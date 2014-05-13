@@ -6,3 +6,26 @@ body {
 a {
   color: #00B7FF;
 }
+
+.l1-box {
+    padding-left: 1em;
+    padding-right: 1em;
+    border: 1px solid black;
+    margin: 1em;
+}
+
+.l2-box {
+    padding-left: 1em;
+    padding-right: 1em;
+    border: 2px solid grey;
+    margin: 1em;
+}
+
+.a-right {
+    text-align: right;
+    padding-right: 1em;
+}
+
+.a-left {
+    text-align: left;
+}

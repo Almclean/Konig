@@ -1,5 +1,29 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div#head(class='pure-g-r')
+    div(class='pure-u-4-5')
+      div#title_nav(class='l2-box')
+          h3 konig
+    div(class='pure-u-1-5')
+      div#login(class='l2-box')
+          h4(class='a-right') Not Logged In | Help
+  div#main(class='pure-g-r')
+    div(class='pure-u-1-4')
+      fieldset
+        legend Db Stuff
+        div#dbnav(class='pure-menu pure-menu-open')
+          p(class='pure-menu-heading') Tier 1 Clients
+          ul
+            li Blah 1
+            li Blah 2
+            li Blah 3
+            li Blah 4
+    div(class='pure-u-3-4')
+      div#mainview(class='pure-menu l1-box')
+        p(class='pure-menu-heading') Data Explorer 
+        div#candiv(class='candiv')
+          canvas#mview(class='l-box', width=600, height=300)
+
+  script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+  script(src='/javascripts/main.js')
