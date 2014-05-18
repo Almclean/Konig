@@ -4,6 +4,7 @@ import sys
 import json
 import logging
 from random import randint, shuffle
+from optparse import OptionParser
 
 ##
 # Load JSON data from the file provided. This will return a {} if there is an issue loading data
@@ -117,12 +118,21 @@ def partition(lst, n):
 def main():
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info("About to start generating data")
-    num_accs = sys.argv[1]
-    json_file = sys.argv[2]
-    logging.info("Number of Accounts to create - {0}".format(num_accs))
-    logging.info("JSON data file to use in generation - {0}".format(json_file))
-    json_data = loadJSON(json_file)
-    accounts = generateAccNames(num_accs)
+    parser = OptionParser()
+    parser.add_option('-n', dest="num_accs", default=100, help="Number of Accounts to Create")
+    parser.add_option('-f', dest="json_file", help="JSON File for init data")
+    (options, args) = parser.parse_args()
+    if options.num_accs:
+        logging.info("Number of Accounts to create - {0}".format(options.num_accs))
+    else:
+        logging.info("Defaulting number of Accounts to 100")
+    if options.json_file:
+        logging.info("JSON data file to use in generation - {0}".format(options.json_file))
+    else:
+        logging.info("Missing JSON File Terminating")
+        sys.exit(2)
+    json_data = loadJSON(options.json_file)
+    accounts = generateAccNames(options.num_accs)
     generateDataLoad(json_data, accounts)
     logging.info("Data Generated")
 
