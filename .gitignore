@@ -1,2 +1,6 @@
 node_modules/
 secrets.key
+.idea
+Konig.iml
+bin/data_load.cql
+bin/GenerateData.py
