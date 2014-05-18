@@ -1,0 +1,75 @@
+{
+   "parties" :
+      [
+         {
+            "id" : "P1",
+            "name" : "MS"
+         },
+         {
+            "id" : "P2",
+            "name" : "GS"
+         },
+         {
+            "id" : "P3",
+            "name" : "JPM"
+         },
+         {
+            "id" : "P4",
+            "name" : "HSBC"
+         },
+         {
+            "id" : "P5",
+            "name" : "CITI"
+         },
+         {
+            "id" : "P6",
+            "name" : "BC"
+         },
+         {
+            "id" : "P7",
+            "name" : "BOA"
+         }
+      ],
+   "ratings" :
+      [
+         {
+            "id" : "R1",
+            "name" : "Top Notch"
+         },
+         {
+            "id" : "R2",
+            "name" : "Good"
+         },
+         {
+            "id" : "R3",
+            "name" : "Not great now that you mention it"
+         },
+         {
+            "id" : "R4",
+            "name" : "Shite"
+         },
+         {
+            "id" : "R5",
+            "name" : "Why the fuck are you buying this?"
+         }
+      ],
+   "locations" :
+      [
+         {
+            "id" : "G1",
+            "name" : "Ireland"
+         },
+         {
+            "id" : "G2",
+            "name" : "Scotland"
+         },
+         {
+            "id" : "G3",
+            "name" : "New York"
+         },
+         {
+            "id" : "G4",
+            "name" : "Rest of the world"
+         }
+      ]
+}
