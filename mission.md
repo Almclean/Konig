@@ -25,7 +25,8 @@ An efficient and speedy way to answer adhoc business queries from your data that
 
 
 ### Next Steps ###
-* Open Source
+* Open Source - to get the word out, once we have a more viable product
 * Grunt.JS
 * Mocha.JS
+* Browserling
 * Meetups/Conferences - further down the line

@@ -13,20 +13,30 @@ block content
       fieldset
         legend Db Stuff
         div#dbnav(class='pure-menu pure-menu-open')
-          p(class='pure-menu-heading') Tier 1 Clients
+          p(class='pure-menu-heading') Example Graphs
           ul
             li 
-              a(href='#') Blah 1
+              a(id='btnAnimal' href='#') Load Animal Graph (local)
+                i(id='fntAnimal' class='fa')
             li
-              a(href='#') Blah 2 
+              a(href='#') Load Test Graph 2
+                i(id='ftnGraph2' class='fa fa-meh-o')
             li 
-              a(href='#') Blah 3
+              a(href='#') Load Test Graph 3
+                i(id='ftnGraph3' class='fa fa-meh-o')
             li 
-              a(href='#') Blah 4
+              a(href='#') Load Test Graph 4
+                i(id='ftnGraph4' class='fa fa-meh-o')
     div(class='pure-u-3-4')
       div#mainview(class='pure-menu l1-box')
         p(class='pure-menu-heading') Data Explorer 
         div#candiv(class='candiv')
           canvas#mview(class='l-box')
-
+        div#queryarea
+          form(class='pure-form')
+            div(class='pure-u-4-5')
+              input(class='pure-input-1' type='text' placeholder='Enter CQL here...')
+            div(class='pure-u-1-5')
+              button(class='pure-input-1' type='submit' class='pure-button pure-button-primary')
+                i(class='fa fa-search')
   script(src='/javascripts/main.js')
