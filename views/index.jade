@@ -33,9 +33,9 @@ block content
         div#candiv(class='candiv')
           canvas#mview(class='l-box')
         div#queryarea
-          form(class='pure-form')
+          form(id='querybar' class='pure-form')
             div(class='pure-u-4-5')
-              input(class='pure-input-1' type='text' placeholder='Enter CQL here...')
+              input(name='cql' class='pure-input-1' type='text' placeholder='Enter CQL here...')
             div(class='pure-u-1-5')
               button(class='pure-input-1' type='submit' class='pure-button pure-button-primary')
                 i(class='fa fa-search')

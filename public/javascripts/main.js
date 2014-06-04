@@ -45,6 +45,16 @@ $(function() {
         return false;
     });
 
+    $('#querybar').submit(function(event) {
+        console.log('Query received...');
+        event.preventDefault();
+        var resultArray = $.post('/api/rawquery', $('#querybar').serialize(), function(data) {
+            // Just log for now...
+            console.log(data);
+        });
+        return false;
+    });
+
 });
 
 // Canvas Init
