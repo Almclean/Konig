@@ -1,9 +1,9 @@
 ### Three tier ###
-   1 Graph UI - HTML 5 + Javascript Bootstrap/whatever
-   1 Socket.io comms layer
-   1 Jquery for UI/Login Passport
-   1 NodeJS server side
-   1 Neo4J for backend
+   1. Graph UI - HTML 5 + Javascript Bootstrap/whatever
+   1. Socket.io comms layer
+   1. Jquery for UI/Login Passport
+   1. NodeJS server side
+   1. Neo4J for backend
 
 ### Mission Statement ###
 An efficient and speedy way to answer adhoc business queries from your data that you haven't thought of yet.
