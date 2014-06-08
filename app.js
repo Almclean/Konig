@@ -56,5 +56,3 @@ app.use(function(err, req, res, next) {
 
 module.exports.app = app;
 module.exports.io = io;
-
-//TEST
