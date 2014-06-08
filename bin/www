@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var debug = require('debug')('my-application');
-var appMod = require('../app');
+var appMod = require('../app.min');
 
 var app = appMod.app;
 var io = appMod.io;
