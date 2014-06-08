@@ -1,3 +1,5 @@
+'use strict';
+
 // Basic Grunt wrapper. All commands must be in here
 module.exports = function(grunt) {
 

@@ -1,4 +1,5 @@
 module.exports = {
 	first: ['gitpull'],
-	second: ['newer:uglify']
+	second: ['npm-install'],
+	third: ['newer:uglify']
 };

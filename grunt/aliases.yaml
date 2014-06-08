@@ -1,6 +1,10 @@
 default:
     - 'concurrent:first'
     - 'concurrent:second'
+    - 'concurrent:third'
 
 pull:
-    - 'concurrent:first'
+    - 'gitpull:task'
+
+install:
+    - 'npm-install:install'
