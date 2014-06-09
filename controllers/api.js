@@ -1,21 +1,26 @@
-// This does the raw neo commands.
-// This is just a simple query for now, eventually we'll import 
-// the remaining Models here, e.g. Nodes etc for CRUD operations
+// use strict ?
+var db = require('./db');
+var util = require('util');
+var events = require('events');
 
-var neo4j = require('neo4j');
-var connectionString = 'http://localhost:7474';
-// Add in some params here, default for now.
-var db = new neo4j.GraphDatabase(connectionString);
-console.log('Connected to NEO4J @ ' + connectionString);
+var Api = function() {
+    // Superclass constructor.
+    events.EventEmitter.call(this);
+    var that = this;
 
-var api = { 
-    runquery : function(queryText, res) {
+    this.query = function (queryText) {
         db.query(queryText, {}, function(err, results) {
-            if (err) throw err;
-            console.log(results);
-            res(results);
+            if (err) { 
+                that.emit('queryError', err);
+            } else {
+                console.log(results);
+                that.emit('queryResult', results);
+            }
         });
-    }
+    };
+
 };
 
-module.exports = api;
+util.inherits(Api, events.EventEmitter);
+
+module.exports = new Api();

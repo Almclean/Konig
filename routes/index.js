@@ -12,12 +12,20 @@ router.route('/api/rawquery')
         var queryText = req.body.cql;
         console.log('CQL : ' + queryText);
         
-        var retval = api.runquery(queryText, function(results) {
+        // Send off the query to the API...
+        api.query(queryText);
+
+        //Lets get the results
+        api.on('queryResult', function(results) {
             console.log('retval = ' + results);
-            
-            // Finally return it as JSON
-            res.json(retval);
+            res.json(results);
         });
+        
+        // Handle some error from the query, just rethrow for now.
+        var errorVal = api.on('queryError', function(err) {
+            throw err;
+        });
+        
     })
     .get(function(req, res, next) {
         next(new Error('Not Yet Implemented'));
