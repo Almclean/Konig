@@ -1,6 +1,6 @@
 module.exports = {
     options: {
-        banner: '/*! <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*! <%= package.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
     },
     dist: {
     	files: {
