@@ -7,6 +7,7 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Konig' });
 });
 
+// Start of API commands
 router.route('/api/rawquery')
     .post(function(req, res, next) {
         var queryText = req.body.cql;
@@ -16,19 +17,14 @@ router.route('/api/rawquery')
         api.query(queryText);
 
         //Lets get the results
-        api.on('queryResult', function(results) {
+        api.once('queryResult', function(results) {
             console.log('retval = ' + results);
             res.json(results);
         });
         
-        // Handle some error from the query, just rethrow for now.
-        var errorVal = api.on('queryError', function(err) {
-            throw err;
-        });
-        
     })
     .get(function(req, res, next) {
-        next(new Error('Not Yet Implemented'));
+        console.log('Not Yet Implemented');
     });
     
 
