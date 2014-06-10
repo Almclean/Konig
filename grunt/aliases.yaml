@@ -8,3 +8,6 @@ pull:
 
 install:
     - 'npm-install:install'
+
+exp:
+    - 'express'
