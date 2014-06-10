@@ -50,7 +50,8 @@ $(function() {
         event.preventDefault();
         var resultArray = $.post('/api/rawquery', $('#querybar').serialize(), function(data) {
             // Just log for now...
-            console.log(data);
+            console.log(JSON.stringify(data));
+
         });
         return false;
     });
