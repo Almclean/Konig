@@ -1,4 +1,5 @@
-// use strict ?
+"use strict";
+
 var db = require('./db');
 var util = require('util');
 var events = require('events');
