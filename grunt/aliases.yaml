@@ -13,4 +13,4 @@ exp:
     - 'express'
 
 test:
-    - 'mochaTest:dummyTest'
+    - 'mochaTest:dummy'
