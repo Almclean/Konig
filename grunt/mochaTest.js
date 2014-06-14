@@ -6,6 +6,7 @@ module.exports = {
         src: ['test/**/*.js']
     },
     options: {
-        colors: true
+        colors: true,
+        log: true
     }
 };
