@@ -1,5 +1,5 @@
 module.exports = {
-    dummy: {
+    test: {
         options: {
             reporter: 'spec'
         },
