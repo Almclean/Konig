@@ -11,3 +11,6 @@ install:
 
 exp:
     - 'express'
+
+test:
+    - 'mochaTest:dummyTest'
