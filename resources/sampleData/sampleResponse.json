@@ -1,0 +1,67 @@
+// Result of query : MATCH m-[r]-n RETURN m,r,n
+// Returns each node and it's first relationship.
+
+{"m": {
+    "_nodeNeo4j": {
+        "version": "1.1.0",
+        "constructor": "Node"
+    },
+    "_data": {
+        "extensions": {},
+        "paged_traverse": "http://localhost:7474/db/data/node/142/paged/traverse/{returnType}{?pageSize,leaseTime}",
+        "labels": "http://localhost:7474/db/data/node/142/labels",
+        "outgoing_relationships": "http://localhost:7474/db/data/node/142/relationships/out",
+        "traverse": "http://localhost:7474/db/data/node/142/traverse/{returnType}",
+        "all_typed_relationships": "http://localhost:7474/db/data/node/142/relationships/all/{-list|&|types}",
+        "all_relationships": "http://localhost:7474/db/data/node/142/relationships/all",
+        "property": "http://localhost:7474/db/data/node/142/properties/{key}",
+        "self": "http://localhost:7474/db/data/node/142",
+        "outgoing_typed_relationships": "http://localhost:7474/db/data/node/142/relationships/out/{-list|&|types}",
+        "properties": "http://localhost:7474/db/data/node/142/properties",
+        "incoming_relationships": "http://localhost:7474/db/data/node/142/relationships/in",
+        "incoming_typed_relationships": "http://localhost:7474/db/data/node/142/relationships/in/{-list|&|types}",
+        "create_relationship": "http://localhost:7474/db/data/node/142/relationships",
+        "data": {
+            "name": "CITI"
+        }
+    }
+}, "r": {
+    "_nodeNeo4j": {
+        "version": "1.1.0",
+        "constructor": "Relationship"
+    },
+    "_data": {
+        "extensions": {},
+        "start": "http://localhost:7474/db/data/node/142",
+        "property": "http://localhost:7474/db/data/relationship/86/properties/{key}",
+        "self": "http://localhost:7474/db/data/relationship/86",
+        "properties": "http://localhost:7474/db/data/relationship/86/properties",
+        "type": "OWNS",
+        "end": "http://localhost:7474/db/data/node/93",
+        "data": {}
+    }
+}, "n": {
+    "_nodeNeo4j": {
+        "version": "1.1.0",
+        "constructor": "Node"
+    },
+    "_data": {
+        "extensions": {},
+        "paged_traverse": "http://localhost:7474/db/data/node/93/paged/traverse/{returnType}{?pageSize,leaseTime}",
+        "labels": "http://localhost:7474/db/data/node/93/labels",
+        "outgoing_relationships": "http://localhost:7474/db/data/node/93/relationships/out",
+        "traverse": "http://localhost:7474/db/data/node/93/traverse/{returnType}",
+        "all_typed_relationships": "http://localhost:7474/db/data/node/93/relationships/all/{-list|&|types}",
+        "all_relationships": "http://localhost:7474/db/data/node/93/relationships/all",
+        "property": "http://localhost:7474/db/data/node/93/properties/{key}",
+        "self": "http://localhost:7474/db/data/node/93",
+        "outgoing_typed_relationships": "http://localhost:7474/db/data/node/93/relationships/out/{-list|&|types}",
+        "properties": "http://localhost:7474/db/data/node/93/properties",
+        "incoming_relationships": "http://localhost:7474/db/data/node/93/relationships/in",
+        "incoming_typed_relationships": "http://localhost:7474/db/data/node/93/relationships/in/{-list|&|types}",
+        "create_relationship": "http://localhost:7474/db/data/node/93/relationships",
+        "data": {
+            "name": "A31"
+        }
+    }
+}}
