@@ -40,20 +40,26 @@ function ParseOSForNeo4j(grunt) {
     var neo4j_start_cmd;
     var nos = nodeOS.type();
     grunt.log.writeln("Node OS Type is [" + nos + "]");
-    if (nos.toUpperCase() == ("WINDOWS_NT")) {
-        grunt.log.writeln("OS is Windows....we think");
-        neo4j_start_cmd = ".\\bin\\win-neo4j-controller.bat start";
-    } else if (nos.toUpperCase() == ("LINUX")) {
-        grunt.log.writeln("OS is Linux....we think");
-        neo4j_start_cmd = "sudo service neo4j-service start";
-    } else if (nos.toUpperCase == ("MAC") || nos.toUpperCase() == ("LINUX")) {
-        grunt.log.writeln("OS is Mac....we think");
-        neo4j_start_cmd = "echo TO FIND OUT";
+
+    switch (nos.toUpperCase()) {
+        case "WINDOWS_NT":
+            grunt.log.writeln("OS is Windows....we think");
+            neo4j_start_cmd = ".\\bin\\win-neo4j-controller.bat start";
+            break;
+        case "LINUX":
+            grunt.log.writeln("OS is Linux....we think");
+            neo4j_start_cmd = "sudo service neo4j-service start";
+            break;
+        case "DARWIN":
+            grunt.log.writeln("OS is Mac....we think");
+            neo4j_start_cmd = "neo4j start";
+            break;
+        default:
+            var msg = "Unable to parse Type of OS [" + nos + "] to figure out to start Neo4j";
+            grunt.log.error(msg);
+            throw new ParameterException(msg);
+            break;
     }
-    else {
-        var msg = "Unable to parse Type of OS [" + nos + "] to figure out to start Neo4j";
-        grunt.log.error(msg);
-        throw new ParameterException(msg);
-    }
+
     return neo4j_start_cmd;
-}
+};
