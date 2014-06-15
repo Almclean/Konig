@@ -22,6 +22,6 @@ Api.prototype.query = function(queryText) {
             that.emit('queryResult', results);
         }
     });
-}
+};
 
 module.exports = new Api();

@@ -1,23 +1,72 @@
+# ==============================================
+# The set of Aliases for the Konig Services
+# all Konig Servcics start with 'ks-'
+# ==============================================
+
+# ==============================================
+# Default task this will run the below as
+# concurrent tasks:
+#   1) gitpull
+#   2) npm-install
+#   3) uglify && mochaTest && jshint
+# ==============================================
 default:
     - 'concurrent:first'
     - 'concurrent:second'
     - 'concurrent:third'
 
-pull:
+# ==============================================
+# ks-init set up the work space. There are two
+# tasks here:
+#   1) gitpull
+#   2) npm-install
+# ==============================================
+ks-init:
     - 'gitpull:task'
-
-install:
     - 'npm-install:install'
 
-exp:
-    - 'express'
-
-test:
-    - 'mochaTest:test'
-
+# ==============================================
+# ks-neo4j-start start the Neo4j server
+# ==============================================
 ks-neo4j-start:
     - 'shell:start_neo4j'
 
+# ==============================================
+# ks-start start the Neo4j server and then the
+# express server
+# ==============================================
 ks-start:
     - 'shell:start_neo4j'
     - 'express'
+
+# ==============================================
+# install runs npm-install
+# ==============================================
+install:
+    - 'npm-install:install'
+
+# ==============================================
+# gitpull goes out to git and pull the latest
+# changes
+# ==============================================
+git-pull:
+    - 'gitpull'
+
+# ==============================================
+# exp starts the express servers for Node.js
+# ==============================================
+exp:
+    - 'express'
+
+# ==============================================
+# test runs the tests configured for this
+# ==============================================
+test:
+    - 'mochaTest:test'
+
+# ==============================================
+# validate the javascript written this runs
+# jshint using jshint-stylish to report
+# ==============================================
+validate:
+    - 'jshint'

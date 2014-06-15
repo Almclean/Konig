@@ -1,7 +1,10 @@
 module.exports = {
-        files: [ '**/*.js' ],
-        tasks: [ 'express:livereload' ],
-        options: {
-        }
+    tasks: [ 'express:restart' ],
+    options: {
+        event: ['added', 'deleted', 'changed'],
+        interval: 1000,
+        reload: true,
+        livereload: true
+    }
 };
 

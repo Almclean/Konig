@@ -15,7 +15,7 @@ var nodeData = {
 function setupGraph(cElement) {
     var sys = arbor.ParticleSystem(200, 300, 0.6, true);
     sys.parameters({gravity:true});
-    sys.renderer = Renderer(cElement);
+    sys.renderer = new Renderer(cElement);
     return sys;
 }
 
@@ -27,7 +27,7 @@ $(function() {
     var g = setupGraph('#mview');
     
     $('#btnQuery').click(function(e) {
-        console.log('The query button was clicked !')
+        console.log('The query button was clicked !');
         return false;
     });
     
@@ -40,7 +40,7 @@ $(function() {
 
     $('#btnGraph2').click(function(e) {
         // Go off and get some JSON
-        console.log('Nothing to see here !')
+        console.log('Nothing to see here !');
         g.graft({});
         return false;
     });

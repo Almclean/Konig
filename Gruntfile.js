@@ -1,4 +1,20 @@
 'use strict';
+var nodeOS = require('os');
+
+// Basic Grunt wrapper. All commands must be in here
+module.exports = function (grunt) {
+    // measures the time each task takes
+    require('time-grunt')(grunt);
+
+    // load grunt config
+    require('load-grunt-config')(grunt, {
+        init: true, //auto grunt.initConfig
+        data: { //data passed into config.  Can use with <%= operatingSys %>
+            neo4j_start: ParseOSForNeo4j(grunt)
+        }
+    });
+};
+
 
 /**
  * The type of exception thrown when we have an invalid Parameter for grunt
@@ -13,37 +29,27 @@ function ParameterException(message) {
     this.name = "ParameterException";
 }
 
-// Basic Grunt wrapper. All commands must be in here
-module.exports = function (grunt) {
-    // measures the time each task takes
-    require('time-grunt')(grunt);
-
+/**
+ *
+ * Attempts to find the correct start command
+ *
+ * @returns {*} The start script of the Neo4j server
+ * @constructor
+ */
+function ParseOSForNeo4j(grunt) {
     var neo4j_start_cmd;
-    var os = grunt.option('OS') || 'WIN';
-    if (os == "NO_OS") {
-        var msg_no_os = "No OS parameter passed to grunt. Please set via --OS=win or --OS=mac";
-        grunt.log.error(msg_no_os);
-        throw new ParameterException(msg_no_os);
+    var nos = nodeOS.type();
+    grunt.log.writeln("Node OS Type is [" + nos + "]");
+    if (nos.toUpperCase() == ("WINDOWS_NT")) {
+        grunt.log.writeln("OS is Windows....we think");
+        neo4j_start_cmd = ".\\bin\\win-neo4j-controller.bat start";
+    } else if (nos.toUpperCase == ("MAC") || nos.toUpperCase() == ("LINUX")) {
+        grunt.log.writeln("OS is Mac....we think");
+        neo4j_start_cmd = "echo TO FIND OUT";
     } else {
-        if (os.toUpperCase() == "WIN") {
-            grunt.log.writeln("OS Set to " + os);
-            neo4j_start_cmd = ".\\bin\\win-neo4j-controller.bat start";
-        } else if (os.toUpperCase() == "MAC") {
-            grunt.log.writeln("OS Set to " + os);
-            neo4j_start_cmd = "echo TO FIND OUT";
-        }
-        else {
-            var msg = "Invalid value [" + os + "] for OS parameter passed to grunt. Please set via --OS=win or --OS=mac";
-            grunt.log.error(msg);
-            throw new ParameterException(msg);
-        }
+        var msg = "Unable to parse Type of OS [" + nos + "] to figure out to start Neo4j";
+        grunt.log.error(msg);
+        throw new ParameterException(msg);
     }
-    // load grunt config
-    require('load-grunt-config')(grunt, {
-        init: true, //auto grunt.initConfig
-        data: { //data passed into config.  Can use with <%= operatingSys %>
-            neo4j_start: neo4j_start_cmd
-        }
-    });
+    return neo4j_start_cmd;
 }
-;
