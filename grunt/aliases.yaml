@@ -14,3 +14,10 @@ exp:
 
 test:
     - 'mochaTest:test'
+
+ks-neo4j-start:
+    - 'shell:start_neo4j'
+
+ks-start:
+    - 'shell:start_neo4j'
+    - 'express'
