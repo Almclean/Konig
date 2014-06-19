@@ -1,4 +1,6 @@
-'use strict';
+/*jslint node: true */
+"use strict";
+
 var nodeOS = require('os');
 
 // Basic Grunt wrapper. All commands must be in here
@@ -62,4 +64,4 @@ function ParseOSForNeo4j(grunt) {
     }
 
     return neo4j_start_cmd;
-};
+}

@@ -11,15 +11,14 @@ var defaultNeoRoot = 'http://localhost:7474/db/data';
 // No point in connecting if there isn't one...
 // Can make the connectionStrings available via config later
 
-var db = null;
-var resp = r(defaultNeoRoot, function testNeo4jRestConnection(err, response, body) {
+r(defaultNeoRoot, function testNeo4jRestConnection(err, response, body) {
     if (err) {
         console.log('Cannot find active Neo4J Rest Service @ ' + defaultNeoRoot);
         throw err;
     }
 });
 
-db = new neo4j.GraphDatabase(connectionString);
+var db = new neo4j.GraphDatabase(connectionString);
 console.log('Neo4J Server Available.');
 
 module.exports = db;
