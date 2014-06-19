@@ -6,23 +6,23 @@ Al and Ivan's awesome business, which will make them uber rich
 How to Run
 ==========
 
-Download the code by cloning the git repo, or if you've already checked it out then just do git pull master
+Please make sure you have Node, NPM and NEO4J on your system (please consult your operating system's package manager).
 
-Make sure you've got the latest version of Node.JS and NPM installed on your machine.  Not sure about Windows capability here, but if it's a mac or a linux box then just do something like :
+Once they're installed then install grunt globally :
 
-> Linux : sudo apt-get install npm node
-> Mac : brew install npm node
+> npm install grunt -g
 
-Once that's down, you should run the following in the root directory of the repository :
+Once that's done, you should be able to go to the application directory and run the following :
 
-> npm install
+> grunt ks-init
+> grunt ks-start
 
-That'll drag down all the deps and should get you everything you need.  If this screws up for whatever reason then you'll need to delete the directory and start again, as Npm doesn't recover well from partial installations.
+This will pull down the latest source code, run an npm install of all the deps and then start the neo4j server and
+run the server.
 
-Once that's sorted then run :
+The application is now available at : 
 
-> node bin/www
+> http://localhost:3001
 
-And you should be able to browse to **http://localhost:3001** to see the project in all it's shining glory !
-
+In all it's shining glory :)
  
