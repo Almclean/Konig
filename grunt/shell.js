@@ -1,3 +1,6 @@
+/*jslint node: true */
+"use strict";
+
 module.exports = {
     start_neo4j: {
         options: {

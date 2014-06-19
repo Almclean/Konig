@@ -1,3 +1,4 @@
+/*jslint node: true */
 "use strict";
 
 var db = require('./db');
@@ -10,9 +11,9 @@ function Api() {
 
 util.inherits(Api, events.EventEmitter);
 
-Api.prototype.query = function(queryText) {
+Api.prototype.query = function (queryText) {
     var that = this;
-    
+
     db.query(queryText, {}, function (err, results) {
         if (err) {
             console.log('Emitting an error');

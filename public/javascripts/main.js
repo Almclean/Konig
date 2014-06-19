@@ -1,54 +1,54 @@
-'use strict';
-
 // This is just test data for now...
 var nodeData = {
-    nodes:{
-        animals:{'color':'red','shape':'dot','label':'Animals'},
-        dog:{'color':'green','shape':'dot','label':'dog'},
-        cat:{'color':'blue','shape':'dot','label':'cat'}
+    nodes: {
+        animals: {'color': 'red', 'shape': 'dot', 'label': 'Animals'},
+        dog: {'color': 'green', 'shape': 'dot', 'label': 'dog'},
+        cat: {'color': 'blue', 'shape': 'dot', 'label': 'cat'}
     },
-    edges:{
-        animals:{ dog:{}, cat:{} }}
+    edges: {
+        animals: { dog: {}, cat: {} }
+    }
 };
 
 // Init Graph
 function setupGraph(cElement) {
     var sys = arbor.ParticleSystem(200, 300, 0.6, true);
-    sys.parameters({gravity:true});
+    sys.parameters({gravity: true});
     sys.renderer = new Renderer(cElement);
     return sys;
 }
 
 // Event Handlers
-$(function() {
+$(function () {
+    "use strict";
     console.log('Page is now ready !');
 
     //updateCanvas();
     var g = setupGraph('#mview');
-    
-    $('#btnQuery').click(function(e) {
+
+    $('#btnQuery').click(function (e) {
         console.log('The query button was clicked !');
         return false;
     });
-    
-    $('#btnAnimal').click(function(e) {
+
+    $('#btnAnimal').click(function (e) {
         // Go off and get some JSON
         g.graft(nodeData);
         $('#fntAnimal').addClass('fa-check-circle');
         return false;
     });
 
-    $('#btnGraph2').click(function(e) {
+    $('#btnGraph2').click(function (e) {
         // Go off and get some JSON
         console.log('Nothing to see here !');
         g.graft({});
         return false;
     });
 
-    $('#querybar').submit(function(event) {
+    $('#querybar').submit(function (event) {
         console.log('Query received...');
         event.preventDefault();
-        var resultArray = $.post('/api/rawquery', $('#querybar').serialize(), function(data) {
+        var resultArray = $.post('/api/rawquery', $('#querybar').serialize(), function (data) {
             // Just log for now...
             var dataObj = {};
             dataObj.nodes = {};

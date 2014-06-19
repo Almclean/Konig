@@ -1,3 +1,6 @@
+/*jslint node: true */
+"use strict";
+
 var neo4j = require('neo4j');
 var r = require('request');
 
