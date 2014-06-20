@@ -10,21 +10,10 @@ var nodeData = {
     }
 };
 
-// Init Graph
-function setupGraph(cElement) {
-    var sys = arbor.ParticleSystem(200, 300, 0.6, true);
-    sys.parameters({gravity: true});
-    sys.renderer = new Renderer(cElement);
-    return sys;
-}
-
 // Event Handlers
 $(function () {
     "use strict";
     console.log('Page is now ready !');
-
-    //updateCanvas();
-    var g = setupGraph('#mview');
 
     $('#btnQuery').click(function (e) {
         console.log('The query button was clicked !');
@@ -33,7 +22,6 @@ $(function () {
 
     $('#btnAnimal').click(function (e) {
         // Go off and get some JSON
-        g.graft(nodeData);
         $('#fntAnimal').addClass('fa-check-circle');
         return false;
     });
@@ -41,7 +29,6 @@ $(function () {
     $('#btnGraph2').click(function (e) {
         // Go off and get some JSON
         console.log('Nothing to see here !');
-        g.graft({});
         return false;
     });
 
@@ -63,18 +50,7 @@ $(function () {
                 }
             }
             console.log(JSON.stringify(dataObj));
-            g.graft(dataObj);
         });
         return false;
     });
-
 });
-
-// Canvas Init
-function updateCanvas() {
-    var canvasNode = document.getElementById('mview');
-    var div = document.getElementById('candiv');
-    canvasNode.width = div.clientWidth;
-    canvasNode.height = div.clientHeight;
-}
-
