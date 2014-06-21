@@ -1,42 +1,33 @@
 extends layout
-
 block content
-  div#head(class='pure-g-r')
-    div(class='pure-u-4-5')
-      div#title_nav(class='l2-box')
-          h3 konig
-    div(class='pure-u-1-5')
-      div#login(class='l2-box')
-          h4(class='a-right') Not Logged In | Help
-  div#main(class='pure-g-r')
-    div(class='pure-u-1-4')
-      fieldset
-        legend Db Stuff
-        div#dbnav(class='pure-menu pure-menu-open')
-          p(class='pure-menu-heading') Example Graphs
-          ul
-            li 
-              a(id='btnAnimal' href='#') Load Animal Graph (local)
-                i(id='fntAnimal' class='fa')
-            li
-              a(href='#') Load Test Graph 2
-                i(id='ftnGraph2' class='fa fa-meh-o')
-            li 
-              a(href='#') Load Test Graph 3
-                i(id='ftnGraph3' class='fa fa-meh-o')
-            li 
-              a(href='#') Load Test Graph 4
-                i(id='ftnGraph4' class='fa fa-meh-o')
-    div(class='pure-u-3-4')
-      div#mainview(class='pure-menu l1-box')
-        p(class='pure-menu-heading') Data Explorer 
-        div#candiv(class='candiv')
-            canvas#mview(class='l-box' width=800 height=600)
-          div#queryarea
-          form(id='querybar' class='pure-form')
-            div(class='pure-u-4-5')
-              input(name='cql' class='pure-input-1' type='text' placeholder='Enter CQL here...')
-            div(class='pure-u-1-5')
-              button(class='pure-input-1' type='submit' class='pure-button pure-button-primary')
-                i(class='fa fa-search')
-  script(src='/javascripts/main.js')
+    div(class="navbar navbar-inverse navbar-fixed-top" role="navigation")
+        div(class="container")
+            div(class="navbar-header")
+                button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
+                    span(class="sr-only") Toggle navigation
+                    span(class="icon-bar")
+                    span(class="icon-bar")
+                    span(class="icon-bar")
+                a(class="navbar-brand" href="#") Konig
+            div(class="collapse navbar-collapse")
+                ul(class="nav navbar-nav")
+                    li(class="active")
+                        a(href="/") Home
+    div(class="container")
+        div
+            h1 Welcome to Konig
+        br
+        br
+        br
+        br
+        div(class="container")
+            div(class="col-md-4")
+                a(href="#")
+                    i(class="fa fa-cogs fa-5x")
+            div(class="col-md-4")
+                a(href="#")
+                    i(class="fa fa-globe fa-5x")
+            div(class="col-md-4")
+                a(href="#")
+                    i(class="fa fa-pencil fa-5x")
+script(src='/javascripts/main.js')
