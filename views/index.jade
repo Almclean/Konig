@@ -1,7 +1,7 @@
 extends layout
 block content
     div(class="navbar navbar-inverse navbar-fixed-top" role="navigation")
-        div(class="container")
+        div(class="container-fluid")
             div(class="navbar-header")
                 button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse")
                     span(class="sr-only") Toggle navigation
@@ -13,21 +13,21 @@ block content
                 ul(class="nav navbar-nav")
                     li(class="active")
                         a(href="/") Home
-    div(class="container")
-        div
-            h1 Welcome to Konig
-        br
-        br
-        br
-        br
-        div(class="container")
-            div(class="col-md-4")
-                a(href="#")
-                    i(class="fa fa-cogs fa-5x")
-            div(class="col-md-4")
-                a(href="#")
-                    i(class="fa fa-globe fa-5x")
-            div(class="col-md-4")
-                a(href="#")
-                    i(class="fa fa-pencil fa-5x")
+    div(class="container-fluid front-page")
+        div(class="container-fluid")
+            div(class="row")
+                div(class="col-md-3")
+                div(class="col-md-3")
+                    a(href="#")
+                        img(src="images/queryExplorer.png" class="img-responsive img-rounded" alt="Query Explorer")
+                div(class="col-md-3")
+        div(class="container-fluid")
+            div(class="row")
+                div(class="col-md-3")
+                    a(href="#")
+                        img(src="images/queryBuilder.png" class="img-responsive img-rounded" alt="Query Builder")
+                div(class="col-md-3")
+                div(class="col-md-3")
+                    a(href="#")
+                        img(src="images/graphEditor.png" class="img-responsive img-rounded" alt="Graph Editor")
 script(src='/javascripts/main.js')
