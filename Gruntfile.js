@@ -45,16 +45,16 @@ function ParseOSForNeo4j(grunt) {
 
     switch (nos.toUpperCase()) {
         case "WINDOWS_NT":
-            grunt.log.writeln("OS is Windows....we think");
+            grunt.log.writeln("OS is Windows");
             neo4j_start_cmd = ".\\bin\\win-neo4j-controller.bat start";
             break;
         case "LINUX":
-            grunt.log.writeln("OS is Linux....we think");
+            grunt.log.writeln("OS is Linux");
             neo4j_start_cmd = "sudo service neo4j-service start";
             break;
         case "DARWIN":
-            grunt.log.writeln("OS is Mac....we think");
-            neo4j_start_cmd = "neo4j start";
+            grunt.log.writeln("OS is Mac");
+            neo4j_start_cmd = "/usr/local/bin/neo4j restart";
             break;
         default:
             var msg = "Unable to parse Type of OS [" + nos + "] to figure out to start Neo4j";

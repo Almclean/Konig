@@ -3,7 +3,8 @@
 
 var express = require('express');
 var router = express.Router();
-var api = require('../controllers/api');
+var p = require('bluebird');
+var api = p.promisifyAll(require('../services/api'));
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -17,13 +18,11 @@ router.route('/api/rawquery')
         console.log('CQL : ' + queryText);
 
         // Send off the query to the API...
-        api.query(queryText);
-
-        //Lets get the results
-        api.once('queryResult', function (results) {
-            console.log('retval = ' + results);
-            res.json(results);
-        });
+        api.query(queryText)
+            .then(function (results) {
+                console.log('retval = results');
+                res.json(Subgraph(results));
+            }).done();
     });
 
 module.exports = router;

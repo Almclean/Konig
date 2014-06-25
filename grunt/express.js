@@ -13,7 +13,7 @@ module.exports = {
             server: path.resolve('./app'),
             livereload: true,
             serverreload: true,
-            bases: [path.resolve('./public'), path.resolve('./routes'), path.resolve('./controllers')]
+            bases: [path.resolve('./public'), path.resolve('./routes'), path.resolve('./services')]
         }
     }
 };
