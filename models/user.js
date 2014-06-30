@@ -1,17 +1,23 @@
 /**
  * Created by almclean on 24/06/2014.
  */
+
 "use strict";
+var userService = require('../services/UserService');
 
-var service = require('../services/UserService');
-
-
-function User(username, password) {
-    this.username = username;
+function User(userName, password) {
+    this.userName = userName;
     this.password = password;
 }
 
-// @param : pass = password to check against ?
-User.prototype.authenticate = function authenticate(inputPassword) {
-    return service.authenticate(inputPassword);
+// @param : inputPassword = password to check against
+// @return : boolean = true if the person has supplied the correct password otherwise false
+User.prototype.authenticate = function authenticate(userName, inputPassword) {
+    return userService.authenticate(userName, inputPassword);
+};
+
+// @param : userName = the userName to get resources for
+// @return : resources = the collection of resources for the supplied user
+User.prototype.resources = function resources(userName) {
+    return userService.resources(userName)
 };

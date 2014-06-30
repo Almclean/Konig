@@ -3,10 +3,10 @@
  */
 "use strict";
 
-function Resource(name, type, location) {
-    this._name = name;
-    this._type = type;
-    this._location = location;
+function Resource(resourceName, resourceType, resourceLocation) {
+    this.resourceName = resourceName;
+    this.resourceType = resourceType;
+    this.resourceLocation = resourceLocation;
 }
 
 module.exports = Resource;
