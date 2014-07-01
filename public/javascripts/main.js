@@ -29,10 +29,11 @@ $(function () {
             }
         });
 
-    }, 2000);
+    }, 30000);
 
-    $('#signIn').submit(function (e) {
+    $('#signIn').on('submit', function (event) {
         event.preventDefault();
+        console.info('Submitting Username/Password : ' + $(this).serialize());
         $.post('/authenticate', $('#signIn').serialize(), function (data) {
             if (data.authenticated === true) {
                 hideElement("usernameInput");
@@ -41,7 +42,6 @@ $(function () {
                 $('#welcome').text('Welcome ' + data.user);
             }
         });
-        return false;
     });
 
     function hideElement(input_id) {
