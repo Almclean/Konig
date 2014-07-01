@@ -30,15 +30,13 @@ router.route('/authenticate')
     .post(function (req, res, next) {
         console.log(req.body);
 
-//        var username = req.body.usernameInput;
-//        var password = req.body.passwordInput;
-//        console.log("Going to call user service. username = " + username + " pwd = " + password);
-//        userService.authenticate(username, password);
-//        userService.once('signInSuccess', function (results) {
-//            console.log('retval = ' + JSON.stringify(results));
-//            res.json(results);
-//        });
-        res.json();
+        var username = req.body.usernameInput;
+        var password = req.body.passwordInput;
+        console.log("Going to call user service. username = " + username + " pwd = " + password);
+        userService.authenticate(username, password)
+            .then(function (result) {
+                res.json(result);
+            });
     });
 
 module.exports = router;

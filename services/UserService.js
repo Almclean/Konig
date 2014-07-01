@@ -5,6 +5,10 @@
 var db = require('./db');
 var util = require('util');
 var events = require('events');
+var Promise = require('bluebird');
+var bcrypt = require('bcrypt');
+Promise.promisifyAll(bcrypt);
+Promise.promisifyAll(db);
 
 var UserService = function () {
     this.name = "UserService";
@@ -15,29 +19,31 @@ util.inherits(UserService, events.EventEmitter);
 
 // Go and check if this user password matches the database
 UserService.prototype.authenticate = function (userName, inputPassword) {
-    var that = this;
+    var queryText = [
+        "MATCH (user:Adminstration { name: {userName} })",
+        "RETURN user"
+    ].join('\n');
 
-    var queryText = "MATCH (user:Adminstration { name:\"" + userName + "\" }) RETURN user";
-    console.log("Query will be " + queryText);
-    db.query(queryText, {}, function (err, results) {
-        var storedPwd;
-        if (err) {
-            console.log('### Event : signInError');
-            that.emit('signInError', {"user": userName, "authenticated": false, "reason": err});
-        } else {
-            console.log('--- DB Results : ' + JSON.stringify(results));
-            storedPwd = results[0].user._data.data.password;
-            // TODO I know this shouldn't be logged here!
-            console.log("--- DB Results [Pwd] :" + storedPwd);
-            if (inputPassword.toUpperCase() === storedPwd.toUpperCase()) {
-                console.log('### Event : signInSuccess');
-                that.emit('signInSuccess', {"user": userName, "authenticated": true});
-            } else {
-                console.log('### Event : signInFail');
-                that.emit('signInFail', {"user": userName, "authenticated": false, "reason": "Invalid Password"});
+    return db.queryAsync(queryText, {userName: userName})
+        .then(function (results) {
+            if (results && results.length > 0) {
+                var storedHash = results[0].user._data.data.password;
+                console.log(storedHash);
+                return bcrypt.compareAsync(inputPassword, storedHash);
             }
-        }
-    });
+        })
+        .then(function (result) {
+            var retval = {};
+            if (result) {
+                retval = {"user": userName, "authenticated": true};
+            } else {
+                retval = {"user": userName, "authenticated": false, "reason": "Invalid Password"};
+            }
+            return retval;
+        })
+        .catch(function (e) {
+            throw e;
+        });
 };
 
 // Go and get the resources for this user from the data container

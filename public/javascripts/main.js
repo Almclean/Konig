@@ -10,7 +10,6 @@ $(function () {
 
         uptimePingRequest.success(function () {
             if ($('#srvStatus').hasClass('label-danger')) {
-                console.log('DB Connection Ok');
                 $('#srvStatus')
                     .removeClass('label-danger')
                     .addClass('label-success')
@@ -21,7 +20,6 @@ $(function () {
         uptimePingRequest.error(function () {
             "use strict";
             if ($('#srvStatus').hasClass('label-success')) {
-                console.log('DB Connection Failure');
                 $('#srvStatus')
                     .removeClass('label-success')
                     .addClass('label-danger')
@@ -33,19 +31,13 @@ $(function () {
 
     $('#signIn').on('submit', function (event) {
         event.preventDefault();
-        console.info('Submitting Username/Password : ' + $(this).serialize());
         $.post('/authenticate', $('#signIn').serialize(), function (data) {
             if (data.authenticated === true) {
-                hideElement("usernameInput");
-                hideElement("passwordInput");
+                $('#usernameInput').css('visibility', 'hidden');
+                $('#passwordInput').css('visibility', 'hidden');
                 $('#btnSignIn').text('Log Out');
                 $('#welcome').text('Welcome ' + data.user);
             }
         });
     });
-
-    function hideElement(input_id) {
-        console.log("Hiding Element : " + input_id);
-        document.getElementById(input_id).style.visibility = 'hidden';
-    }
 });

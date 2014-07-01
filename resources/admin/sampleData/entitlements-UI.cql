@@ -1,4 +1,4 @@
-CREATE (U1:AdminUser:Adminstration {name:'Al', password:''} )
+CREATE (U1:AdminUser:Adminstration {name:'Al', password:'$2a$10$CSY34JcAluxZ.kSu2MgtseLyxvJ68p7g.T5zC4bfoWvqOAvd8IfIq'} )
 CREATE (U2:AdminUser:Adminstration {name:'Ivan', password:''} )
 CREATE (U3:ReadOnlyUser:Adminstration {name:'Alan', password:''} )
 CREATE (U4:ReadOnlyUser:Adminstration {name:'Barry', password:''} )
