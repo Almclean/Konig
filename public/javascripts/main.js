@@ -47,6 +47,6 @@ $(function () {
 
     function hideElement(inputName) {
         console.info("Hiding Element : " + inputName);
-        var el = document.getElementsByName(inputName)[0].style.visibility = 'hidden';
+        document.getElementsByName(inputName)[0].style.visibility = 'hidden';
     }
 });
