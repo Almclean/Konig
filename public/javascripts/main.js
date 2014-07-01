@@ -35,6 +35,7 @@ $(function () {
         event.preventDefault();
         console.info('Submitting Username/Password : ' + $(this).serialize());
         $.post('/authenticate', $('#signIn').serialize(), function (data) {
+            console.info('Auth : ' + data.authenticated);
             if (data.authenticated === true) {
                 hideElement("usernameInput");
                 hideElement("passwordInput");
@@ -44,8 +45,8 @@ $(function () {
         });
     });
 
-    function hideElement(input_id) {
-        console.log("Hiding Element : " + input_id);
-        document.getElementById(input_id).style.visibility = 'hidden';
+    function hideElement(inputName) {
+        console.info("Hiding Element : " + inputName);
+        var el = document.getElementsByName(inputName)[0].style.visibility = 'hidden';
     }
 });
