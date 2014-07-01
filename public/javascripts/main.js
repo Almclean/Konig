@@ -31,20 +31,14 @@ $(function () {
 
     }, 2000);
 
-    $('#btnSignIn').click(function (e) {
-        console.log('Login button was clicked. Inputs were User : [' + $('#usernameInput').val() + '] Pwd : [' + $('#passwordInput').val() + ']');
+    $('#signIn').submit(function (e) {
         event.preventDefault();
-        // TODO Should we really just submit the form here
-        $.post('/authenticate', { name: $('#usernameInput').val(), pwd: $('#passwordInput').val() }, function (data) {
-            // Just log for now...
-            console.log(JSON.stringify(data));
+        $.post('/authenticate', $('#signIn').serialize(), function (data) {
             if (data.authenticated === true) {
-                console.log("Auth!");
                 hideElement("usernameInput");
                 hideElement("passwordInput");
-                hideElement("btnSignIn");
-                $('#welcome')
-                    .text('Welcome ' + data.user);
+                $('#btnSignIn').text('Log Out');
+                $('#welcome').text('Welcome ' + data.user);
             }
         });
         return false;

@@ -28,14 +28,18 @@ router.route('/api/rawquery')
 
 router.route('/authenticate')
     .post(function (req, res, next) {
-        var username = req.body.name;
-        var password = req.body.pwd;
-        console.log("Going to call user service. username = " + username + " pwd = " + password);
-        userService.authenticate(username, password);
-        userService.once('signInSuccess', function (results) {
-            console.log('retval = ' + JSON.stringify(results));
-            res.json(results);
-        });
+        console.log(req);
+        console.log(req.headers);
+        console.log(req.body);
+
+//        var username = req.body.usernameInput;
+//        var password = req.body.pwd;
+//        console.log("Going to call user service. username = " + username + " pwd = " + password);
+        //userService.authenticate(username, password);
+//        userService.once('signInSuccess', function (results) {
+//            console.log('retval = ' + JSON.stringify(results));
+//            res.json(results);
+//        });
     });
 
 module.exports = router;
