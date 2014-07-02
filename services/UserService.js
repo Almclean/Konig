@@ -28,7 +28,6 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
         .then(function (results) {
             if (results && results.length > 0) {
                 var storedHash = results[0].user._data.data.password;
-                console.log(storedHash);
                 return bcrypt.compareAsync(inputPassword, storedHash);
             }
         })
@@ -46,9 +45,59 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
         });
 };
 
-// Go and get the resources for this user from the data container
+// Go and get the groups for this User.
+UserService.prototype.groups = function (userName) {
+    var queryText = [
+        "MATCH (n {name : {userName} })-[IS_IN]-(group)",
+        "RETURN g"
+    ].join('\n');
+    return db.queryAsync(queryText, {userName: userName})
+        .then(function (results) {
+            var retArray = [];
+            if (results && results.length > 0) {
+                for (var i = 0; i < results.length ; i++) {
+                    retArray.push(results[i].group._data.data.name);
+                }
+            }
+            return retArray;
+        })
+        .catch(function (e) {
+            throw e;
+        });
+};
+
+// Go and get the actions for this User
+UserService.prototype.actions = function (userName) {
+    var queryText = [
+        "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action) ",
+        "RETURN g,action"
+    ].join('\n');
+    return db.queryAsync(queryText, {userName: userName})
+        .then(function (results) {
+            // TODO
+            // Need to work out here how to populate a map of
+            // Group => Action from the sample response.
+        })
+        .catch(function (e) {
+            throw e;
+        });
+};
+
 UserService.prototype.resources = function (userName) {
-    return false;
+    var queryText = [
+         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action)-[ON]-(re:Resource) ",
+        "RETURN DISTINCT n,action,re"
+    ].join('\n');
+    return db.queryAsync(queryText, {userName: userName})
+        .then(function (results) {
+            // TODO
+            // Should we return an array of tuples here ?
+            // e.g. [(user, Action, Resource), (user, Action, Resource
+            // ??
+        })
+        .catch(function (e) {
+            throw e;
+        });
 };
 
 module.exports = new UserService();
