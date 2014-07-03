@@ -2,7 +2,8 @@
 $(function () {
     "use strict";
 
-    var neoBaseUrl = "http://localhost:7474/db/data/";
+    var neoBaseUrl = "http://localhost:7474/db/data/",
+        interval = 2000;
 
     // Ping the base url for connectivity.
     setInterval(function () {
@@ -15,6 +16,7 @@ $(function () {
                     .addClass('label-success')
                     .text('Connection Ok');
             }
+            interval = 30000;
         });
 
         uptimePingRequest.error(function () {
@@ -27,7 +29,7 @@ $(function () {
             }
         });
 
-    }, 30000);
+    }, interval);
 
     $('#signIn').on('submit', function (event) {
         event.preventDefault();
