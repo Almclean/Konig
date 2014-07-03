@@ -1,21 +1,17 @@
 /**
  * Created by almclean on 24/06/2014.
  */
+/*jslint node: true */
 "use strict";
-var db = require('./db');
-var util = require('util');
-var events = require('events');
+var _serviceRoot_ = 'http://localhost:7474/db/data/';
+var api = new (require('../services/api'))(_serviceRoot_);
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
 Promise.promisifyAll(bcrypt);
-Promise.promisifyAll(db);
 
 var UserService = function () {
     this.name = "UserService";
-    events.EventEmitter.call(this);
 };
-
-util.inherits(UserService, events.EventEmitter);
 
 // Go and check if this user password matches the database
 UserService.prototype.authenticate = function (userName, inputPassword) {
@@ -24,7 +20,7 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
         "RETURN user"
     ].join('\n');
 
-    return db.queryAsync(queryText, {userName: userName})
+    return api.query(queryText, {userName: userName})
         .then(function (results) {
             if (results && results.length > 0) {
                 var storedHash = results[0].user._data.data.password;
@@ -48,14 +44,14 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
 // Go and get the groups for this User.
 UserService.prototype.groups = function (userName) {
     var queryText = [
-        "MATCH (n {name : {userName} })-[IS_IN]-(group)",
+        "MATCH (n {name : {userName} })-[IS_IN]-(g)",
         "RETURN g"
     ].join('\n');
-    return db.queryAsync(queryText, {userName: userName})
+    return api.query(queryText, {userName: userName})
         .then(function (results) {
             var retArray = [];
             if (results && results.length > 0) {
-                for (var i = 0; i < results.length ; i++) {
+                for (var i = 0; i < results.length; i++) {
                     retArray.push(results[i].group._data.data.name);
                 }
             }
@@ -72,7 +68,7 @@ UserService.prototype.actions = function (userName) {
         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action) ",
         "RETURN g,action"
     ].join('\n');
-    return db.queryAsync(queryText, {userName: userName})
+    return api.query(queryText, {userName: userName})
         .then(function (results) {
             // TODO
             // Need to work out here how to populate a map of
@@ -85,10 +81,10 @@ UserService.prototype.actions = function (userName) {
 
 UserService.prototype.resources = function (userName) {
     var queryText = [
-         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action)-[ON]-(re:Resource) ",
+        "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action)-[ON]-(re:Resource) ",
         "RETURN DISTINCT n,action,re"
     ].join('\n');
-    return db.queryAsync(queryText, {userName: userName})
+    return api.query(queryText, {userName: userName})
         .then(function (results) {
             // TODO
             // Should we return an array of tuples here ?

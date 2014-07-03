@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var p = require('bluebird');
-var api = p.promisifyAll(require('../services/api'));
+var api = require('../services/api');
 var userService = p.promisifyAll(require('../services/UserService'));
 
 
@@ -21,9 +21,11 @@ router.route('/api/rawquery')
         // Send off the query to the API...
         api.query(queryText)
             .then(function (results) {
-                console.log('retval = results');
                 res.json(results);
-            }).done();
+            })
+            .catch(function (e) {
+                next(e);
+            });
     });
 
 router.route('/authenticate')
@@ -36,6 +38,9 @@ router.route('/authenticate')
         userService.authenticate(username, password)
             .then(function (result) {
                 res.json(result);
+            })
+            .catch(function (e) {
+                next(e);
             });
     });
 
