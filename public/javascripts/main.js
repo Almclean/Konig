@@ -35,9 +35,7 @@ $(function () {
         event.preventDefault();
         $.post('/authenticate', $('#signIn').serialize(), function (data) {
             if (data.authenticated === true) {
-                $('#usernameInput').css('visibility', 'hidden');
-                $('#passwordInput').css('visibility', 'hidden');
-                $('#btnSignIn').text('Log Out');
+                $('#signIn').fadeOut();
                 $('#welcome').text('Welcome ' + data.user);
             }
         });
