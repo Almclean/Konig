@@ -4,7 +4,8 @@
 /*jslint node: true */
 "use strict";
 var _serviceRoot_ = 'http://localhost:7474/db/data/';
-var api = new (require('../services/api'))(_serviceRoot_);
+var Api = require('../services/api');
+var apiInstance = new Api(_serviceRoot_);
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
 Promise.promisifyAll(bcrypt);
@@ -20,7 +21,7 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
         "RETURN user"
     ].join('\n');
 
-    return api.query(queryText, {userName: userName})
+    return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             if (results && results.length > 0) {
                 var storedHash = results[0].user._data.data.password;
@@ -47,7 +48,7 @@ UserService.prototype.groups = function (userName) {
         "MATCH (n {name : {userName} })-[IS_IN]-(g)",
         "RETURN g"
     ].join('\n');
-    return api.query(queryText, {userName: userName})
+    return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             var retArray = [];
             if (results && results.length > 0) {
@@ -68,7 +69,7 @@ UserService.prototype.actions = function (userName) {
         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action) ",
         "RETURN g,action"
     ].join('\n');
-    return api.query(queryText, {userName: userName})
+    return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             // TODO
             // Need to work out here how to populate a map of
@@ -84,7 +85,7 @@ UserService.prototype.resources = function (userName) {
         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action)-[ON]-(re:Resource) ",
         "RETURN DISTINCT n,action,re"
     ].join('\n');
-    return api.query(queryText, {userName: userName})
+    return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             // TODO
             // Should we return an array of tuples here ?
@@ -96,4 +97,4 @@ UserService.prototype.resources = function (userName) {
         });
 };
 
-module.exports = new UserService();
+module.exports = UserService;

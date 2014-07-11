@@ -4,38 +4,20 @@
 var express = require('express');
 var router = express.Router();
 var p = require('bluebird');
-var api = require('../services/api');
-var userService = p.promisifyAll(require('../services/UserService'));
-
+var UserService = require('../services/UserService');
+var us = new UserService();
 
 /* GET home page. */
 router.get('/', function (req, res) {
     res.render('index', { title: 'Konig' });
 });
 
-// Start of API commands
-router.route('/api/rawquery')
-    .post(function (req, res, next) {
-        var queryText = req.body.cql;
-        console.log('CQL : ' + queryText);
-        // Send off the query to the API...
-        api.query(queryText)
-            .then(function (results) {
-                res.json(results);
-            })
-            .catch(function (e) {
-                next(e);
-            });
-    });
-
 router.route('/authenticate')
     .post(function (req, res, next) {
-        console.log(req.body);
+        var username = req.body.usernameInput,
+            password = req.body.passwordInput;
 
-        var username = req.body.usernameInput;
-        var password = req.body.passwordInput;
-        console.log("Going to call user service. username = " + username + " pwd = " + password);
-        userService.authenticate(username, password)
+        us.authenticate(username, password)
             .then(function (result) {
                 res.json(result);
             })
