@@ -8,10 +8,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
-
-var app = express(),
-    server = require('http').createServer(app);
-
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,7 +17,9 @@ app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/icons/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -57,8 +56,6 @@ app.use(function (err, req, res, next) {
     });
 });
 
-exports = module.exports = server;
-
-exports.use = function () {
-    app.use.apply(app, arguments);
-};
+var server = app.listen(3001, function () {
+    console.info("Started application, listening on : " + server.address().port);
+})

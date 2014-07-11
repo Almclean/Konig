@@ -32,6 +32,13 @@ ks-neo4j-start:
     - 'shell:start_neo4j'
 
 # ==============================================
+# start the app, cli version, kicks neo off in the background.
+# ==============================================
+ks-cli-start:
+    - 'shell:start_neo4j'
+    - 'shell:start_app'
+
+# ==============================================
 # ks-start start the Neo4j server and then the
 # express server
 # ==============================================
