@@ -8,12 +8,12 @@ $(function () {
     // Populate the drag drop area with it
 
     function createElement(value, listId) {
-        var elem = ["<li class=\"list-group-item\">",
+        var elem = ["<li class=\"list-group-item\" id=\"drag-list\">",
             value,
             "</li>"
         ].join('');
 
-        $(listId).append(elem);
+        $(listId).append(elem).sortable();
     }
 
     $.getJSON('/api/metaData', function (data) {

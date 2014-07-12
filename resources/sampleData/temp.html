@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head><title>Query Builder</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="bootstrap-3.1.1/js/bootstrap.min.js"></script>
+    <script src="/javascripts/main.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="bootstrap-3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/style.css" rel="stylesheet">
+    <script src="javascripts/main.js"></script>
+<body>
+<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle"><span
+                    class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span
+                    class="icon-bar"></span></button>
+            <a href="#" class="navbar-brand">Konig</a></div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+            </ul>
+            <p class="navbar-text"><span id="srvStatus" class="label label-danger">No Connection</span></p>
+
+            <p id="welcome" class="navbar-text"></p>
+
+            <form id="signIn" class="navbar-form navbar-right">
+                <div class="form-group"><label for="usernameInput" class="sr-only">User Name</label><input type="text"
+                                                                                                           name="usernameInput"
+                                                                                                           placeholder="User Name"
+                                                                                                           class="form-control">
+                </div>
+                <div class="form-group"><label for="passwordInput" class="sr-only">Password</label><input
+                        type="password" name="passwordInput" placeholder="Password" class="form-control"></div>
+                <button id="btnSignIn" type="submit" class="btn btn-default">Sign in</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container-fluid front-page">
+    <div class="container-fluid">
+        <form>
+            <fieldset>
+                <legend>Graph Metadata
+                    <div class
+                    "row>
+                    <div id="nodeTypes" class="col-md-4"><label>Node Types</label>
+                        <ul id="nodeTypeList" class="list-group"></ul>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div id="relationships" class="col-md-4"><label>Relationships</label>
+                        <ul id="relationshipList" class="list-group"></ul>
+                    </div>
+    </div>
+    </legend></fieldset></form></div>
+<div class="container-fluid">
+    <form>
+        <fieldset>
+            <legend>Query
+                <div name="builtQuery"></div>
+            </legend>
+        </fieldset>
+        <button id="executeQuery" type="submit" class="btn btn-default">Execute Query</button>
+        <button id="saveQuery" type="submit" class="btn btn-default">Save Query As...
+            <div name="metaDataContent"></div>
+        </button>
+    </form>
+</div>
+</div>
+<script src="/javascripts/queryBuilder.js"></script>
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+</body>
+</head></html>
