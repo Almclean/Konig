@@ -5,4 +5,17 @@ block content
             form
                 fieldset
                     legend Graph Metadata
-                        div(name="metaDataContent")
+                        div(class"row")
+                            div(class="col-md-4" id="nodeTypes")
+                                label Node Types
+                            div(class="col-md-4" id="relationships")
+                                label Relationships
+                            div(class="col-md-4" id="labels")
+                                label Labels
+        div(class="container-fluid")
+            form
+                fieldset
+                    legend Query
+                        div(name="builtQuery")
+                button(id="executeQuery" type="submit" class="btn btn-default") Execute Query
+                button(id="saveQuery" type="submit" class="btn btn-default") Save Query As...
