@@ -5,20 +5,32 @@
 /*jshint jquery: true */
 
 $(function () {
-    // On page load.
-
-    // Pull in the metadata
     // Populate the drag drop area with it
 
-    $.getJSON('/api/metaData', function(data) {
-        var dataObj = JSON.parse(data);
+    $.getJSON('/api/metaData', function (data) {
 
-        var labels = dataObj.labels,
-            relationshipTypes = dataObj.relationships,
-            indexes = dataObj.indexes;
+        var labels = data.labels,
+            relationshipTypes = data.relationships,
+            indexes = data.indexes;
 
+        // Populate the nodeTypes
+        $.each(labels, function (index, value) {
+            var elem = ["<li class=\"list-group-item\">",
+                value,
+                "</li>"
+            ].join('');
 
+            $("#nodeTypeList").append(elem);
+        });
 
+        // Populate the relationships
+        $.each(relationshipTypes, function (index, value) {
+            var elem = ["<li class=\"list-group-item\">",
+                value,
+                "</li>"
+            ].join('');
 
+            $("#relationshipList").append(elem);
+        });
     });
 });
