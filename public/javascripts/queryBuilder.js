@@ -7,6 +7,15 @@
 $(function () {
     // Populate the drag drop area with it
 
+    function createElement(value, listId) {
+        var elem = ["<li class=\"list-group-item\">",
+            value,
+            "</li>"
+        ].join('');
+
+        $(listId).append(elem);
+    }
+
     $.getJSON('/api/metaData', function (data) {
 
         var labels = data.labels,
@@ -15,22 +24,12 @@ $(function () {
 
         // Populate the nodeTypes
         $.each(labels, function (index, value) {
-            var elem = ["<li class=\"list-group-item\">",
-                value,
-                "</li>"
-            ].join('');
-
-            $("#nodeTypeList").append(elem);
+            createElement(value, "#nodeTypeList");
         });
 
         // Populate the relationships
         $.each(relationshipTypes, function (index, value) {
-            var elem = ["<li class=\"list-group-item\">",
-                value,
-                "</li>"
-            ].join('');
-
-            $("#relationshipList").append(elem);
+            createElement(value, "#relationshipList");
         });
     });
 });
