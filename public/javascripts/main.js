@@ -1,3 +1,4 @@
+/*jshint jquery: true */
 // Event Handlers
 $(function () {
     "use strict";
