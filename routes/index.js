@@ -12,6 +12,11 @@ router.get('/', function (req, res) {
     res.render('index', { title: 'Konig' });
 });
 
+// Get the QueryBuilder page
+router.get('/queryBuilder', function (req, res) {
+    res.render('queryBuilder', { title: 'Query Builder'});
+});
+
 router.route('/authenticate')
     .post(function (req, res, next) {
         var username = req.body.usernameInput,
