@@ -7,13 +7,22 @@
 $(function () {
     // Populate the drag drop area with it
 
-    function createElement(value, listId) {
-        var elem = ["<li class=\"list-group-item\" id=\"drag-list\">",
+    // Make query sentence a drag target
+    $(".relationConnect, .nodeConnect .emptyClass").sortable({
+        placeholder: "ui-state-highlight",
+        forcePlaceholderSize: true
+    });
+
+    function createElement(value, listId, connector) {
+        var elem = ["<li class=\"list-group-item ui-state-default\" id=\"drag-list\">",
             value,
             "</li>"
         ].join('');
 
-        $(listId).append(elem).sortable();
+        $(listId).append(elem).sortable({
+            connectWith: "#emptyList",
+            dropOnEmpty: true
+        });
     }
 
     $.getJSON('/api/metaData', function (data) {
@@ -21,12 +30,13 @@ $(function () {
             relationshipTypes = data.relationships;
         // Populate the nodeTypes
         $.each(labels, function (index, value) {
-            createElement(value, "#nodeTypeList");
+            createElement(value, "#nodeTypeList", ".nodeConnect");
         });
         // Populate the relationships
         $.each(relationshipTypes, function (index, value) {
-            createElement(value, "#relationshipList");
+            createElement(value, "#relationshipList", ".relationConnect");
         });
+
     });
 
     $('#executeQuery').on('click', function (event) {
