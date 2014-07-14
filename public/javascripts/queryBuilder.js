@@ -17,19 +17,22 @@ $(function () {
     }
 
     $.getJSON('/api/metaData', function (data) {
-
         var labels = data.labels,
-            relationshipTypes = data.relationships,
-            indexes = data.indexes;
-
+            relationshipTypes = data.relationships;
         // Populate the nodeTypes
         $.each(labels, function (index, value) {
             createElement(value, "#nodeTypeList");
         });
-
         // Populate the relationships
         $.each(relationshipTypes, function (index, value) {
             createElement(value, "#relationshipList");
+        });
+    });
+
+    $('#executeQuery').on('click', function (event) {
+        event.preventDefault();
+        $.post('/api/nodeQuery', $('#query').serialize(), function (data) {
+            console.log(data);
         });
     });
 });

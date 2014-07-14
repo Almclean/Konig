@@ -20,20 +20,23 @@ block content
             div(class="row")
                 div(class="col-md-2")
                 div(class="col-md-8")
-                    form
+                    form(id="query")
                         fieldset
                             legend Query
                                 div(name="builtQuery")
                         div(class="row" id="queryComponents")
-                            div(class="col-md-3" id="node1")
+                            div(class="col-md-3" name="node1")
                                 label NODE 1 HERE
                                 ul(class="list-group" id="node1List")
-                            div(class="col-md-3" id="rel1")
+                                    li Party
+                            div(class="col-md-3" name="rel1")
                                 label Relationship 1 HERE
                                 ul(class="list-group" id="rel1List")
-                            div(class="col-md-3" id="node2")
+                                    li HAS_RATING
+                            div(class="col-md-3" name="node2")
                                 label NODE 2 HERE
                                 ul(class="list-group" id="node2List")
+                                    li Rating
                             div(class="col-md-3" id="btnAdd")
                                 button(id="addClause" type="submit" class="btn btn-default") Add Clause
                         button(id="executeQuery" type="submit" class="btn btn-default") Execute Query
