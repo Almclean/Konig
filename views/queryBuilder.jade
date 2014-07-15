@@ -15,28 +15,27 @@ block content
                                     div(class="col-md-4" id="relationships")
                                         label Relationships
                                         ul(class="list-group" id="relationshipList")
-                div(class="col-md-2")
-        div(class="container-fluid")
+                                    div(class="col-md-4" id="relationships")
+                                        label empty
+                                        ul(class="list-group" id="emptyList")
+                                            li(class="list-group-item") Bollocks
             div(class="row")
                 div(class="col-md-2")
                 div(class="col-md-8")
                     form(id="query")
                         fieldset
                             legend Query
-                                div(name="builtQuery")
                         div(class="row" id="queryComponents")
                             div(class="col-md-3" name="node1")
                                 label NODE 1 HERE
-                                ul(class="list-group" id="node1List")
-                                    li Party
+                                ul(class="list-group entityConnect" id="node1List")
                             div(class="col-md-3" name="rel1")
                                 label Relationship 1 HERE
-                                ul(class="list-group" id="rel1List")
-                                    li HAS_RATING
+                                ul(class="list-group entityConnect" id="rel1List")
                             div(class="col-md-3" name="node2")
                                 label NODE 2 HERE
-                                ul(class="list-group" id="node2List")
-                                    li Rating
+                                ul(class="list-group entityConnect" id="node2List")
+                                    li(class="list-group-item") Bollocks
                             div(class="col-md-3" id="btnAdd")
                                 button(id="addClause" type="submit" class="btn btn-default") Add Clause
                         button(id="executeQuery" type="submit" class="btn btn-default") Execute Query

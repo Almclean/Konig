@@ -8,10 +8,7 @@ $(function () {
     // Populate the drag drop area with it
 
     // Make query sentence a drag target
-    $(".relationConnect, .nodeConnect .emptyClass").sortable({
-        placeholder: "ui-state-highlight",
-        forcePlaceholderSize: true
-    });
+    $(".entityConnect").sortable();
 
     function createElement(value, listId, connector) {
         var elem = ["<li class=\"list-group-item ui-state-default\" id=\"drag-list\">",
@@ -20,7 +17,8 @@ $(function () {
         ].join('');
 
         $(listId).append(elem).sortable({
-            connectWith: "#emptyList",
+            connectWith: ".entityConnect",
+            helper: "clone",
             dropOnEmpty: true
         });
     }
