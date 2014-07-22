@@ -5,13 +5,19 @@
 /*jshint jquery: true */
 
 $(function () {
-    // Populate the drag drop area with it
-
     // Make query sentence a drag target
-    $(".entityConnect").sortable();
+    $(".entityConnect").sortable({
+        receive:
+            function (event, ui) {
+                // so if > 1
+                if ($(this).children().length > 1) {
+                    $(ui.sender).sortable('cancel');
+                }
+            }
+    });
 
     function createElement(value, listId, connector) {
-        var elem = ["<li class=\"list-group-item ui-state-default\" id=\"drag-list\">",
+        var elem = ["<li class=\"list-group-item\" id=\"drag-list\">",
             value,
             "</li>"
         ].join('');
@@ -19,6 +25,8 @@ $(function () {
         $(listId).append(elem).sortable({
             connectWith: ".entityConnect",
             helper: "clone",
+            opacity: 0.6,
+            placeholder: "ui-state-highlight",
             dropOnEmpty: true
         });
     }

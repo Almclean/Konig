@@ -6,3 +6,16 @@ body {
     padding: 40px 15px;
     text-align: center;
 }
+
+.entityConnect {
+    padding: 10px;
+    height: 0.5em;
+    line-height: 1em;
+}
+
+.ui-state-highlight {
+    border-style: dashed;
+    list-style-type: circle;
+    border-color: grey;
+    list-style-position: inside;
+}

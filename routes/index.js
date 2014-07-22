@@ -11,12 +11,12 @@ var us = new UserService();
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', { title: 'Konig' });
+    res.render('index', { title: 'Konig - Home' });
 });
 
 // Get the QueryBuilder page
 router.get('/queryBuilder', function (req, res) {
-    res.render('queryBuilder', { title: 'Query Builder'});
+    res.render('queryBuilder', { title: 'Konig - Query Builder'});
 });
 
 // Start of API
