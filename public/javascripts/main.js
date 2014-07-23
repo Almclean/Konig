@@ -3,13 +3,11 @@
 $(function () {
     "use strict";
 
-    var neoBaseUrl = "http://localhost:7474/db/data/",
-        interval = 2000;
+    var interval = 2000;
 
-    // Ping the base url for connectivity.
-    setInterval(function () {
-        var uptimePingRequest = $.get(neoBaseUrl);
-
+    function pingBaseUrlMetadata() {
+        var uptimePingRequest = $.get('/api/metaData');
+        console.log('Value of interval is now : ' + interval);
         uptimePingRequest.success(function () {
             if ($('#srvStatus').hasClass('label-danger')) {
                 $('#srvStatus')
@@ -21,7 +19,6 @@ $(function () {
         });
 
         uptimePingRequest.error(function () {
-            "use strict";
             if ($('#srvStatus').hasClass('label-success')) {
                 $('#srvStatus')
                     .removeClass('label-success')
@@ -29,8 +26,10 @@ $(function () {
                     .text('No Connection');
             }
         });
+    }
 
-    }, interval);
+    // Ping the base url for connectivity.
+    setInterval(pingBaseUrlMetadata, interval);
 
     $('#signIn').on('submit', function (event) {
         event.preventDefault();
