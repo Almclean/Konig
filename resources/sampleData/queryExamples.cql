@@ -1,1 +1,4 @@
-CREATE (Q1:Query {title: "Party by Location", version: 1, queryText: "MATCH (pty:Party)-[IS_IN]->(loc:Location) RETURN pty, loc", triplets: [[{source: {type: "Party", filter: null}},{relationship: {type: "IS_IN", filter: null}},{target: {type: "Location", filter: null}}]]})
+CREATE (Q1:Query {title: "Party by Location", version: 1, queryText: "MATCH (pty:Party)-[IS_IN]->(loc:Location) RETURN pty, loc"})
+CREATE (T1:Triplet {source: "Party", relationship: "IS_IN", target: "Location", sourceConstraint: "blah", relConstraint: "blah", targetConstraint: "blah"})
+
+CREATE (Q1)-[:COMPRISED_OF]->(T1)
