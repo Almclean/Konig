@@ -1,32 +1,19 @@
 /*jslint node: true */
 "use strict";
 var Promise = require('bluebird');
-var db = require('./db');
+var dbLib = require('./db')
+var db = dbLib.db;
+var getSimpleJ
 var r = Promise.promisifyAll(require('request'));
 Promise.promisifyAll(db);
 
 // Constructor
 // @param : The Neo service root.
-function Api(serviceRoot) {
-    this.serviceRoot = serviceRoot;
-}
-
-// Private helper function, just to get simple async json responses.
-function getSimpleJSONResponse(uri) {
-    return r.getAsync(uri)
-        .spread(function (response, body) {
-            if (response.statusCode === 200) {
-                return JSON.parse(body);
-            }
-        })
-        .catch(function (e) {
-            throw e;
-        });
-}
+function Api() { }
 
 // Checks the service root to ensure that the REST service is operational.
 Api.prototype.pingService = function () {
-    return getSimpleJSONResponse(this.serviceRoot);
+    return dbLib.getSimpleJSONResponse();
 };
 
 Api.prototype.getNonAdminRelationships = function () {
@@ -52,7 +39,7 @@ Api.prototype.getMetaData = function () {
         .then(function (result) {
             var labels = this.getNonAdminLabels(),
                 relationshipTypes = this.getNonAdminRelationships(),
-                indexes = getSimpleJSONResponse(result.indexes);
+                indexes = dbLib.getSimpleJSONResponse(result.indexes);
             return Promise.props({
                 labels: labels,
                 indexes: indexes,

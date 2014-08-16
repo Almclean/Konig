@@ -1,9 +1,8 @@
 /*jslint node: true */
 "use strict";
 
-var _serviceRoot_ = 'http://localhost:7474/db/data/';
 var Api = require('../services/api');
-var apiInstance = new Api(_serviceRoot_);
+var apiInstance = new Api();
 
 var GraphService = function () {
     this.name = "graphService";
