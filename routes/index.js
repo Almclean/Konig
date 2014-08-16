@@ -19,6 +19,11 @@ router.get('/queryBuilder', function (req, res) {
     res.render('queryBuilder', { title: 'Konig - Query Builder'});
 });
 
+// Get the QueryEditor page
+router.get('/queryEditor', function (req, res) {
+    res.render('queryEditor', { title: 'Konig - Query Editor'});
+});
+
 // Start of API
 router.get('/api/metaData', function (req, res, next) {
     gs.getMetaData()
