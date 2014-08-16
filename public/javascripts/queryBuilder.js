@@ -36,11 +36,13 @@ $(function () {
             relationshipTypes = data.relationships;
         // Populate the nodeTypes
         $.each(labels, function (index, value) {
-            createElement(value, "#nodeTypeList", ".nodeConnect");
+            $.each(value, function(index, v) {
+                createElement(v, "#nodeTypeList", ".nodeConnect");
+            });
         });
         // Populate the relationships
         $.each(relationshipTypes, function (index, value) {
-            createElement(value, "#relationshipList", ".relationConnect");
+            createElement(value.r, "#relationshipList", ".relationConnect");
         });
 
     });

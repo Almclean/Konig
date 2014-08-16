@@ -29,12 +29,30 @@ Api.prototype.pingService = function () {
     return getSimpleJSONResponse(this.serviceRoot);
 };
 
+Api.prototype.getNonAdminRelationships = function () {
+    var queryText = [
+            'MATCH (n)-[r]-(m)',
+            'WHERE NOT has(r.admin)',
+            'RETURN distinct type(r) as r'
+    ].join('\n');
+    return this.query(queryText, {});
+};
+
+Api.prototype.getNonAdminLabels = function () {
+    var queryText = [
+        'MATCH n WHERE NOT has(n.admin)',
+        'RETURN distinct labels(n) as l'
+    ].join('\n');
+
+    return this.query(queryText, {});
+};
+
 Api.prototype.getMetaData = function () {
-    return this.pingService()
+    return this.pingService().bind(this)
         .then(function (result) {
-            var labels = getSimpleJSONResponse(result.node_labels),
-                indexes = getSimpleJSONResponse(result.indexes),
-                relationshipTypes = getSimpleJSONResponse(result.relationship_types);
+            var labels = this.getNonAdminLabels(),
+                relationshipTypes = this.getNonAdminRelationships(),
+                indexes = getSimpleJSONResponse(result.indexes);
             return Promise.props({
                 labels: labels,
                 indexes: indexes,
@@ -44,7 +62,7 @@ Api.prototype.getMetaData = function () {
         .catch(function (e) {
             throw e;
         });
-}
+};
 
 // Performs direct Cypher queries, bindings optional.
 Api.prototype.query = function (queryText, bindings) {
