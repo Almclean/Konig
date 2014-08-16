@@ -11,10 +11,8 @@ block content
                                 h3(class="panel-title") Saved Queries
                             div(class="panel-body")
                                 div(class="row")
-                                    div(class="col-md-8" id="savedQueries")
+                                    div(class="col-md-12  " id="savedQueries")
                                         h3 Queries
                                         ul(class="list-group" id="savedQueriesList")
-                                    div(class="col-md-4" id="editButtons")
-                                        h3 Edit
-                                        form(id="controls")
-                                            button(id="editQuery" type="submit" class="btn btn-default") Edit
+    script(src='/javascripts/queryEditor.js')
+    script(src='//code.jquery.com/ui/1.11.0/jquery-ui.min.js')

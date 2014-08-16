@@ -33,5 +33,23 @@ GraphService.prototype.getNodes = function (node1, rel1, node2) {
         });
 };
 
+GraphService.prototype.getSavedQueries = function () {
+    // TODO Write query
+    var queryText = [
+        "MATCH (n:Party) RETURN n"
+    ].join('\n');
+    return apiInstance.query(queryText)
+        .then(function (results) {
+            var retArray = [];
+            if (results && results.length > 0) {
+                for (var i = 0; i < results.length; i++) {
+                    retArray.push(results[i].n._data.data.name);
+                }
+            }
+            return retArray;
+        })
+        .catch(function (e) {
+            throw e;
+        });};
 module.exports = GraphService;
 

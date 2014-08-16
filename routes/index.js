@@ -64,4 +64,13 @@ router.route('/authenticate')
             });
     });
 
+router.get('/api/savedQueries', function (req, res, next) {
+    gs.getSavedQueries()
+        .then(function (result) {
+            res.json(result);
+        })
+        .catch(function (err) {
+            next(err);
+        });
+});
 module.exports = router;

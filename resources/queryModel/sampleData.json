@@ -1,0 +1,29 @@
+// Example JSON for query model returned from Neo4j
+// Query can be seen in the query text attribute
+
+{"queries": [
+    {
+        "title": "Party by Location",
+        "version": 1,
+        "queryText": "MATCH (pty:Party)-[IS_IN]->(loc:Location) RETURN pty, loc",
+        "triplets": [
+            {
+                "source": "Party",
+                "relationship": "IS_IN",
+                "target": "Location"
+            }
+        ]
+    },
+    {
+        "title": "Party by Location",
+        "version": 2,
+        "queryText": "MATCH (pty:Party { name:'MS' })-[IS_IN]->(loc:Location) RETURN pty, loc",
+        "triplets": [
+            {
+                "source": "Party",
+                "relationship": "IS_IN",
+                "target": "Location"
+            }
+        ]
+    }
+]}
