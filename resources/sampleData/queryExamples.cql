@@ -1,0 +1,1 @@
+CREATE (Q1:Query {title: "Party by Location", version: 1, queryText: "MATCH (pty:Party)-[IS_IN]->(loc:Location) RETURN pty, loc", triplets: [[{source: {type: "Party", filter: null}},{relationship: {type: "IS_IN", filter: null}},{target: {type: "Location", filter: null}}]]})

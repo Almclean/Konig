@@ -11,4 +11,6 @@ function Query (propMap) {
     this.triplets = propMap.triplets;
 }
 
+module.exports = Query;
+
 
