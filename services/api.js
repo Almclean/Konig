@@ -3,8 +3,6 @@
 var Promise = require('bluebird');
 var dbLib = require('./db')
 var db = dbLib.db;
-var getSimpleJ
-var r = Promise.promisifyAll(require('request'));
 Promise.promisifyAll(db);
 
 // Constructor
