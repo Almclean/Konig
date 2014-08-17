@@ -5,12 +5,11 @@
 "use strict";
 
 function Query (propMap) {
-    this.queryTitle = propMap.queryTitle;
-    this.queryVersion = propMap.queryVersion;
+    this.queryTitle = propMap.title;
+    this.queryVersion = propMap.version;
     this.queryText = propMap.queryText;
     this.triplets = propMap.triplets;
 }
 
 module.exports = Query;
-
 

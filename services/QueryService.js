@@ -6,11 +6,12 @@
 
 var Api = require('../services/api');
 var apiInstance = new Api();
-var Promise = require('bluebird');
 var Query = require('../models/Query');
 
 function QueryService () {}
 
+// @Param : Title of query
+// @Returns : array of matching queries complete with triplets
 QueryService.prototype.loadByTitle = function (title) {
     var queryText = [
         'MATCH (q:Query {title: {title} })-[:COMPRISED_OF]->(t:Triplet)',
@@ -30,7 +31,8 @@ QueryService.prototype.loadByTitle = function (title) {
                     queries.push(newQuery);
                 }
             }
-            console.log(JSON.stringify(queries, null, "\t"));
+            var nq = new Query(queries[0]);
+            console.log(JSON.stringify(nq, null, "\t"));
         }
     );
 };
