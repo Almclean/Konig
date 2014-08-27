@@ -7,17 +7,16 @@
 $(function () {
     // Make query sentence a drag target
     $(".entityConnect").sortable({
-        receive:
-            function (event, ui) {
-                // so if > 1
-                if ($(this).children().length > 1) {
-                    $(ui.sender).sortable('cancel');
-                }
+        receive: function (event, ui) {
+            // so if > 1
+            if ($(this).children().length > 1) {
+                $(ui.sender).sortable('cancel');
             }
+        }
     });
 
     function createElement(value, listId, connector) {
-        var elem = ["<li class=\"list-group-item\" id=\"drag-list\">",
+        var elem = ["<li class=\"list-group-item\" id=\"drag-list_" + value + "\">",
             value,
             "</li>"
         ].join('');
@@ -36,7 +35,7 @@ $(function () {
             relationshipTypes = data.relationships;
         // Populate the nodeTypes
         $.each(labels, function (index, value) {
-            $.each(value, function(index, v) {
+            $.each(value, function (index, v) {
                 createElement(v, "#nodeTypeList", ".nodeConnect");
             });
         });
@@ -49,7 +48,10 @@ $(function () {
 
     $('#executeQuery').on('click', function (event) {
         event.preventDefault();
-        $.post('/api/nodeQuery', $('#query').serialize(), function (data) {
+        var serialized = $('#node1List').sortable('serialize');
+        //var serialized1 = $('#rel1List').sortable('serialize');
+        //var serialized2 = $('#node2List').sortable('serialize');
+        $.post('/api/nodeQuery', serialized, function (data) {
             console.log(data);
         });
     });
