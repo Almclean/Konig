@@ -37,11 +37,7 @@ router.get('/api/metaData', function (req, res, next) {
 
 router.route('/api/nodeQuery')
     .post(function (req, res, next) {
-        var node1 = req.body.node1,
-            rel1 = req.body.rel,
-            node2 = req.body.node2;
-
-        gs.getNodes(node1, rel1, node2)
+        gs.getNodes(req.body.queryText)
             .then(function (result) {
                 res.json(result);
             })

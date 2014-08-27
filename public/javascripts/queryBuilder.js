@@ -15,21 +15,6 @@ $(function () {
         }
     });
 
-    function createElement(value, listId, connector) {
-        var elem = ["<li class=\"list-group-item\" id=\"drag-list_" + value + "\">",
-            value,
-            "</li>"
-        ].join('');
-
-        $(listId).append(elem).sortable({
-            connectWith: ".entityConnect",
-            helper: "clone",
-            opacity: 0.6,
-            placeholder: "ui-state-highlight",
-            dropOnEmpty: true
-        });
-    }
-
     $.getJSON('/api/metaData', function (data) {
         var labels = data.labels,
             relationshipTypes = data.relationships;
@@ -48,11 +33,64 @@ $(function () {
 
     $('#executeQuery').on('click', function (event) {
         event.preventDefault();
-        var serialized = $('#node1List').sortable('serialize');
-        //var serialized1 = $('#rel1List').sortable('serialize');
-        //var serialized2 = $('#node2List').sortable('serialize');
-        $.post('/api/nodeQuery', serialized, function (data) {
-            console.log(data);
+        $.post('/api/nodeQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List')), function (data) {
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    console.log(JSON.stringify(data[i]));
+                }
+            }
         });
     });
+
+    // Start of functions
+    function createElement(value, listId) {
+        var elem = ["<li class=\"list-group-item\" id=\"drag-list_" + value + "\">",
+            value,
+            "</li>"
+        ].join('');
+
+        $(listId).append(elem).sortable({
+            connectWith: ".entityConnect",
+            helper: "clone",
+            opacity: 0.6,
+            placeholder: "ui-state-highlight",
+            dropOnEmpty: true
+        });
+    }
+
+    // Given 3 lists nodeFrom, relationships and nodeTo create a Query object
+    // Simple query to start with just one row of data
+    function createQuery(fromNode, relationship, toNode) {
+        // TODO This will need to loop per row and create query tuples
+        var from = fromNode[0].textContent;
+        var rel = relationship[0].textContent;
+        var to = toNode[0].textContent;
+        return {
+            "title": "Party by Location",
+            "version": 1,
+            "queryText": "MATCH (from:" + from + ")-[rel:" + rel + "]->(to:" + to + ") RETURN from, to, rel",
+            "triplets": [
+                [
+                    {
+                        "source": {
+                            "type": from,
+                            "filter": null
+                        }
+                    },
+                    {
+                        "relationship": {
+                            "type": rel,
+                            "filter": null
+                        }
+                    },
+                    {
+                        "target": {
+                            "type": to,
+                            "filter": null
+                        }
+                    }
+                ]
+            ]
+        };
+    }
 });
