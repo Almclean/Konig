@@ -57,5 +57,7 @@ app.use(function (err, req, res, next) {
 });
 
 var server = app.listen(3001, function () {
-    console.info("Started application, listening on : " + server.address().port);
-})
+    console.info("Started application, listening on : " + server.address().port + '\n');
+});
+
+module.exports = app;

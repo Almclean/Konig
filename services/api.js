@@ -2,7 +2,7 @@
 "use strict";
 var Promise = require('bluebird');
 var dbLib = require('./db')
-var db = dbLib.db;
+var db = dbLib.getConnection();
 Promise.promisifyAll(db);
 
 // Constructor
@@ -11,7 +11,7 @@ function Api() { }
 
 // Checks the service root to ensure that the REST service is operational.
 Api.prototype.pingService = function () {
-    return dbLib.getSimpleJSONResponse();
+    return dbLib.getSimpleJSONResponse(dbLib.connectionString + '/db/data/');
 };
 
 Api.prototype.getNonAdminRelationships = function () {
@@ -36,12 +36,15 @@ Api.prototype.getMetaData = function () {
     return this.pingService().bind(this)
         .then(function (result) {
             var labels = this.getNonAdminLabels(),
-                relationshipTypes = this.getNonAdminRelationships(),
+                //relationshipTypes = this.getNonAdminRelationships(),
+                indexes = "";
+            if (result.hasOwnProperty('indexes')) {
                 indexes = dbLib.getSimpleJSONResponse(result.indexes);
+            }
             return Promise.props({
                 labels: labels,
-                indexes: indexes,
-                relationships: relationshipTypes
+                indexes: indexes
+//                relationships: relationshipTypes
             });
         })
         .catch(function (e) {
