@@ -50,7 +50,7 @@ router.route('/api/nodeQuery')
             });
     });
 
-router.route('/authenticate')
+router.route('/api/authenticate')
     .post(function (req, res, next) {
         var username = req.body.usernameInput,
             password = req.body.passwordInput;

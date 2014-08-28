@@ -29,11 +29,11 @@ $(function () {
     }
 
     // Ping the base url for connectivity.
-    setInterval(pingBaseUrlMetadata, interval);
+    //setInterval(pingBaseUrlMetadata, interval);
 
     $('#signIn').on('submit', function (event) {
         event.preventDefault();
-        $.post('/authenticate', $('#signIn').serialize(), function (data) {
+        $.post('/api/authenticate', $('#signIn').serialize(), function (data) {
             if (data.authenticated === true) {
                 $('#signIn').fadeOut();
                 $('#welcome').text('Welcome ' + data.user);
