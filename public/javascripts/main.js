@@ -29,7 +29,7 @@ $(function () {
     }
 
     // Ping the base url for connectivity.
-    //setInterval(pingBaseUrlMetadata, interval);
+    setInterval(pingBaseUrlMetadata, interval);
 
     $('#signIn').on('submit', function (event) {
         event.preventDefault();

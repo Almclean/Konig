@@ -4,8 +4,8 @@
 var express = require('express');
 var router = express.Router();
 var p = require('bluebird');
-var UserService = require('../services/UserService');
-var QueryService = require('../services/QueryService');
+var UserService = require('../services/userService');
+var QueryService = require('../services/queryService');
 var qs = new QueryService();
 var us = new UserService();
 

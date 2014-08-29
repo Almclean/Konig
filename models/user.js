@@ -3,7 +3,7 @@
  */
 
 "use strict";
-var userService = require('../services/UserService');
+var userService = require('../services/userService');
 
 function User(userName, password) {
     this.userName = userName;

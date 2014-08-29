@@ -6,7 +6,7 @@
 
 var Api = require('../services/api');
 var apiInstance = new Api();
-var Query = require('../models/Query');
+var Query = require('../models/query');
 
 //
 // This is the set of services that will query the data container and return values.
