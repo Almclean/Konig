@@ -5,8 +5,8 @@ var express = require('express');
 var router = express.Router();
 var p = require('bluebird');
 var UserService = require('../services/UserService');
-var GraphService = require('../services/GraphService');
-var gs = new GraphService();
+var QueryService = require('../services/QueryService');
+var qs = new QueryService();
 var us = new UserService();
 
 /* GET home page. */
@@ -24,9 +24,9 @@ router.get('/queryEditor', function (req, res) {
     res.render('queryEditor', { title: 'Konig - Query Editor'});
 });
 
-// Start of API
+// Start of API calls
 router.get('/api/metaData', function (req, res, next) {
-    gs.getMetaData()
+    qs.getMetaData()
         .then(function (result) {
             res.json(result);
         })
@@ -37,7 +37,7 @@ router.get('/api/metaData', function (req, res, next) {
 
 router.route('/api/nodeQuery')
     .post(function (req, res, next) {
-        gs.getNodes(req.body.queryText)
+        qs.getNodes(req.body.queryText)
             .then(function (result) {
                 res.json(result);
             })
@@ -48,10 +48,7 @@ router.route('/api/nodeQuery')
 
 router.route('/api/authenticate')
     .post(function (req, res, next) {
-        var username = req.body.usernameInput,
-            password = req.body.passwordInput;
-
-        us.authenticate(username, password)
+        us.authenticate(req.body.usernameInput, req.body.passwordInput)
             .then(function (result) {
                 res.json(result);
             })
@@ -61,7 +58,7 @@ router.route('/api/authenticate')
     });
 
 router.get('/api/savedQueries', function (req, res, next) {
-    gs.getSavedQueries()
+    qs.getSavedQueries()
         .then(function (result) {
             res.json(result);
         })
@@ -69,4 +66,5 @@ router.get('/api/savedQueries', function (req, res, next) {
             next(err);
         });
 });
+
 module.exports = router;

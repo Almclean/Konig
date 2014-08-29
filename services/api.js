@@ -1,7 +1,7 @@
 /*jslint node: true */
 "use strict";
 var Promise = require('bluebird');
-var dbLib = require('./db')
+var dbLib = require('./db');
 var db = dbLib.getConnection();
 Promise.promisifyAll(db);
 
@@ -36,15 +36,15 @@ Api.prototype.getMetaData = function () {
     return this.pingService().bind(this)
         .then(function (result) {
             var labels = this.getNonAdminLabels(),
-                //relationshipTypes = this.getNonAdminRelationships(),
+                relationshipTypes = this.getNonAdminRelationships(),
                 indexes = "";
             if (result.hasOwnProperty('indexes')) {
                 indexes = dbLib.getSimpleJSONResponse(result.indexes);
             }
             return Promise.props({
                 labels: labels,
-                indexes: indexes
-//                relationships: relationshipTypes
+                indexes: indexes,
+                relationships: relationshipTypes
             });
         })
         .catch(function (e) {
