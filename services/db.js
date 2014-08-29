@@ -1,32 +1,22 @@
 /*jslint node: true */
-"use strict";
+"use stri§ct";
 
 var neo4j = require('neo4j');
 var Promise = require('bluebird');
-var r = Promise.promisifyAll(require('request'));
-var connectionString = 'http://162.243.169.45:7474';
-var db = null;
+var neo = Promise.promisifyAll(require('neo4j-js'));
 
-// Private helper function, just to get simple async json responses.
-function getSimpleJSONResponse(uri) {
-    return r.getAsync(uri)
-        .spread(function (response, body) {
-            if (response.statusCode === 200) {
-                return JSON.parse(body);
-            }
+function Db(connectionString) {
+    this.connectionString = connectionString;
+    neo.connectAsync(this.connectionString).bind(this)
+        .then(function (graph) {
+            console.log('Connected');
+            this.dbInstance = Promise.promisifyAll(graph);
         })
         .catch(function (e) {
+            "use strict";
+            console.err('Hit a problem');
             throw e;
         });
 }
 
-function getDbConnection() {
-    if (!db) {
-        db = new neo4j.GraphDatabase(connectionString);
-        return db;
-    } else {
-        return db;
-    }
-}
-
-module.exports = {getConnection: getDbConnection, getSimpleJSONResponse: getSimpleJSONResponse, connectionString: connectionString};
+module.exports = Db;

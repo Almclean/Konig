@@ -1,17 +1,32 @@
 /*jslint node: true */
 "use strict";
 var Promise = require('bluebird');
+var r = Promise.promisifyAll(require('request'));
 var dbLib = require('./db');
-var db = dbLib.getConnection();
-Promise.promisifyAll(db);
 
 // Constructor
 // @param : The Neo service root.
-function Api() { }
+function Api() {
+    this.connectionString = 'http://162.243.169.45:7474/db/data';
+    this.db = new dbLib(this.connectionString).dbInstance;
+}
+
+Api.prototype.getSimpleJSONResponse = function (uri) {
+    console.log(uri);
+    return r.getAsync(uri)
+        .spread(function (response, body) {
+            if (response.statusCode === 200) {
+                return JSON.parse(body);
+            }
+        })
+        .catch(function (e) {
+            throw e;
+        });
+};
 
 // Checks the service root to ensure that the REST service is operational.
 Api.prototype.pingService = function () {
-    return dbLib.getSimpleJSONResponse(dbLib.connectionString + '/db/data/');
+    return this.getSimpleJSONResponse(this.connectionString);
 };
 
 Api.prototype.getNonAdminRelationships = function () {
@@ -35,16 +50,16 @@ Api.prototype.getNonAdminLabels = function () {
 Api.prototype.getMetaData = function () {
     return this.pingService().bind(this)
         .then(function (result) {
-            var labels = this.getNonAdminLabels(),
-                relationshipTypes = this.getNonAdminRelationships(),
-                indexes = "";
+            var labels = this.getNonAdminLabels();
+//                relationshipTypes = this.getNonAdminRelationships(),
+            var indexes = "";
             if (result.hasOwnProperty('indexes')) {
-                indexes = dbLib.getSimpleJSONResponse(result.indexes);
+                indexes = this.getSimpleJSONResponse(result.indexes);
             }
             return Promise.props({
                 labels: labels,
-                indexes: indexes,
-                relationships: relationshipTypes
+                indexes: indexes
+//                relationships: relationshipTypes
             });
         })
         .catch(function (e) {
@@ -54,7 +69,8 @@ Api.prototype.getMetaData = function () {
 
 // Performs direct Cypher queries, bindings optional.
 Api.prototype.query = function (queryText, bindings) {
-    return db.queryAsync(queryText, bindings)
+    console.log(this.db);
+    return this.db.queryAsync(queryText, bindings)
         .then(function (results) {
             return results;
         })
