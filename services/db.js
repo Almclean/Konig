@@ -1,22 +1,23 @@
 /*jslint node: true */
-"use stri§ct";
+"use strict";
 
-var neo4j = require('neo4j');
 var Promise = require('bluebird');
-var neo = Promise.promisifyAll(require('neo4j-js'));
+var util = require('util');
+var neo4j = Promise.promisifyAll(require('neo4j-js'));
 
 function Db(connectionString) {
     this.connectionString = connectionString;
-    neo.connectAsync(this.connectionString).bind(this)
-        .then(function (graph) {
-            console.log('Connected');
-            this.dbInstance = Promise.promisifyAll(graph);
-        })
-        .catch(function (e) {
-            "use strict";
-            console.err('Hit a problem');
-            throw e;
-        });
+    var that = this;
+    neo4j.connect(connectionString, setup);
+
+    function setup(err, graph) {
+        if (!err) {
+            Promise.promisifyAll(graph);
+            that.dbInstance = graph;
+        } else {
+            throw err;
+        }
+    }
 }
 
 module.exports = Db;

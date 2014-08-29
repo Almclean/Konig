@@ -7,7 +7,7 @@ var dbLib = require('./db');
 // Constructor
 // @param : The Neo service root.
 function Api() {
-    this.connectionString = 'http://162.243.169.45:7474/db/data';
+    this.connectionString = 'http://162.243.169.45:7474/db/data/';
     this.db = new dbLib(this.connectionString).dbInstance;
 }
 
