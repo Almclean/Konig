@@ -9,18 +9,19 @@ $(function () {
         //var labels = data.labels;
         // Populate the nodeTypes
         $.each(data, function (index, value) {
-            createElement(value, "#savedQueriesList");
+            console.log(value);
+            createQueryListItem(value.queryTitle, value.queryVersion, value.queryText, "#savedQueriesTable");
         });
 
     });
 
-    function createElement(value, listId) {
-        var elem = ["<li class=\"list-group-item\" id=\"drag-list\">",
-            value,
-            "</li>"
+    function createQueryListItem(title, version, text, tblId) {
+        var elem = ["<tr><td>" + title + "</td>",
+                "<td>" + version + "</td>",
+                "<td>" + text + "</td></tr>"
         ].join('');
 
-        $(listId).append(elem);
+        $(tblId).append(elem);
     }
 
     // TODO Edit button to load div to allow you to edit query

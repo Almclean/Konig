@@ -88,7 +88,12 @@ QueryService.prototype.getSavedQueries = function () {
             var retArray = [];
             if (results.data && results.data.length > 0) {
                 for (var i = 0; i < results.data.length; i++) {
-                    retArray.push(results.data[i][0].data.title);
+                    var props = new Object();
+                    props ["title"] = results.data[i][0].data.title;
+                    props ["version"] = results.data[i][0].data.version;
+                    props ["queryText"] = results.data[i][0].data.queryText;
+                    // TODO Test how multiple Triplets will return from DB
+                    retArray.push(new Query(props));
                 }
             }
             return retArray;

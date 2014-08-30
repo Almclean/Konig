@@ -12,7 +12,12 @@ block content
                             div(class="panel-body")
                                 div(class="row")
                                     div(class="col-md-12  " id="savedQueries")
-                                        h3 Queries
-                                        ul(class="list-group" id="savedQueriesList")
+                                        table(class="table table-hover")
+                                            thead
+                                                tr
+                                                    th Title
+                                                    th Version
+                                                    th Text
+                                            tbody(id="savedQueriesTable")
     script(src='/javascripts/queryEditor.js')
     script(src='//code.jquery.com/ui/1.11.0/jquery-ui.min.js')
