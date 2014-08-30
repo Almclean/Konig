@@ -80,7 +80,6 @@ QueryService.prototype.getNodes = function (queryText) {
 };
 
 QueryService.prototype.getSavedQueries = function () {
-    // TODO Write query
     var queryText = [
         "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t"
     ].join('\n');
