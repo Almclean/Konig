@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Tool for running the api commands on the command line !
 var Promise = require('bluebird');
-var QS = require('../services/QueryService');
+var QS = require('../services/queryService');
 var neo = require('neo4j-js');
 var nock = require('nock');
 Promise.promisifyAll(neo);

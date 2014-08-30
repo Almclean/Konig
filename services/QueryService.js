@@ -82,14 +82,14 @@ QueryService.prototype.getNodes = function (queryText) {
 QueryService.prototype.getSavedQueries = function () {
     // TODO Write query
     var queryText = [
-        "MATCH (n:Party) RETURN n"
+        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t"
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
             var retArray = [];
-            if (results && results.length > 0) {
-                for (var i = 0; i < results.length; i++) {
-                    retArray.push(results[i].n._data.data.name);
+            if (results.data && results.data.length > 0) {
+                for (var i = 0; i < results.data.length; i++) {
+                    retArray.push(results.data[i][0].data.title);
                 }
             }
             return retArray;
