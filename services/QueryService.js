@@ -25,19 +25,31 @@ QueryService.prototype.loadByTitle = function (title) {
     return apiInstance.query(queryText, {title: title})
         .then(function (results) {
             var queries = [];
-            for (var query in results) {
-                if (results[query].hasOwnProperty("q")) {
-                    var newQuery = results[query].q._data.data;
-                    var triplets = {};
-                    for (var i = 0; i < results[query].triplets.length; i++) {
-                        triplets["triplet" + i] = results[query].triplets[i]._data.data;
+            if (results) {
+                results.data.forEach(function (element, outerIndex, array) {
+                    if (Array.isArray(element)) {
+                        var triplets = {};
+                        element.forEach(function (element, dataIndex, array) {
+                            if (Array.isArray(element)) {
+                                element.forEach(function (element, tripletIndex, array) {
+
+                                    triplets['triplet' + tripletIndex] = element.data;
+                                });
+                            } else {
+                                queries.push(element.data);
+                            }
+                            if (queries[outerIndex]) {
+                                queries[outerIndex].triplets = triplets;
+                            }
+                        });
                     }
-                    newQuery.triplets = triplets;
-                    queries.push(newQuery);
-                }
+                });
             }
-            var nq = new Query(queries[0]);
-            console.log(JSON.stringify(nq, null, "\t"));
+            var queryObjectArray = [];
+            queries.forEach(function (element, index, array) {
+                queryObjectArray.push(new Query(element));
+            });
+            return queryObjectArray;
         }
     );
 };
