@@ -8,13 +8,47 @@ var should = require("should");
 describe('API Tests', function () {
     "use strict";
     describe('GET /metadata', function () {
-        nock.recorder.rec();
+        var scope = nock('http://162.243.169.45:7474')
+            .get('/db/data/')
+            .reply(200, {"indexes": "http://162.243.169.45:7474/db/data/schema/index"})
+            .get('/db/data/schema/index')
+            .reply(200, [])
+            .post('/db/data/cypher', {"query": "MATCH n WHERE NOT has(n.admin)\nRETURN distinct labels(n) as l", "params": {}})
+            .reply(200, {"columns": ["l"], "data": [
+                [
+                    ["Rating"]
+                ],
+                [
+                    ["Location"]
+                ],
+                [
+                    ["Account"]
+                ],
+                [
+                    ["Party"]
+                ],
+                [
+                    ["Query"]
+                ],
+                [
+                    ["Triplet"]
+                ]
+            ]})
+            .post('/db/data/cypher', {"query": "MATCH (n)-[r]-(m)\nWHERE NOT has(r.admin)\nRETURN distinct type(r) as r", "params": {}})
+            .reply(200, {"columns": ["r"], "data": [
+                ["ON"],
+                ["HAS_RATING"],
+                ["LOCATED_IN"],
+                ["OWNS"],
+                ["COMPRISED_OF"]
+            ]});
+
         it('Should respond with a JSON 200 response', function (done) {
             request(app)
                 .get('/api/metaData')
                 .expect(200)
                 .end(function (err, res) {
-                    console.log(res);
+                    scope.done();
                     done();
                 });
         });
