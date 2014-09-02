@@ -41,7 +41,17 @@ block content
             div(class="row")
             form(id="controls")
                 button(id="addClause" type="submit" class="btn btn-default") Add Clause
-                button(id="executeQuery" type="submit" class="btn btn-default") Execute Query
-                button(id="saveQuery" type="submit" class="btn btn-default") Save Query As...
+            button(id="executeQuery" type="submit" class="btn btn-default") Execute Query
+            button(id="saveQuery" class="btn btn-default" data-toggle="modal" data-target="#saveQueryModal") Save Query As...
+        div(class="modal fade" id="saveQueryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+            div(class="modal-dialog")
+                div(class="modal-content")
+                    div(class="modal-header")
+                        h4(class="modal-title" id="myModalLabel") Save Query
+                    div(class="modal-body")
+                        input(type="text" class="form-control" id="queryName" placeholder="Query Name...")
+                    div(class="modal-footer")
+                        button(type="button" class="btn btn-default" data-dismiss="modal") Close
+                        button(type="button" class="btn btn-primary" id="querySave") Save
     script(src='/javascripts/queryBuilder.js')
     script(src='//code.jquery.com/ui/1.11.0/jquery-ui.min.js')

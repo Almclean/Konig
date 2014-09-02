@@ -88,4 +88,30 @@ Api.prototype.query = function (queryText, bindings) {
         });
 };
 
+// TODO Is this the best method to call for persist
+// FIXME Proper error code parsing
+Api.prototype.persist = function (queryText, bindings) {
+    // TODO What are the right return codes here for success?
+    return r.postAsync({
+        uri: this.connectionString + 'cypher',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json; charset=UTF-8",
+            "X-Stream": true
+        },
+        json: {query: queryText, params: bindings}
+    })
+        .spread(function (res, body, err) {
+            if (!err) {
+                return body;
+            } else {
+                throw err;
+            }
+        })
+        .catch(function (err) {
+            console.error('Query error : ' + err);
+            throw err;
+        });
+};
+
 module.exports = Api;

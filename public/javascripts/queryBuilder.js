@@ -33,13 +33,25 @@ $(function () {
 
     $('#executeQuery').on('click', function (event) {
         event.preventDefault();
-        $.post('/api/nodeQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List')), function (data) {
+        $.post('/api/nodeQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List'), today()), function (data) {
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
                     console.log(JSON.stringify(data[i]));
                 }
             }
         });
+    });
+
+    $('#querySave').on('click', function (event) {
+        event.preventDefault();
+        $.post('/api/saveQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List'), $('#queryName')[0].value), function (data) {
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    console.log(JSON.stringify(data[i]));
+                }
+            }
+        });
+        $('#saveQueryModal').modal('hide')
     });
 
     // Start of functions
@@ -60,13 +72,13 @@ $(function () {
 
     // Given 3 lists nodeFrom, relationships and nodeTo create a Query object
     // Simple query to start with just one row of data
-    function createQuery(fromNode, relationship, toNode) {
+    function createQuery(fromNode, relationship, toNode, queryTitle) {
         // TODO This will need to loop per row and create query tuples
         var from = fromNode[0].textContent;
-        var rel = relationship[0].textContent;
+        var rel = "LOCATED_IN";//relationship[0].textContent;
         var to = toNode[0].textContent;
         return {
-            "title": "Party by Location",
+            "title": queryTitle,
             "version": 1,
             "queryText": "MATCH (from:" + from + ")-[rel:" + rel + "]->(to:" + to + ") RETURN from, to, rel",
             "triplets": [
@@ -92,5 +104,18 @@ $(function () {
                 ]
             ]
         };
+    }
+
+    function today() {
+        var now = new Date();
+        var dd = now.getDate();
+        var mm = now.getMonth() + 1; //January is 0!
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        return mm + '-' + dd + '-' + now.getFullYear() + '-' + now.getTime();
     }
 });

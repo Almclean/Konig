@@ -6,7 +6,9 @@ var router = express.Router();
 var p = require('bluebird');
 var UserService = require('../services/userService');
 var QueryService = require('../services/queryService');
+var PersistService = require('../services/persistService');
 var qs = new QueryService();
+var ps = new PersistService();
 var us = new UserService();
 
 /* GET home page. */
@@ -66,5 +68,16 @@ router.get('/api/savedQueries', function (req, res, next) {
             next(err);
         });
 });
+
+router.route('/api/saveQuery')
+    .post(function (req, res, next) {
+        ps.saveQuery(req.body)
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(function (err) {
+                next(err);
+            });
+    });
 
 module.exports = router;
