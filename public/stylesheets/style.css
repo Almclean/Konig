@@ -19,3 +19,14 @@ body {
     border-color: grey;
     list-style-position: inside;
 }
+
+.node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
+.link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
+

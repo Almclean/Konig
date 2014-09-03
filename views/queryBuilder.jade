@@ -41,8 +41,11 @@ block content
             div(class="row")
             form(id="controls")
                 button(id="addClause" type="submit" class="btn btn-default") Add Clause
-            button(id="executeQuery" type="submit" class="btn btn-default") Execute Query
-            button(id="saveQuery" class="btn btn-default" data-toggle="modal" data-target="#saveQueryModal") Save Query As...
+            div(class="row")
+                button(id="executeQuery" type="submit" class="btn btn-default") Execute Query
+                button(id="saveQuery" class="btn btn-default" data-toggle="modal" data-target="#saveQueryModal") Save Query As...
+            div(class="row")
+                div(id="graph" style='display:none')
         div(class="modal fade" id="saveQueryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
             div(class="modal-dialog")
                 div(class="modal-content")
@@ -55,3 +58,4 @@ block content
                         button(type="button" class="btn btn-primary" id="querySave") Save
     script(src='/javascripts/queryBuilder.js')
     script(src='//code.jquery.com/ui/1.11.0/jquery-ui.min.js')
+    script(src='/javascripts/d3.min.js')
