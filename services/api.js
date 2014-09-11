@@ -2,6 +2,8 @@
 "use strict";
 var Promise = require('bluebird');
 var r = Promise.promisifyAll(require('request'));
+var ApiError = require('./apiError');
+var logger = require('winston');
 
 // Constructor
 // @param : The Neo service root.
@@ -15,9 +17,12 @@ Api.prototype.getSimpleJSONResponse = function (uri) {
             if (response.statusCode === 200) {
                 return JSON.parse(body);
             }
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) {
+            logger.error(__filename + "getSimpleJSONResponse: Unable to parse body invalid json. \nError : " + e);
+            throw new ApiError("getSimpleJSONResponse: Unable to parse body invalid json", e);
+        }).error(function (e) {
+            logger.error(__filename + "getSimpleJSONResponse: unexpected error. \nError : ", e);
+            throw new ApiError(__filename + "getSimpleJSONResponse: unexpected error. \nError : ", e);
         });
 };
 
@@ -58,9 +63,12 @@ Api.prototype.getMetaData = function () {
                 indexes: indexes,
                 relationships: relationshipTypes
             });
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) {
+            logger.error(__filename + "getMetaData: Unable to parse body invalid json. \nError : " + e);
+            throw new ApiError("getMetaData: Unable to parse body invalid json", e);
+        }).error(function (e) {
+            logger.error(__filename + "getMetaData: unexpected error. \nError : ", e);
+            throw new ApiError(__filename + "getMetaData: unexpected error. \nError : ", e);
         });
 };
 
@@ -74,44 +82,26 @@ Api.prototype.query = function (queryText, bindings) {
             "X-Stream": true
         },
         json: {query: queryText, params: bindings}
-    })
-        .spread(function (res, body, err) {
-            if (!err) {
-                return body;
-            } else {
-                throw err;
-            }
-        })
-        .catch(function (err) {
-            console.error('Query error : ' + err);
+    }).spread(function (res, body, err) {
+        if (!err) {
+            return body;
+        } else {
             throw err;
-        });
+        }
+    }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+        logger.error(__filename + "query: Unable to parse body invalid json. \nError : " + e);
+        throw new ApiError("query: Unable to parse body invalid json", e);
+    }).error(function (e) {
+        logger.error(__filename + "query: unexpected error. \nError : ", e);
+        throw new ApiError(__filename + "query: unexpected error. \nError : ", e);
+    });
+
 };
 
 // TODO Is this the best method to call for persist
 // FIXME Proper error code parsing
 Api.prototype.persist = function (queryText, bindings) {
-    // TODO What are the right return codes here for success?
-    return r.postAsync({
-        uri: this.connectionString + 'cypher',
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json; charset=UTF-8",
-            "X-Stream": true
-        },
-        json: {query: queryText, params: bindings}
-    })
-        .spread(function (res, body, err) {
-            if (!err) {
-                return body;
-            } else {
-                throw err;
-            }
-        })
-        .catch(function (err) {
-            console.error('Query error : ' + err);
-            throw err;
-        });
+    query(queryText, bindings);
 };
 
 module.exports = Api;

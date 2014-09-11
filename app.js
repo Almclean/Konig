@@ -4,7 +4,7 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
-var logger = require('morgan');
+var logger = require('./services/logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
@@ -15,7 +15,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(favicon(__dirname + '/public/icons/favicon.ico'));
-app.use(logger('dev'));
+
+logger.debug("Overriding 'Express' logger");
+app.use(require('morgan')({ "stream": logger.stream }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -57,7 +60,7 @@ app.use(function (err, req, res, next) {
 });
 
 var server = app.listen(3001, function () {
-    console.info("Started application, listening on : " + server.address().port + '\n');
+    logger.info("Started application, listening on : " + server.address().port + '\n');
 });
 
 module.exports = app;
