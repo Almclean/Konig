@@ -4,6 +4,7 @@ var Promise = require('bluebird');
 var QS = require('../services/queryService');
 var neo = require('neo4j-js');
 var nock = require('nock');
+var logger = require('winston');
 Promise.promisifyAll(neo);
 
 
@@ -13,7 +14,7 @@ function main() {
     nock.recorder.rec();
     qs1.loadByTitle('Party by Location')
         .then(function (results) {
-            console.log(results);
+            logger.info(results);
         });
 }
 

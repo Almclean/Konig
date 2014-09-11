@@ -3,7 +3,7 @@
 $(function () {
     "use strict";
 
-    var interval = 2000;
+    var interval = 20000;
 
     function pingBaseUrlMetadata() {
         var uptimePingRequest = $.get('/api/metaData');
@@ -15,7 +15,7 @@ $(function () {
                     .addClass('label-success')
                     .text('Connection Ok');
             }
-            interval = 30000;
+            interval = 300000;
         });
 
         uptimePingRequest.error(function () {

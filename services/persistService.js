@@ -3,9 +3,10 @@
  */
 /*jslint node: true */
 "use strict";
-
 var Api = require('../services/api');
 var apiInstance = new Api();
+var PersistError = require('./persistError');
+var logger = require('winston');
 
 //
 // This is the set of services that will persist data to the data container and return success or not.
@@ -17,12 +18,15 @@ function PersistService() {
 PersistService.prototype.saveQuery = function (query) {
     return apiInstance.query(createStatement(query))
         .then(function (results) {
-            console.log(results);
+            logger.info(results);
             //FIXME We need proper error codes here
             return {"persist": "success"};
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + "saveQuery: Unable to parse body invalid json. \nError : " + e);
+            throw new PersistError("saveQuery: Unable to parse body invalid json", e);
+        }).error(function (e) {
+            logger.error(__filename + "saveQuery: unexpected error. \nError : ", e);
+            throw new PersistError(__filename + "saveQuery: unexpected error. \nError : ", e);
         });
 };
 
