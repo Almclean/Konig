@@ -84,7 +84,7 @@ $(function () {
     function createQuery(fromNode, relationship, toNode, queryTitle) {
         // TODO This will need to loop per row and create query tuples
         var from = fromNode[0].textContent;
-        var rel = "LOCATED_IN";//relationship[0].textContent;
+        var rel = relationship[0].textContent;
         var to = toNode[0].textContent;
         return {
             "title": queryTitle,
