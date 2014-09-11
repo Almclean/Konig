@@ -19,14 +19,17 @@ $(function () {
         var labels = data.labels,
             relationshipTypes = data.relationships;
         // Populate the nodeTypes
-        $.each(labels, function (index, value) {
+        $.each(labels.data, function (index, value) {
             $.each(value, function (index, v) {
                 createElement(v, "#nodeTypeList", ".nodeConnect");
             });
         });
         // Populate the relationships
-        $.each(relationshipTypes, function (index, value) {
-            createElement(value.r, "#relationshipList", ".relationConnect");
+        $.each(relationshipTypes.data, function (index, value) {
+            $.each(value, function (index, v) {
+                createElement(v, "#relationshipList", ".relationConnect");
+            });
+
         });
 
     });
