@@ -3,11 +3,13 @@
  */
 /*jslint node: true */
 "use strict";
-var Api = require('../services/api');
+var Api = require('./api');
 var apiInstance = new Api();
+var UserError = require('./userError');
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
 Promise.promisifyAll(bcrypt);
+var logger = require('winston');
 
 var UserService = function () {
     this.name = "UserService";
@@ -19,7 +21,6 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
         "MATCH (user:Adminstration { name: {userName} })",
         "RETURN user"
     ].join('\n');
-
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             if (results && results.length > 0) {
@@ -35,9 +36,12 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
                 retval = {"user": userName, "authenticated": false, "reason": "Invalid Password"};
             }
             return retval;
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + " authenticate: Unable to authenticate user. \nError : " + e);
+            throw new UserError(__filename + " authenticate: Unable to authenticate user.", e);
+        }).error(function (e) {
+            logger.error(__filename + " authenticate: Unable to authenticate user. \nError : ", e);
+            throw new UserError(__filename + " authenticate: Unable to authenticate user.", e);
         });
 };
 
@@ -56,9 +60,12 @@ UserService.prototype.groups = function (userName) {
                 }
             }
             return retArray;
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + " groups: Unable to get groups for user. \nError : " + e);
+            throw new UserError(__filename + " groups: Unable to get groups for user.", e);
+        }).error(function (e) {
+            logger.error(__filename + " groups: Unable to get groups for user. \nError : ", e);
+            throw new UserError(__filename + " groups: Unable to get groups for user.", e);
         });
 };
 
@@ -73,9 +80,12 @@ UserService.prototype.actions = function (userName) {
             // TODO
             // Need to work out here how to populate a map of
             // Group => Action from the sample response.
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + " groups: Unable to get actions for user. \nError : " + e);
+            throw new UserError(__filename + " groups: Unable to get actions for user.", e);
+        }).error(function (e) {
+            logger.error(__filename + " groups: Unable to get actions for user. \nError : ", e);
+            throw new UserError(__filename + " groups: Unable to get actions for user.", e);
         });
 };
 
@@ -90,9 +100,12 @@ UserService.prototype.resources = function (userName) {
             // Should we return an array of tuples here ?
             // e.g. [(user, Action, Resource), (user, Action, Resource
             // ??
-        })
-        .catch(function (e) {
-            throw e;
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + " groups: Unable to get resources for user. \nError : " + e);
+            throw new UserError(__filename + " groups: Unable to get resources for user.", e);
+        }).error(function (e) {
+            logger.error(__filename + " groups: Unable to get resources for user. \nError : ", e);
+            throw new UserError(__filename + " groups: Unable to get resources for user.", e);
         });
 };
 

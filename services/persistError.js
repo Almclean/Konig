@@ -4,7 +4,7 @@
 "use strict";
 // The set of Errors for the API layer
 function PersistError(message, error) {
-    this.name = "ApiError";
+    this.name = "PersistError";
     this.message = (message || "");
     this.error = (error || "");
 }

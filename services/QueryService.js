@@ -4,10 +4,11 @@
 /*jslint node: true */
 "use strict";
 
-var Api = require('../services/api');
+var Api = require('./api');
 var apiInstance = new Api();
 var Query = require('../models/query');
 var QueryError = require('./queryError');
+var logger = require('winston');
 
 //
 // This is the set of services that will query the data container and return values.
@@ -75,11 +76,11 @@ QueryService.prototype.getNodes = function (queryText) {
             }
             return retArray;
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
-            logger.error(__filename + "getNodes: Unable to parse body invalid json. \nError : " + e);
-            throw new QueryError("getNodes: Unable to parse body invalid json", e);
+            logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
+            throw new QueryError(__filename + " getNodes: Unable to parse body invalid json", e);
         }).error(function (e) {
-            logger.error(__filename + "getNodes: unexpected error. \nError : ", e);
-            throw new QueryError(__filename + "getNodes: unexpected error. \nError : ", e);
+            logger.error(__filename + " getNodes: unexpected error. \nError : ", e);
+            throw new QueryError(__filename + " getNodes: unexpected error. \nError : ", e);
         });
 };
 
@@ -102,11 +103,11 @@ QueryService.prototype.getSavedQueries = function () {
             }
             return retArray;
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
-            logger.error(__filename + "getSavedQueries: Unable to parse body invalid json. \nError : " + e);
-            throw new QueryError("getSavedQueries: Unable to parse body invalid json", e);
+            logger.error(__filename + " getSavedQueries: Unable to parse body invalid json. \nError : " + e);
+            throw new QueryError(" getSavedQueries: Unable to parse body invalid json", e);
         }).error(function (e) {
-            logger.error(__filename + "getSavedQueries: unexpected error. \nError : ", e);
-            throw new QueryError(__filename + "getSavedQueries: unexpected error. \nError : ", e);
+            logger.error(__filename + " getSavedQueries: unexpected error. \nError : ", e);
+            throw new QueryError(__filename + " getSavedQueries: unexpected error. \nError : ", e);
         });
 };
 

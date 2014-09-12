@@ -4,7 +4,7 @@
 "use strict";
 // The set of Errors for the API layer
 function QueryError(message, error) {
-    this.name = "ApiError";
+    this.name = "QueryError";
     this.message = (message || "");
     this.error = (error || "");
 }

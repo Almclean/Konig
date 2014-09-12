@@ -3,7 +3,7 @@
  */
 /*jslint node: true */
 "use strict";
-var Api = require('../services/api');
+var Api = require('./api');
 var apiInstance = new Api();
 var PersistError = require('./persistError');
 var logger = require('winston');
@@ -22,11 +22,11 @@ PersistService.prototype.saveQuery = function (query) {
             //FIXME We need proper error codes here
             return {"persist": "success"};
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
-            logger.error(__filename + "saveQuery: Unable to parse body invalid json. \nError : " + e);
-            throw new PersistError("saveQuery: Unable to parse body invalid json", e);
+            logger.error(__filename + " saveQuery: Unable to parse body invalid json. \nError : " + e);
+            throw new PersistError(__filename + " saveQuery: Unable to parse body invalid json", e);
         }).error(function (e) {
-            logger.error(__filename + "saveQuery: unexpected error. \nError : ", e);
-            throw new PersistError(__filename + "saveQuery: unexpected error. \nError : ", e);
+            logger.error(__filename + " saveQuery: unexpected error. \nError : ", e);
+            throw new PersistError(__filename + " saveQuery: unexpected error. \nError : ", e);
         });
 };
 
