@@ -8,6 +8,8 @@ var Api = require('./api');
 var apiInstance = new Api();
 var Query = require('../models/query');
 var QueryError = require('./queryError');
+var GraphTransformer = require('../services/graphTransformer');
+var gt = new GraphTransformer();
 var logger = require('winston');
 
 //
@@ -63,18 +65,38 @@ QueryService.prototype.getMetaData = function () {
 QueryService.prototype.getNodes = function (queryText) {
     return apiInstance.query(queryText)
         .then(function (results) {
-            // TODO Fix parsing
-            var retArray = [];
-            if (results && results.length > 0) {
-                for (var i = 0; i < results.length; i++) {
-                    retArray.push({
-                        from: results[i].from._data.data.name,
-                        rel: results[i].rel._data.type,
-                        to: results[i].to._data.data.name
-                    });
+            var serverNodes = [];
+            if (results && results.data.length > 0) {
+                for (var i = 0; i < results.data.length; i++) {
+                    serverNodes.push([{"source": {
+                            "type": isNodeOrRel(results.data[i][0].self),
+                            "label": "Party", //TODO
+                            "url": results.data[i][0].self,
+                            "data": {
+                                "name": results.data[i][0].data.name
+                            }
+                        }                        },
+                        {"relationship": {
+                            "type": isNodeOrRel(results.data[i][2].self),
+                            "label": "LOCATED_IN",
+                            "url": results.data[i][2].self,
+                            "data": {
+                                "name": results.data[i][2].type
+                            }
+                        }},
+                        {"target": {
+                            "type": isNodeOrRel(results.data[i][1].self),
+                            "label": "Location",
+                            "url": results.data[i][1].self,
+                            "data": {
+                                "name": results.data[i][1].data.name
+                            }
+                        }
+                        }
+                    ]);
                 }
             }
-            return retArray;
+            return gt.toClientGraph({"triplets": serverNodes});
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(__filename + " getNodes: Unable to parse body invalid json", e);
@@ -111,4 +133,8 @@ QueryService.prototype.getSavedQueries = function () {
         });
 };
 
+function isNodeOrRel(str){
+    var re = /node/i;
+    return (re.test(str)) ? "node" : "relationship";
+}
 module.exports = QueryService;

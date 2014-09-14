@@ -37,18 +37,16 @@ $(function () {
     $('#executeQuery').on('click', function (event) {
         event.preventDefault();
         $.post('/api/nodeQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List'), today()), function (data) {
-            if (data && data.length > 0) {
-                for (var i = 0; i < data.length; i++) {
-                    console.log(JSON.stringify(data[i]));
-                    console.log("Result");
-                }
+            if (data) {
+                console.log(JSON.stringify(data));
+                console.log("Result");
+                $('#graph').show()
+                    .css('background-color', 'white')
+                    .css('width', '50%')
+                    .css('height', '50%');
+                drawGraph(data);
             }
         });
-        $('#graph').show()
-            .css('background-color', 'white')
-            .css('width', '50%')
-            .css('height', '50%');
-        drawGraph(graph);
     });
 
     $('#querySave').on('click', function (event) {
@@ -128,18 +126,56 @@ $(function () {
         return mm + '-' + dd + '-' + now.getFullYear() + '-' + now.getTime();
     }
 
-    var graph = {
-        "nodes": [
-            {"name": "Myriel", "group": 1},
-            {"name": "Napoleon", "group": 2},
-            {"name": "Mlle.Baptistine", "group": 3}
-        ],
-        "links": [
-            {"source": 0, "target": 1, "value": 1},
-            {"source": 1, "target": 2, "value": 8},
-            {"source": 2, "target": 0, "value": 10}
-        ]
-    };
+//    var graph =
+//    {
+//        "links": [
+//            {
+//                "source": 0,
+//                "target": 1,
+//                "url": "http://162.243.169.45:7474/db/data/relationship/160",
+//                "value": 1
+//            },
+//            {
+//                "source": 2,
+//                "target": 3,
+//                "url": "http://162.243.169.45:7474/db/data/relationship/161",
+//                "value": 1
+//            },
+//            {
+//                "source": 4,
+//                "target": 1,
+//                "url": "http://162.243.169.45:7474/db/data/relationship/164",
+//                "value": 1
+//            }
+//        ],
+//        "nodes": [
+//            {
+//                "group": "Party",
+//                "name": "MS",
+//                "url": "http://162.243.169.45:7474/db/data/node/282"
+//            },
+//            {
+//                "group": "Location",
+//                "name": "Scotland",
+//                "url": "http://162.243.169.45:7474/db/data/node/158"
+//            },
+//            {
+//                "group": "Party",
+//                "name": "GS",
+//                "url": "http://162.243.169.45:7474/db/data/node/283"
+//            },
+//            {
+//                "group": "Location",
+//                "name": "Ireland",
+//                "url": "http://162.243.169.45:7474/db/data/node/159"
+//            },
+//            {
+//                "group": "Party",
+//                "name": "JPM",
+//                "url": "http://162.243.169.45:7474/db/data/node/284"
+//            }
+//        ]
+//    };
 
     // Graph stuff
     var width = 960,
