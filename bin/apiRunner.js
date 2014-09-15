@@ -1,21 +1,17 @@
 #!/usr/bin/env node
 // Tool for running the api commands on the command line !
 var Promise = require('bluebird');
-var QS = require('../services/queryService');
-var neo = require('neo4j-js');
-var nock = require('nock');
+var bcrypt = require('bcrypt');
 var logger = require('winston');
-Promise.promisifyAll(neo);
 
 
 function main() {
     "use strict";
-    var qs1 = new QS();
-    nock.recorder.rec();
-    qs1.loadByTitle('Party by Location')
-        .then(function (results) {
-            logger.info(results);
+    bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash("blah", salt, function (err, hash) {
+            console.log(hash);
         });
+    });
 }
 
 main();
