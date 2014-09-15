@@ -2,6 +2,7 @@
  * Created by Ivan O'Mahony on 9/10/2014.
  */
 var winston = require('winston');
+
 winston.emitErrs = true;
 
 var logger = new winston.Logger({
@@ -17,11 +18,9 @@ var logger = new winston.Logger({
 //            colorize: false
 //        }),
         new winston.transports.Console({
-            level: 'debug',
-            handleExceptions: true,
-            json: false,
             colorize: true,
-            fileName: true
+            timestamp: true,
+            level: 'debug'
         })
     ],
     exitOnError: false

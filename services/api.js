@@ -18,11 +18,11 @@ Api.prototype.getSimpleJSONResponse = function (uri) {
                 return JSON.parse(body);
             }
         }).catch(SyntaxError, function (e) {
-            logger.error(__filename + "getSimpleJSONResponse: Unable to parse body invalid json. \nError : " + e);
-            throw new ApiError("getSimpleJSONResponse: Unable to parse body invalid json", e);
+            logger.error(__filename + " getSimpleJSONResponse: Unable to parse body invalid json. \nError : " + e);
+            throw new ApiError(__filename + " getSimpleJSONResponse: Unable to parse body invalid json", e);
         }).error(function (e) {
-            logger.error(__filename + "getSimpleJSONResponse: unexpected error. \nError : ", e);
-            throw new ApiError(__filename + "getSimpleJSONResponse: unexpected error. \nError : ", e);
+            logger.error(__filename + " getSimpleJSONResponse: unexpected error. \nError : ", e);
+            throw new ApiError(__filename + " getSimpleJSONResponse: unexpected error. \nError : ", e);
         });
 };
 
@@ -64,11 +64,11 @@ Api.prototype.getMetaData = function () {
                 relationships: relationshipTypes
             });
         }).catch(SyntaxError, function (e) {
-            logger.error(__filename + "getMetaData: Unable to parse body invalid json. \nError : " + e);
-            throw new ApiError("getMetaData: Unable to parse body invalid json", e);
+            logger.error(__filename + " getMetaData: Unable to parse body invalid json. \nError : " + e);
+            throw new ApiError(__filename + " getMetaData: Unable to parse body invalid json", e);
         }).error(function (e) {
-            logger.error(__filename + "getMetaData: unexpected error. \nError : ", e);
-            throw new ApiError(__filename + "getMetaData: unexpected error. \nError : ", e);
+            logger.error(__filename + " getMetaData: unexpected error. \nError : ", e);
+            throw new ApiError(__filename + " getMetaData: unexpected error. \nError : ", e);
         });
 };
 
@@ -90,10 +90,10 @@ Api.prototype.query = function (queryText, bindings) {
         }
     }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
         logger.error(__filename + "query: Unable to parse body invalid json. \nError : " + e);
-        throw new ApiError("query: Unable to parse body invalid json", e);
+        throw new ApiError(__filename + " query: Unable to parse body invalid json", e);
     }).error(function (e) {
-        logger.error(__filename + "query: unexpected error. \nError : ", e);
-        throw new ApiError(__filename + "query: unexpected error. \nError : ", e);
+        logger.error(__filename + " query: unexpected error. \nError : ", e);
+        throw new ApiError(__filename + " query: unexpected error. \nError : ", e);
     });
 
 };
