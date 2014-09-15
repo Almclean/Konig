@@ -1,6 +1,7 @@
 /**
  * Created by Ivan O'Mahony on 9/14/2014.
  */
+/*jslint node: true */
 "use strict";
 
 var GraphTransformer = require('../services/graphTransformer');
@@ -30,8 +31,8 @@ describe('graphTransformer', function () {
             var res = gt.toClientGraph(validDataSet);
             res.should.eql(expectedDataSet);
         });
-    })
-})
+    });
+});
 
 var validData = {
     "triplets": [

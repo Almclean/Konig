@@ -8,6 +8,7 @@ var apiInstance = new Api();
 var UserError = require('./userError');
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
+var _ = require('lodash');
 Promise.promisifyAll(bcrypt);
 var logger = require('winston');
 
@@ -18,13 +19,13 @@ var UserService = function () {
 // Go and check if this user password matches the database
 UserService.prototype.authenticate = function (userName, inputPassword) {
     var queryText = [
-        "MATCH (user:Adminstration { name: {userName} })",
+        "MATCH (user:AdminUser { name: {userName} })",
         "RETURN user"
     ].join('\n');
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
-            if (results && results.length > 0) {
-                var storedHash = results[0].user._data.data.password;
+            if (results && results.data) {
+                var storedHash = _.find(_.pluck(_.flatten(results.data), 'data'), 'password').password;
                 return bcrypt.compareAsync(inputPassword, storedHash);
             }
         })

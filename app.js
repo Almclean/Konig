@@ -17,7 +17,7 @@ app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/icons/favicon.ico'));
 
 logger.debug("Overriding 'Express' logger");
-app.use(require('morgan')({ "stream": logger.stream }));
+app.use(require('morgan')("combined", { "stream": logger.stream }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

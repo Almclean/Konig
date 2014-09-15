@@ -101,7 +101,7 @@ Api.prototype.query = function (queryText, bindings) {
 // TODO Is this the best method to call for persist
 // FIXME Proper error code parsing
 Api.prototype.persist = function (queryText, bindings) {
-    query(queryText, bindings);
+    this.query(queryText, bindings);
 };
 
 module.exports = Api;
