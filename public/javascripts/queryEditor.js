@@ -3,31 +3,36 @@
  */
 
 $(function () {
-    $.getJSON('/api/savedQueries', function (data) {
-        // TODO Render the data some nice way
 
-        //var labels = data.labels;
-        // Populate the nodeTypes
-        $.each(data, function (index, value) {
-            console.log(value);
-            createQueryListItem(value.queryTitle, "#recentQueries");
+    $('#queries').on('click', function (event) {
+        event.preventDefault();
+        $.post('/api/savedQueries', function (data) {
+            $("#recentQueries").empty();
+            if (data) {
+                $.each(data, function (index, value) {
+                    createQueryListItem(value.queryTitle, "#recentQueries");
+                });
+            }
         });
-
     });
 
     function createQueryListItem(title, listId) {
-        var elem = ["<li>" + title + "</li`>"
+        var elem = ["<li><h4><span class=\"label label-primary\">" + title + "</span></h4></li`>"
         ].join('');
         $(listId).append(elem);
     }
 
-    // TODO Edit button to load div to allow you to edit query
-
-    // TODO Save button in Edit div to save changes made to query
-
-    // TODO Execute button to test query work
-
-    // TODO Div to show saved result
+    $('#frmSearch').on('submit', function (event) {
+        event.preventDefault();
+        $.post('/api/loadByTitle', $('#frmSearch').serialize(), function (data) {
+            if (data) {
+                $("#searchResults").empty();
+                $.each(data, function (index, value) {
+                    createQueryListItem(value.queryTitle, "#searchResults");
+                });
+            }
+        });
+    });
 
     // Graph stuff
     var width = 960,

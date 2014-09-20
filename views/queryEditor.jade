@@ -3,17 +3,17 @@ block content
     div(class="container-fluid front-page")
         div(class="container-fluid")
             div(class="row")
-                div(class="col-md-3")
-                    li(class="nav-header" style="list-style: none; margin: 0; padding: 0;")
-                        button(class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#recentQueries") Recent Queries
+                div(class="col-md-3" align="left")
+                    li(class="nav-header" style="list-style: none; margin-left: 0; padding-left: 0;")
+                        button(class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#recentQueries" id="queries") Recent Queries
                         ul(style="list-style: none;" class="collapse" id="recentQueries")
                     li(class="nav-header" style="list-style: none;")
-                        button(class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#search") Search for Queries
-                        ul(class="collapse" id="search")
-                            li(style="list-style: none;")
-                                div(class="row")
-                                    label(class="sr-only" for="searchInput") Search
-                                    input(type="text" class="form-control" name="searchInput" placeholder="Enter Description...")
+                        form(id="frmSearch" accept-charset="UTF-8" role="form")
+                            fieldset
+                                div(class="form-group")
+                                    input(class="form-control" placeholder="Search by title..." name="searchInput" type="text")
+                    li(class="nav-header" style="list-style: none;")
+                        ul(style="list-style: none;" id="searchResults")
                 div(class="col-md-9")
                     div(class="row")
                         div(class="col-md-12")

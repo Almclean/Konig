@@ -16,7 +16,7 @@ router.get('/', function (req, res) {
     res.render('index', { title: 'Konig'});
 });
 
-router.get('/admin', function(req, res) {
+router.get('/admin', function (req, res) {
     res.render('admin', {title: 'Konig - Admin'});
 });
 
@@ -70,15 +70,27 @@ router.route('/api/authenticate')
             });
     });
 
-router.get('/api/savedQueries', function (req, res, next) {
-    qs.getSavedQueries()
-        .then(function (result) {
-            res.json(result);
-        })
-        .catch(function (err) {
-            next(err);
-        });
-});
+router.route('/api/savedQueries')
+    .post(function (req, res, next) {
+        qs.getSavedQueries()
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(function (err) {
+                next(err);
+            });
+    });
+
+router.route('/api/loadByTitle')
+    .post(function (req, res, next) {
+        qs.loadByTitle(req.body.searchInput)
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(function (err) {
+                next(err);
+            });
+    });
 
 router.route('/api/saveQuery')
     .post(function (req, res, next) {
