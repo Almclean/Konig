@@ -54,14 +54,16 @@ Api.prototype.getMetaData = function () {
         .then(function (result) {
             var labels = this.getNonAdminLabels(),
                 relationshipTypes = this.getNonAdminRelationships(),
-                indexes = "";
+                indexes = "",
+                connectionString = this.connectionString;
             if (result.hasOwnProperty('indexes')) {
                 indexes = this.getSimpleJSONResponse(result.indexes);
             }
             return Promise.props({
                 labels: labels,
                 indexes: indexes,
-                relationships: relationshipTypes
+                relationships: relationshipTypes,
+                connectionString: connectionString
             });
         }).catch(SyntaxError, function (e) {
             logger.error(__filename + " getMetaData: Unable to parse body invalid json. \nError : " + e);
