@@ -40,12 +40,31 @@ $(function () {
             if (data) {
                 console.log(JSON.stringify(data));
                 console.log("Result");
-                $('#graph').show()
-                    .css('background-color', 'white')
-                    .css('width', '50%')
-                    .css('height', '50%');
-                drawGraph(data);
+
+                // Graph stuff
+                var graphWidth = $("#modalContent").width() - 5,
+                    graphHeight = (graphWidth / 2) - 5;
+
+                console.log('Graph Width = ' + graphWidth);
+                console.log('Graph Height = ' + graphHeight);
+
+                var color = d3.scale.category20();
+
+                var force = d3.layout.force()
+                    .charge(-100)
+                    .linkDistance(150)
+                    .size([graphWidth, graphHeight]);
+
+                var svg = d3.select("#graph").append("svg")
+                    .addClass("for-removal")
+                    .attr("width", graphWidth)
+                    .attr("height", graphHeight);
+
+                drawGraph(color, graphWidth, graphHeight, force, svg, data);
+            } else {
+                $('#graph').append('<p>No Results returned for that Query !</p>');
             }
+
         });
     });
 
@@ -58,7 +77,7 @@ $(function () {
                 }
             }
         });
-        $('#saveQueryModal').modal('hide')
+        $('#saveQueryModal').modal('hide');
     });
 
     // Start of functions
@@ -125,22 +144,8 @@ $(function () {
         }
         return mm + '-' + dd + '-' + now.getFullYear() + '-' + now.getTime();
     }
-    // Graph stuff
-    var width = 960,
-        height = 500;
 
-    var color = d3.scale.category20();
-
-    var force = d3.layout.force()
-        .charge(-100)
-        .linkDistance(150)
-        .size([width, height]);
-
-    var svg = d3.select("#graph").append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    var drawGraph = function (graph) {
+    var drawGraph = function (color, graphWidth, graphHeight, force, svg, graph) {
         force
             .nodes(graph.nodes)
             .links(graph.links)
