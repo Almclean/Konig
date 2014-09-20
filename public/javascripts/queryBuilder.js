@@ -56,7 +56,6 @@ $(function () {
                     .size([graphWidth, graphHeight]);
 
                 var svg = d3.select("#graph").append("svg")
-                    .addClass("for-removal")
                     .attr("width", graphWidth)
                     .attr("height", graphHeight);
 
