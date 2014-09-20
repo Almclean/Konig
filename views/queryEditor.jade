@@ -3,21 +3,23 @@ block content
     div(class="container-fluid front-page")
         div(class="container-fluid")
             div(class="row")
-                div(class="col-md-1")
-                div(class="col-md-10")
-                    form(id="metadata")
-                        div(class="panel panel-success")
-                            div(class="panel-heading")
-                                h3(class="panel-title") Saved Queries
-                            div(class="panel-body")
+                div(class="col-md-3")
+                    li(class="nav-header" style="list-style: none; margin: 0; padding: 0;")
+                        button(class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#recentQueries") Recent Queries
+                        ul(style="list-style: none;" class="collapse" id="recentQueries")
+                    li(class="nav-header" style="list-style: none;")
+                        button(class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#search") Search for Queries
+                        ul(class="collapse" id="search")
+                            li(style="list-style: none;")
                                 div(class="row")
-                                    div(class="col-md-12  " id="savedQueries")
-                                        table(class="table table-hover")
-                                            thead
-                                                tr
-                                                    th Title
-                                                    th Version
-                                                    th Text
-                                            tbody(id="savedQueriesTable")
+                                    label(class="sr-only" for="searchInput") Search
+                                    input(type="text" class="form-control" name="searchInput" placeholder="Enter Description...")
+                div(class="col-md-9")
+                    div(class="row")
+                        div(class="col-md-12")
+                            p This will be some text I reckon
+                    div(class="row")
+                        div(class="col-md-12")
+                            div(id="graph")
     script(src='/javascripts/queryEditor.js')
-    script(src='//code.jquery.com/ui/1.11.0/jquery-ui.min.js')
+    script(src='/javascripts/d3.min.js')

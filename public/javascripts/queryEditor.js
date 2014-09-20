@@ -10,18 +10,15 @@ $(function () {
         // Populate the nodeTypes
         $.each(data, function (index, value) {
             console.log(value);
-            createQueryListItem(value.queryTitle, value.queryVersion, value.queryText, "#savedQueriesTable");
+            createQueryListItem(value.queryTitle, "#recentQueries");
         });
 
     });
 
-    function createQueryListItem(title, version, text, tblId) {
-        var elem = ["<tr><td>" + title + "</td>",
-                "<td>" + version + "</td>",
-                "<td>" + text + "</td></tr>"
+    function createQueryListItem(title, listId) {
+        var elem = ["<li>" + title + "</li`>"
         ].join('');
-
-        $(tblId).append(elem);
+        $(listId).append(elem);
     }
 
     // TODO Edit button to load div to allow you to edit query
