@@ -29,14 +29,18 @@ $(function () {
     }
 
     // Ping the base url for connectivity.
-    setInterval(pingBaseUrlMetadata, interval);
+    // setInterval(pingBaseUrlMetadata, interval);
 
     $('#signIn').on('submit', function (event) {
         event.preventDefault();
         $.post('/api/authenticate', $('#signIn').serialize(), function (data) {
             if (data.authenticated === true) {
-                $('#signIn').fadeOut();
-                $('#welcome').text('Welcome ' + data.user);
+                window.location.assign('/home');
+            } else {
+                $('#btnLogin')
+                    .removeClass('btn-success')
+                    .addClass('btn-danger');
+                $('#lblInfo').text(data.reason);
             }
         });
     });

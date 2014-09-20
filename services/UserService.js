@@ -34,7 +34,7 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
             if (result) {
                 retval = {"user": userName, "authenticated": true};
             } else {
-                retval = {"user": userName, "authenticated": false, "reason": "Invalid Password"};
+                retval = {"user": userName, "authenticated": false, "reason": "Invalid User Name/Password"};
             }
             return retval;
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch

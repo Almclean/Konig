@@ -1,19 +1,24 @@
 extends layout
 block content
-    div(class="container-fluid front-page")
-        div(class="container-fluid")
-            div(class="row")
-                div(class="col-md-4")
-                div(id="queryEditor" class="col-md-4")
-                    a(href="/queryEditor")
-                        img(src="images/QueryEditor.png" class="img-responsive img-rounded" alt="Query Editor")
-                div(class="col-md-4")
-        div(class="container-fluid")
-            div(class="row")
-                div(id="queryBuilder" class="col-md-4")
-                    a(href="/queryBuilder")
-                        img(src="images/QueryBuilder.png" class="img-responsive img-rounded" alt="Query Builder")
-                div(class="col-md-4")
-                div(id="graphEditor" class="col-md-4")
-                    a(href="#")
-                        img(src="images/GraphEditor.png" class="img-responsive img-rounded" alt="Graph Editor")
+    div(class="container-fluid")
+        div(class="row")
+            br
+            br
+            br
+            br
+        div(class="row")
+            div(class="col-md-6 col-md-offset-3")
+                div(class="panel panel-default")
+                    div(class="panel-heading")
+                        h3(id="lblInfo" class="panel-title" ) Please sign in
+                        div(class="panel-body")
+                            form(id="signIn" accept-charset="UTF-8" role="form")
+                                fieldset
+                                    div(class="form-group")
+                                        input(class="form-control" placeholder="User Name" name="usernameInput" type="text")
+                                    div(class="form-group")
+                                        input(class="form-control" placeholder="Password" name="passwordInput" type="password" value="")
+                                    div(class="checkbox")
+                                        label Remember Me
+                                            input(name="remember" type="checkbox" value="Remember Me")
+                                    input(id="btnLogin" class="btn btn-lg btn-success btn-block" type="submit" value="Login")
