@@ -1,0 +1,18 @@
+extends layout
+block content
+    script(src='/javascripts/admin.js')
+    div(class="container-fluid")
+        br
+        br
+        br
+        br
+        div(class="row")
+            div(class="col-md-8 col-md-offset-2")
+                div(class="panel panel-default panel-success")
+                    div(class="panel-heading") Admin Details
+                    div(class="panel-body")
+                        ul(class="list-group")
+                            li(class="list-group-item") Neo4J Connection Status :
+                                span(id="srvStatus" class="label label-danger")  No Connection
+                            li(class="list-group-item") Server Connection String :
+                                span(id="connectionString" class="label label-primary")

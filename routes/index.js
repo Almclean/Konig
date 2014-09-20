@@ -16,6 +16,10 @@ router.get('/', function (req, res) {
     res.render('index', { title: 'Konig'});
 });
 
+router.get('/admin', function(req, res) {
+    res.render('admin', {title: 'Konig - Admin'});
+});
+
 /* GET home page. */
 router.get('/home', function (req, res) {
     res.render('home', { title: 'Konig - Home' });
