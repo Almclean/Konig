@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var p = require('bluebird');
+var logger = require('winston');
 var UserService = require('../services/userService');
 var QueryService = require('../services/queryService');
 var PersistService = require('../services/persistService');
@@ -11,9 +12,15 @@ var qs = new QueryService();
 var ps = new PersistService();
 var us = new UserService();
 
-/* GET home page. */
+// GET Landing Page
+
 router.get('/', function (req, res) {
-    res.render('index', { title: 'Konig - Home' });
+    res.render('index', { title: 'Konig'});
+});
+
+/* GET home page. */
+router.get('/home', function (req, res) {
+    res.render('home', { title: 'Konig - Home' });
 });
 
 // Get the QueryBuilder page
@@ -52,10 +59,12 @@ router.route('/api/authenticate')
     .post(function (req, res, next) {
         us.authenticate(req.body.usernameInput, req.body.passwordInput)
             .then(function (result) {
+                logger.info('Successfully authenticated User: ' + result.user);
                 res.json(result);
             })
             .catch(function (e) {
-                next(e);
+                var result = {"authenticated": false, "reason": "Invalid User Name/Password"};
+                res.json(result);
             });
     });
 
