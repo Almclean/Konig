@@ -74,18 +74,7 @@ QueryService.prototype.getSavedQueries = function () {
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
-            var retArray = [];
-            if (results.data && results.data.length > 0) {
-                for (var i = 0; i < results.data.length; i++) {
-                    var props = {};
-                    props ["title"] = results.data[i][0].data.title;
-                    props ["version"] = results.data[i][0].data.version;
-                    props ["queryText"] = results.data[i][0].data.queryText;
-                    // TODO Test how multiple Triplets will return from DB
-                    retArray.push(new Query(props));
-                }
-            }
-            return retArray;
+            return parseQueries(results);
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getSavedQueries: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(" getSavedQueries: Unable to parse body invalid json", e);
@@ -104,18 +93,7 @@ QueryService.prototype.loadByTitle = function (title) {
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
-            var retArray = [];
-            if (results.data && results.data.length > 0) {
-                for (var i = 0; i < results.data.length; i++) {
-                    var props = {};
-                    props ["title"] = results.data[i][0].data.title;
-                    props ["version"] = results.data[i][0].data.version;
-                    props ["queryText"] = results.data[i][0].data.queryText;
-                    // TODO Test how multiple Triplets will return from DB
-                    retArray.push(new Query(props));
-                }
-            }
-            return retArray;
+            return parseQueries(results);
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " loadByTitle: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(" loadByTitle: Unable to parse body invalid json", e);
@@ -125,11 +103,6 @@ QueryService.prototype.loadByTitle = function (title) {
         });
 };
 
-function isNodeOrRel(str) {
-    var re = /node/i;
-    return (re.test(str)) ? "node" : "relationship";
-}
-
 QueryService.prototype.saveQuery = function (query) {
     return apiInstance.query(createStatement(query))
         .then(function (results) {
@@ -138,12 +111,32 @@ QueryService.prototype.saveQuery = function (query) {
             return {"persist": "success"};
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " saveQuery: Unable to parse body invalid json. \nError : " + e);
-            throw new PersistError(__filename + " saveQuery: Unable to parse body invalid json", e);
+            throw new QueryError(__filename + " saveQuery: Unable to parse body invalid json", e);
         }).error(function (e) {
             logger.error(__filename + " saveQuery: unexpected error. \nError : ", e);
-            throw new PersistError(__filename + " saveQuery: unexpected error. \nError : ", e);
+            throw new QueryError(__filename + " saveQuery: unexpected error. \nError : ", e);
         });
 };
+
+function isNodeOrRel(str) {
+    var re = /node/i;
+    return (re.test(str)) ? "node" : "relationship";
+}
+
+function parseQueries(results) {
+    var retArray = [];
+    if (results.data && results.data.length > 0) {
+        for (var i = 0; i < results.data.length; i++) {
+            var props = {};
+            props ["title"] = results.data[i][0].data.title;
+            props ["version"] = results.data[i][0].data.version;
+            props ["queryText"] = results.data[i][0].data.queryText;
+            // TODO Test how multiple Triplets will return from DB
+            retArray.push(new Query(props));
+        }
+    }
+    return retArray;
+}
 
 function createStatement(query) {
     var persistString = "CREATE (Q1:Query {title: \"" + query.title + "\", version: " + query.version + ", queryText: \"" + query.queryText + "\"})";
