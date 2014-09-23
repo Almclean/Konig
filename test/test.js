@@ -76,7 +76,7 @@ describe('API Tests', function () {
     describe('POST /api/authenticate', function() {
         var scope = nock('http://162.243.169.45:7474')
             .post('/db/data/cypher', {"query":"MATCH (user:AdminUser { name: {userName} })\nRETURN user","params":{"userName":"Al"}})
-            .reply(200, {"columns":["user"],"data":[[{"data":{"password":"$2a$10$yFgDvzRz20/MhtgnxelJveTaHgTkIHmOIUQT9E6ahHCE4b.YzklyK","admin":"true","name":"Al"}}]]})
+            .reply(200, {"columns":["user"],"data":[[{"data":{"password":"$2a$10$yFgDvzRz20/MhtgnxelJveTaHgTkIHmOIUQT9E6ahHCE4b.YzklyK","admin":"true","name":"Al"}}]]});
 
         it('Should authenticate with a sample password and salt', function(done) {
             request(app)
@@ -92,18 +92,33 @@ describe('API Tests', function () {
         });
     });
 
-//    describe('GET /api/savedQueries', function() {
-//        it('Should return a valid list of saved queries from the DB', function(done) {
-//            '1'.should.not.equal('1');
-//        });
-//    });
-//
-//    describe('POST /api/saveQuery', function() {
-//        it('Should save a query in the DB successfully', function(done) {
-//            '1'.should.not.equal('1');
-//        });
-//    });
+    describe('POST /api/loadByTitle', function() {
+        var scope = nock('http://162.243.169.45:7474')
+            .post('/db/data/cypher', {'query':'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)\nWHERE q.title =~ "(?i).*Special.*"\nRETURN q, t'})
+            .reply(200, {"columns":["q","t"],"data":[[{"extensions":{},"paged_traverse":"http://162.243.169.45:7474/db/data/node/320/paged/traverse/{returnType}{?pageSize,leaseTime}","labels":"http://162.243.169.45:7474/db/data/node/320/labels","outgoing_relationships":"http://162.243.169.45:7474/db/data/node/320/relationships/out","traverse":"http://162.243.169.45:7474/db/data/node/320/traverse/{returnType}","all_typed_relationships":"http://162.243.169.45:7474/db/data/node/320/relationships/all/{-list|&|types}","property":"http://162.243.169.45:7474/db/data/node/320/properties/{key}","all_relationships":"http://162.243.169.45:7474/db/data/node/320/relationships/all","self":"http://162.243.169.45:7474/db/data/node/320","outgoing_typed_relationships":"http://162.243.169.45:7474/db/data/node/320/relationships/out/{-list|&|types}","properties":"http://162.243.169.45:7474/db/data/node/320/properties","incoming_relationships":"http://162.243.169.45:7474/db/data/node/320/relationships/in","incoming_typed_relationships":"http://162.243.169.45:7474/db/data/node/320/relationships/in/{-list|&|types}","create_relationship":"http://162.243.169.45:7474/db/data/node/320/relationships","data":{"queryText":"MATCH (from:Party)-[rel:HAS_RATING]->(to:Rating) RETURN from, to, rel","version":1,"title":"Ivans special Party - Rel Query"}},{"extensions":{},"paged_traverse":"http://162.243.169.45:7474/db/data/node/321/paged/traverse/{returnType}{?pageSize,leaseTime}","labels":"http://162.243.169.45:7474/db/data/node/321/labels","outgoing_relationships":"http://162.243.169.45:7474/db/data/node/321/relationships/out","traverse":"http://162.243.169.45:7474/db/data/node/321/traverse/{returnType}","all_typed_relationships":"http://162.243.169.45:7474/db/data/node/321/relationships/all/{-list|&|types}","property":"http://162.243.169.45:7474/db/data/node/321/properties/{key}","all_relationships":"http://162.243.169.45:7474/db/data/node/321/relationships/all","self":"http://162.243.169.45:7474/db/data/node/321","outgoing_typed_relationships":"http://162.243.169.45:7474/db/data/node/321/relationships/out/{-list|&|types}","properties":"http://162.243.169.45:7474/db/data/node/321/properties","incoming_relationships":"http://162.243.169.45:7474/db/data/node/321/relationships/in","incoming_typed_relationships":"http://162.243.169.45:7474/db/data/node/321/relationships/in/{-list|&|types}","create_relationship":"http://162.243.169.45:7474/db/data/node/321/relationships","data":{"target":"Rating","sourceConstraint":"","relationship":"HAS_RATING","relConstraint":"","targetConstraint":"","source":"Party"}}],[{"extensions":{},"paged_traverse":"http://162.243.169.45:7474/db/data/node/322/paged/traverse/{returnType}{?pageSize,leaseTime}","labels":"http://162.243.169.45:7474/db/data/node/322/labels","outgoing_relationships":"http://162.243.169.45:7474/db/data/node/322/relationships/out","traverse":"http://162.243.169.45:7474/db/data/node/322/traverse/{returnType}","all_typed_relationships":"http://162.243.169.45:7474/db/data/node/322/relationships/all/{-list|&|types}","property":"http://162.243.169.45:7474/db/data/node/322/properties/{key}","all_relationships":"http://162.243.169.45:7474/db/data/node/322/relationships/all","self":"http://162.243.169.45:7474/db/data/node/322","outgoing_typed_relationships":"http://162.243.169.45:7474/db/data/node/322/relationships/out/{-list|&|types}","properties":"http://162.243.169.45:7474/db/data/node/322/properties","incoming_relationships":"http://162.243.169.45:7474/db/data/node/322/relationships/in","incoming_typed_relationships":"http://162.243.169.45:7474/db/data/node/322/relationships/in/{-list|&|types}","create_relationship":"http://162.243.169.45:7474/db/data/node/322/relationships","data":{"queryText":"MATCH (from:Party)-[rel:HAS_RATING]->(to:Rating) RETURN from, to, rel","version":1,"title":"Al's special query - cos im special"}},{"extensions":{},"paged_traverse":"http://162.243.169.45:7474/db/data/node/323/paged/traverse/{returnType}{?pageSize,leaseTime}","labels":"http://162.243.169.45:7474/db/data/node/323/labels","outgoing_relationships":"http://162.243.169.45:7474/db/data/node/323/relationships/out","traverse":"http://162.243.169.45:7474/db/data/node/323/traverse/{returnType}","all_typed_relationships":"http://162.243.169.45:7474/db/data/node/323/relationships/all/{-list|&|types}","property":"http://162.243.169.45:7474/db/data/node/323/properties/{key}","all_relationships":"http://162.243.169.45:7474/db/data/node/323/relationships/all","self":"http://162.243.169.45:7474/db/data/node/323","outgoing_typed_relationships":"http://162.243.169.45:7474/db/data/node/323/relationships/out/{-list|&|types}","properties":"http://162.243.169.45:7474/db/data/node/323/properties","incoming_relationships":"http://162.243.169.45:7474/db/data/node/323/relationships/in","incoming_typed_relationships":"http://162.243.169.45:7474/db/data/node/323/relationships/in/{-list|&|types}","create_relationship":"http://162.243.169.45:7474/db/data/node/323/relationships","data":{"target":"Rating","sourceConstraint":"","relationship":"HAS_RATING","relConstraint":"","targetConstraint":"","source":"Party"}}]]});
+
+        it('Should find a query via a case in-sensitive search term', function(done) {
+            request(app)
+                .post('/api/loadByTitle')
+                .send({'searchInput': 'Special'})
+                .expect(200)
+                .end(function (err, res) {
+                    console.log("");
+                    res.body.length.should.equal(2);
+                    res.body[0].queryTitle.should.equal("Ivans special Party - Rel Query");
+                    res.body[0].queryVersion.should.equal(1);
+                    res.body[0].queryText.should.equal("MATCH (from:Party)-[rel:HAS_RATING]->(to:Rating) RETURN from, to, rel");
+                    res.body[1].queryTitle.should.equal("Al's special query - cos im special");
+                    res.body[1].queryVersion.should.equal(1);
+                    res.body[1].queryText.should.equal("MATCH (from:Party)-[rel:HAS_RATING]->(to:Rating) RETURN from, to, rel");
+                    scope.done();
+                    done();
+                });
+        });
+    });
+
 });
+
 
 
 
