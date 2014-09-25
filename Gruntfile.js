@@ -24,7 +24,6 @@ module.exports = function (grunt) {
  * This may be due to the parameter being missing or an invalid value being passed
  *
  * @param message The message to return to the user
- * @constructor // TODO find out what this means to populate
  */
 function ParameterException(message) {
     this.message = message;
