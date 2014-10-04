@@ -7,7 +7,7 @@
 var Api = require('./api');
 var apiInstance = new Api();
 var Query = require('../models/query');
-var QueryError = require('./queryError');
+var QueryError = require('./error/queryError');
 var GraphTransformer = require('../services/graphTransformer');
 var gt = new GraphTransformer();
 var logger = require('winston');
