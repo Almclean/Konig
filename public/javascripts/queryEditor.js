@@ -43,9 +43,11 @@ $(function () {
 
     $("#recentQueries").on('click', "li.queryItem", function (event) {
         event.preventDefault();
-        var qt = queries[$(this)[0].id].queryText;
-        $("p").text(qt + "[" + $(this)[0].id + "]");
-        $.post('/api/nodeQuery', {queryText: qt}, function (data) {
+        var qry = queries[$(this)[0].id];
+        $("#qTitle").text(qry.queryTitle);
+        $("#qVersion").text(qry.queryVersion);
+        $("#qText").text(qry.queryText);
+        $.post('/api/nodeQuery', {queryText: qry.queryText}, function (data) {
             $('#graph').empty();
             if (!data || data.nodes.length == 0) {
                 $('#graph').append('<p>No Results returned for that Query !</p>');
@@ -125,14 +127,11 @@ $(function () {
     function drawGraphDefaults() {
         var data = {
             "nodes": [
-                {"name": "Myriel", "group": 1},
-                {"name": "Napoleon", "group": 2},
-                {"name": "Mlle.Baptistine", "group": 3}
+                {"name": "Konig", "group": 1},
+                {"name": "Awesome", "group": 2}
             ],
             "links": [
-                {"source": 0, "target": 1, "value": 1},
-                {"source": 1, "target": 2, "value": 8},
-                {"source": 2, "target": 0, "value": 10}
+                {"source": 0, "target": 1, "value": 8}
             ]
         };
         var color = d3.scale.category20();
