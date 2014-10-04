@@ -9,6 +9,7 @@ function Query (propMap) {
     this.queryVersion = propMap.version;
     this.queryText = propMap.queryText;
     this.triplets = propMap.triplets;
+    this.url = propMap.url;
 }
 
 module.exports = Query;
