@@ -37,7 +37,7 @@ $(function () {
     $('#executeQuery').on('click', function (event) {
         event.preventDefault();
         $.post('/api/nodeQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List'), today()), function (data) {
-            if (data) {
+            if (data && data.nodes.length) {
                 console.log(JSON.stringify(data));
                 console.log("Result");
 
@@ -45,14 +45,11 @@ $(function () {
                 var graphWidth = $("#modalContent").width() - 5,
                     graphHeight = (graphWidth / 2) - 5;
 
-                console.log('Graph Width = ' + graphWidth);
-                console.log('Graph Height = ' + graphHeight);
-
                 var color = d3.scale.category20();
 
                 var force = d3.layout.force()
                     .charge(-100)
-                    .linkDistance(150)
+                    .linkDistance(200)
                     .size([graphWidth, graphHeight]);
 
                 var svg = d3.select("#graph").append("svg")

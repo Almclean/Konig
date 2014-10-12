@@ -35,6 +35,11 @@ router.get('/queryEditor', function (req, res) {
     res.render('queryEditor', { title: 'Konig - Query Editor'});
 });
 
+// Start of external query routes
+router.get('/ext/query', function (req, res, next) {
+    res.send(req.path);
+});
+
 // Start of API calls
 router.get('/api/metaData', function (req, res, next) {
     qs.getMetaData()
