@@ -7,3 +7,4 @@ bin/GenerateData.py
 .DS_Store
 25brym4g.bb5.txt
 C
+coverage/

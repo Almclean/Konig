@@ -5,7 +5,7 @@
 "use strict";
 var Api = require('./api');
 var apiInstance = new Api();
-var UserError = require('./userError');
+var UserError = require('./error/userError');
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
 var _ = require('lodash');

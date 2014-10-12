@@ -16,10 +16,25 @@ block content
                         ul(style="list-style: none;" id="searchResults")
                 div(class="col-md-9")
                     div(class="row")
-                        div(class="col-md-12")
-                            p This will be some text I reckon
+                        div(class="col-md-6 col-md-offset-3")
+                            table(class="table table-striped")
+                                thead
+                                    tr: th Query Details
+                                tbody
+                                    tr
+                                        td Title
+                                        td
+                                            label(id="qTitle") Sample Query Title
+                                    tr
+                                        td Version
+                                        td
+                                            label(id="qVersion") Sample Query Version
+                                    tr
+                                        td Text
+                                        td
+                                            label(id="qText") Sample Query Text
                     div(class="row")
-                        div(class="col-md-12")
-                            div(id="graph")
+                        div(class="col-md-6 col-md-offset-3")
+                            div(id="graph" style="background-color: #A3FFA3;")
     script(src='/javascripts/queryEditor.js')
     script(src='/javascripts/d3.min.js')

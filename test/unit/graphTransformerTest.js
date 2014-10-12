@@ -5,7 +5,7 @@
 "use strict";
 
 var GraphTransformer = require('../../services/graphTransformer');
-var GraphTransformerError = require('../../services/graphTransformerError');
+var GraphTransformerError = require('../../services/error/graphTransformerError');
 
 describe('graphTransformer', function () {
     describe('#toClientGraph()', function () {

@@ -56,7 +56,7 @@ $(function () {
                     .attr("width", graphWidth)
                     .attr("height", graphHeight);
 
-                drawGraph(color, graphWidth, graphHeight, force, svg, data);
+                drawGraph(color, force, svg, data);
             } else {
                 $('#graph').append('<p>No Results returned for that Query !</p>');
             }
@@ -141,7 +141,7 @@ $(function () {
         return mm + '-' + dd + '-' + now.getFullYear() + '-' + now.getTime();
     }
 
-    var drawGraph = function (color, graphWidth, graphHeight, force, svg, graph) {
+    var drawGraph = function (color, force, svg, graph) {
         force
             .nodes(graph.nodes)
             .links(graph.links)

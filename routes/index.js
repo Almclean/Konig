@@ -41,6 +41,30 @@ router.get('/ext/query', function (req, res, next) {
 });
 
 // Start of API calls
+router.route('/api/authenticate')
+    .post(function (req, res, next) {
+        us.authenticate(req.body.usernameInput, req.body.passwordInput)
+            .then(function (result) {
+                logger.info('Successfully authenticated User: ' + result.user);
+                res.json(result);
+            })
+            .catch(function (e) {
+                var result = {"authenticated": false, "reason": "Invalid User Name/Password"};
+                res.json(result);
+            });
+    });
+
+router.route('/api/loadByTitle')
+    .post(function (req, res, next) {
+        qs.loadByTitle(req.body.searchInput)
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(function (err) {
+                next(err);
+            });
+    });
+
 router.get('/api/metaData', function (req, res, next) {
     qs.getMetaData()
         .then(function (result) {
@@ -62,33 +86,9 @@ router.route('/api/nodeQuery')
             });
     });
 
-router.route('/api/authenticate')
-    .post(function (req, res, next) {
-        us.authenticate(req.body.usernameInput, req.body.passwordInput)
-            .then(function (result) {
-                logger.info('Successfully authenticated User: ' + result.user);
-                res.json(result);
-            })
-            .catch(function (e) {
-                var result = {"authenticated": false, "reason": "Invalid User Name/Password"};
-                res.json(result);
-            });
-    });
-
 router.route('/api/savedQueries')
     .post(function (req, res, next) {
-        qs.getSavedQueries()
-            .then(function (result) {
-                res.json(result);
-            })
-            .catch(function (err) {
-                next(err);
-            });
-    });
-
-router.route('/api/loadByTitle')
-    .post(function (req, res, next) {
-        qs.loadByTitle(req.body.searchInput)
+        qs.getSavedQueries(req.body.limit)
             .then(function (result) {
                 res.json(result);
             })

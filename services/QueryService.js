@@ -7,7 +7,7 @@
 var Api = require('./api');
 var apiInstance = new Api();
 var Query = require('../models/query');
-var QueryError = require('./queryError');
+var QueryError = require('./error/queryError');
 var GraphTransformer = require('../services/graphTransformer');
 var gt = new GraphTransformer();
 var logger = require('winston');
@@ -68,9 +68,9 @@ QueryService.prototype.getNodes = function (queryText) {
         });
 };
 
-QueryService.prototype.getSavedQueries = function () {
+QueryService.prototype.getSavedQueries = function (limit) {
     var queryText = [
-        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t"
+        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
@@ -128,6 +128,7 @@ function parseQueries(results) {
     if (results.data && results.data.length > 0) {
         for (var i = 0; i < results.data.length; i++) {
             var props = {};
+            props["url"] = results.data[i][0].self;
             props ["title"] = results.data[i][0].data.title;
             props ["version"] = results.data[i][0].data.version;
             props ["queryText"] = results.data[i][0].data.queryText;

@@ -4,20 +4,27 @@
 
 $(function () {
 
+    // TODO Should we try load all queries here. This affect search in that in the search box we could just load the
+    // list for the already loaded queries. However will that end up being a lot of data in the client?
+    var queries = {};
+    $.post('/api/savedQueries', {limit: 10}, function (data) {
+        if (data) {
+            $.each(data, function (index, value) {
+                queries[value.url] = value;
+            });
+        }
+    });
+
     $('#queries').on('click', function (event) {
         event.preventDefault();
-        $.post('/api/savedQueries', function (data) {
-            $("#recentQueries").empty();
-            if (data) {
-                $.each(data, function (index, value) {
-                    createQueryListItem(value.queryTitle, "#recentQueries");
-                });
-            }
+        $("#recentQueries").empty();
+        Object.keys(queries).forEach(function (key) {
+            createQueryListItem(queries[key].queryTitle, key, "#recentQueries");
         });
     });
 
-    function createQueryListItem(title, listId) {
-        var elem = ["<li><h4><span class=\"label label-primary\">" + title + "</span></h4></li`>"
+    function createQueryListItem(title, id, listId) {
+        var elem = ["<li id=\"" + id + "\" class=\"queryItem\"><h4><span class= \"label label-primary\">" + title + "</span></h4></li`>"
         ].join('');
         $(listId).append(elem);
     }
@@ -28,28 +35,43 @@ $(function () {
             if (data) {
                 $("#searchResults").empty();
                 $.each(data, function (index, value) {
-                    createQueryListItem(value.queryTitle, "#searchResults");
+                    createQueryListItem(value.queryTitle, value.url, "#searchResults");
                 });
             }
         });
     });
 
-    // Graph stuff
-    var width = 960,
-        height = 500;
+    $("#recentQueries").on('click', "li.queryItem", function (event) {
+        event.preventDefault();
+        var qry = queries[$(this)[0].id];
+        $("#qTitle").text(qry.queryTitle);
+        $("#qVersion").text(qry.queryVersion);
+        $("#qText").text(qry.queryText);
+        $.post('/api/nodeQuery', {queryText: qry.queryText}, function (data) {
+            $('#graph').empty();
+            if (!data || data.nodes.length == 0) {
+                $('#graph').append('<p>No Results returned for that Query !</p>');
+            } else {
+                var color = d3.scale.category20();
 
-    var color = d3.scale.category20();
+                var graphWidth = $("#graph").width() - 15,
+                    graphHeight = (graphWidth / 2) - 15;
 
-    var force = d3.layout.force()
-        .charge(-100)
-        .linkDistance(150)
-        .size([width, height]);
+                var force = d3.layout.force()
+                    .charge(-100)
+                    .linkDistance(150)
+                    .size([graphWidth, graphHeight]);
 
-    var svg = d3.select("#graph").append("svg")
-        .attr("width", width)
-        .attr("height", height);
+                var svg = d3.select("#graph").append("svg")
+                    .attr("width", graphWidth)
+                    .attr("height", graphHeight);
 
-    var drawGraph = function (graph) {
+                drawGraph(color, force, svg, data);
+            }
+        });
+    });
+
+    function drawGraph(color, force, svg, graph) {
         force
             .nodes(graph.nodes)
             .links(graph.links)
@@ -100,19 +122,33 @@ $(function () {
                 return 'translate(' + [d.x, d.y] + ')';
             });
         });
-    };
+    }
 
-    var data = {
-        "nodes": [
-            {"name": "Myriel", "group": 1},
-            {"name": "Napoleon", "group": 2},
-            {"name": "Mlle.Baptistine", "group": 3}
-        ],
-        "links": [
-            {"source": 0, "target": 1, "value": 1},
-            {"source": 1, "target": 2, "value": 8},
-            {"source": 2, "target": 0, "value": 10}
-        ]
-    };
-    drawGraph(data);
+    function drawGraphDefaults() {
+        var data = {
+            "nodes": [
+                {"name": "Konig", "group": 1},
+                {"name": "Awesome", "group": 2}
+            ],
+            "links": [
+                {"source": 0, "target": 1, "value": 8}
+            ]
+        };
+        var color = d3.scale.category20();
+
+        var graphWidth = $("#graph").width() - 5,
+            graphHeight = (graphWidth / 2) - 5;
+
+        var force = d3.layout.force()
+            .charge(-100)
+            .linkDistance(150)
+            .size([graphWidth, graphHeight]);
+
+        var svg = d3.select("#graph").append("svg")
+            .attr("width", graphWidth)
+            .attr("height", graphHeight);
+        drawGraph(color, force, svg, data);
+    }
+
+    drawGraphDefaults();
 });
