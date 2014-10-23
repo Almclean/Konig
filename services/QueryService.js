@@ -95,7 +95,7 @@ QueryService.prototype.loadByTitle = function (title) {
     ].join('\n');
     return apiInstance.query(queryText, {title:title})
         .then(function (results) {
-            return parse_queries2(results);
+            return parseQuery(results);
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " loadByTitle: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(" loadByTitle: Unable to parse body invalid json", e);
@@ -115,7 +115,7 @@ QueryService.prototype.loadByTitleFuzzy = function (title) {
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
-            return parse_queries2(results);
+            return parseQueries(results);
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " loadByTitle: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(" loadByTitle: Unable to parse body invalid json", e);
@@ -146,7 +146,7 @@ function isNodeOrRel(str) {
     return (re.test(str)) ? "node" : "relationship";
 }
 
-function parse_queries2 (results) {
+function parseQuery (results) {
     var retArray = [];
     if (results.hasOwnProperty('data')) {
         var flatArray = _.flatten(results.data, true);

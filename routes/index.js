@@ -85,6 +85,17 @@ router.route('/api/loadByTitle')
             });
     });
 
+router.route('/api/loadByTitleFuzzy')
+    .post(function (req, res, next) {
+        qs.loadByTitleFuzzy(req.body.searchInput)
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(function (err) {
+                next(err);
+            });
+    });
+
 router.get('/api/metaData', function (req, res, next) {
     qs.getMetaData()
         .then(function (result) {
