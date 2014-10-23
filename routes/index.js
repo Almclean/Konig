@@ -7,10 +7,13 @@ var p = require('bluebird');
 var logger = require('winston');
 var UserService = require('../services/userService');
 var QueryService = require('../services/queryService');
+var _ = require('lodash');
 var qs = new QueryService();
 var us = new UserService();
 
-// GET Landing Page
+// ---------------------- ---------------------
+
+// Routes for pages
 
 router.get('/', function (req, res) {
     res.render('index', { title: 'Konig'});
@@ -35,10 +38,27 @@ router.get('/queryEditor', function (req, res) {
     res.render('queryEditor', { title: 'Konig - Query Editor'});
 });
 
+// ---------------------- ---------------------
+
 // Start of external query routes
-router.get('/ext/query', function (req, res, next) {
-    res.send(req.path);
+
+router.get('/ext/query/list', function (req, res, next) {
+    qs.getSavedQueries(200)
+        .then(function(result) {
+            var retval = [];
+            _.forEach(result, function(item) {
+                retval.push({'queryTitle' : item.queryTitle});
+            });
+            res.json(retval);
+        });
 });
+
+router.post('/ext/query*', function (req, res, next) {
+    console.log(req);
+    res.send(req.path + '\n' + JSON.stringify(req.body) + '\n' + JSON.stringify(req.query));
+});
+
+// ---------------------- ---------------------
 
 // Start of API calls
 router.route('/api/authenticate')

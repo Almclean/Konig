@@ -11,6 +11,7 @@ var QueryError = require('./error/queryError');
 var GraphTransformer = require('../services/graphTransformer');
 var gt = new GraphTransformer();
 var logger = require('winston');
+var _ = require('lodash');
 
 //
 // This is the set of services that will query the data container and return values.
@@ -37,7 +38,7 @@ QueryService.prototype.getNodes = function (queryText) {
                             "data": {
                                 "name": results.data[i][0].data.name
                             }
-                        }                        },
+                        }},
                         {"relationship": {
                             "type": isNodeOrRel(results.data[i][2].self),
                             "label": "LOCATED_IN",
@@ -70,7 +71,7 @@ QueryService.prototype.getNodes = function (queryText) {
 
 QueryService.prototype.getSavedQueries = function (limit) {
     var queryText = [
-        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
+            "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
@@ -83,17 +84,18 @@ QueryService.prototype.getSavedQueries = function (limit) {
             throw new QueryError(__filename + " getSavedQueries: unexpected error. \nError : ", e);
         });
 };
+
 // @Param : Title of query
 // @Returns : array of matching queries complete with triplets
 QueryService.prototype.loadByTitle = function (title) {
     var queryText = [
         'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
-            'WHERE q.title =~ "(?i).*' + title + '.*"',
-        'RETURN q, t'
+        'WHERE q.title = {title}',
+        'RETURN distinct(q) AS Query, COLLECT(t) AS Triplets'
     ].join('\n');
-    return apiInstance.query(queryText)
+    return apiInstance.query(queryText, {title:title})
         .then(function (results) {
-            return parseQueries(results);
+            return parse_queries2(results);
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " loadByTitle: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(" loadByTitle: Unable to parse body invalid json", e);
@@ -102,6 +104,27 @@ QueryService.prototype.loadByTitle = function (title) {
             throw new QueryError(__filename + " loadByTitle: unexpected error. \nError : ", e);
         });
 };
+
+// @Param : Regular expression with partial query title
+// @Returns : array of matching queries complete with triplets
+QueryService.prototype.loadByTitleFuzzy = function (title) {
+    var queryText = [
+        'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
+            'WHERE q.title =~ "(?i).*' + title + '.*"',
+        'RETURN q, t'
+    ].join('\n');
+    return apiInstance.query(queryText)
+        .then(function (results) {
+            return parse_queries2(results);
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + " loadByTitle: Unable to parse body invalid json. \nError : " + e);
+            throw new QueryError(" loadByTitle: Unable to parse body invalid json", e);
+        }).error(function (e) {
+            logger.error(__filename + " loadByTitle: unexpected error. \nError : ", e);
+            throw new QueryError(__filename + " loadByTitle: unexpected error. \nError : ", e);
+        });
+};
+
 
 QueryService.prototype.saveQuery = function (query) {
     return apiInstance.query(createStatement(query))
@@ -121,6 +144,27 @@ QueryService.prototype.saveQuery = function (query) {
 function isNodeOrRel(str) {
     var re = /node/i;
     return (re.test(str)) ? "node" : "relationship";
+}
+
+function parse_queries2 (results) {
+    var retArray = [];
+    if (results.hasOwnProperty('data')) {
+        var flatArray = _.flatten(results.data, true);
+        
+        var query = flatArray[0];
+        var tripletArray = [];
+
+        _.forEach(flatArray[1], function(triplet) {
+            tripletArray.push(triplet.data);
+        });
+
+        return new Query({ url : query.self,
+                      title : query.data.title,
+                      version : query.data.version,
+                      queryText : query.data.queryText,
+                      triplets : tripletArray
+                    });
+    }
 }
 
 function parseQueries(results) {
