@@ -12,18 +12,24 @@ function Api() {
 }
 
 Api.prototype.getSimpleJSONResponse = function (uri) {
-    return r.getAsync(uri)
-        .spread(function (response, body) {
-            if (response.statusCode === 200) {
-                return JSON.parse(body);
-            }
-        }).catch(SyntaxError, function (e) {
-            logger.error(__filename + " getSimpleJSONResponse: Unable to parse body invalid json. \nError : " + e);
-            throw new ApiError(__filename + " getSimpleJSONResponse: Unable to parse body invalid json", e);
-        }).error(function (e) {
-            logger.error(__filename + " getSimpleJSONResponse: unexpected error. \nError : ", e);
-            throw new ApiError(__filename + " getSimpleJSONResponse: unexpected error. \nError : ", e);
-        });
+    return r.getAsync({
+        uri: uri,
+        headers: {
+            "Content-Type": "application/json",
+            "X-Stream": true
+        }}).spread(function (response, body) {
+        if (response.statusCode === 200) {
+            return JSON.parse(body);
+        } else {
+            throw new ApiError(__filename + " getSimpleJSONResponse: Invalid status code returned [" + response.statusCode + "] for uri [" + uri + "]")
+        }
+    }).catch(SyntaxError, function (e) {
+        logger.error(__filename + " getSimpleJSONResponse: Unable to parse body invalid json. \nError : " + e);
+        throw new ApiError(__filename + " getSimpleJSONResponse: Unable to parse body invalid json", e);
+    }).error(function (e) {
+        logger.error(__filename + " getSimpleJSONResponse: unexpected error. \nError : ", e);
+        throw new ApiError(__filename + " getSimpleJSONResponse: unexpected error. \nError : ", e);
+    });
 };
 
 // Checks the service root to ensure that the REST service is operational.
