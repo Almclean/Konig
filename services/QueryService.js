@@ -167,6 +167,7 @@ function parseQuery (results) {
     }
 }
 
+// TODO - Refactor this to be prettier like parseQuery
 function parseQueries(results) {
     var retArray = [];
     if (results.data && results.data.length > 0) {

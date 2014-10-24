@@ -31,7 +31,7 @@ $(function () {
 
     $('#frmSearch').on('submit', function (event) {
         event.preventDefault();
-        $.post('/api/loadByTitle', $('#frmSearch').serialize(), function (data) {
+        $.post('/api/loadByTitleFuzzy', $('#frmSearch').serialize(), function (data) {
             if (data) {
                 $("#searchResults").empty();
                 $.each(data, function (index, value) {
