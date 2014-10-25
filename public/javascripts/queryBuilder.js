@@ -102,7 +102,7 @@ $(function () {
         return {
             "title": queryTitle,
             "version": 1,
-            "queryText": "MATCH (from:" + from + ")-[rel:" + rel + "]->(to:" + to + ") RETURN from, to, rel",
+            "queryText": "MATCH (from:" + from + ")-[rel:" + rel + "]->(to:" + to + ") RETURN from, to, rel, labels(from) as lblFm, labels(to) as lblTo",
             "triplets": [
                 [
                     {

@@ -33,7 +33,7 @@ QueryService.prototype.getNodes = function (queryText) {
                     serverNodes.push([
                         {"source": {
                             "type": isNodeOrRel(results.data[i][0].self),
-                            "label": "Party", //TODO
+                            "label": results.data[i][3][0],
                             "url": results.data[i][0].self,
                             "data": {
                                 "name": results.data[i][0].data.name
@@ -41,7 +41,7 @@ QueryService.prototype.getNodes = function (queryText) {
                         }},
                         {"relationship": {
                             "type": isNodeOrRel(results.data[i][2].self),
-                            "label": "LOCATED_IN",
+                            "label": results.data[i][2].type,
                             "url": results.data[i][2].self,
                             "data": {
                                 "name": results.data[i][2].type
@@ -49,7 +49,7 @@ QueryService.prototype.getNodes = function (queryText) {
                         }},
                         {"target": {
                             "type": isNodeOrRel(results.data[i][1].self),
-                            "label": "Location",
+                            "label": results.data[i][4][0],
                             "url": results.data[i][1].self,
                             "data": {
                                 "name": results.data[i][1].data.name
@@ -147,7 +147,6 @@ function isNodeOrRel(str) {
 }
 
 function parseQuery (results) {
-    var retArray = [];
     if (results.hasOwnProperty('data')) {
         var flatArray = _.flatten(results.data, true);
         
