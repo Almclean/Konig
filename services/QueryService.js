@@ -27,43 +27,44 @@ QueryService.prototype.getMetaData = function () {
 QueryService.prototype.getNodes = function (queryText) {
     return apiInstance.query(queryText)
         .then(function (results) {
-            var flatArray = _.flatten(results.data, true);
-            var arrays = chunk(flatArray, 5);
             var serverNodes = [];
-            arrays.map( function(data){
-                serverNodes.push([
-                    {
-                        "source": {
-                            "type": isNodeOrRel(data[0].self),
-                            "label": data[3][0],
-                            "url": data[0].self,
-                            "data": {
-                                "name": data[0].data.name
+            _.chain(results.data)
+                .flatten(true)
+                .chunk(5)
+                .map(function (data) {
+                    serverNodes.push([
+                        {
+                            "source": {
+                                "type": isNodeOrRel(data[0].self),
+                                "label": data[3][0],
+                                "url": data[0].self,
+                                "data": {
+                                    "name": data[0].data.name
+                                }
+                            }
+                        },
+                        {
+                            "relationship": {
+                                "type": isNodeOrRel(data[2].self),
+                                "label": data[2].type,
+                                "url": data[2].self,
+                                "data": {
+                                    "name": data[2].type
+                                }
+                            }
+                        },
+                        {
+                            "target": {
+                                "type": isNodeOrRel(data[1].self),
+                                "label": data[4][0],
+                                "url": data[1].self,
+                                "data": {
+                                    "name": data[1].data.name
+                                }
                             }
                         }
-                    },
-                    {
-                        "relationship": {
-                            "type": isNodeOrRel(data[2].self),
-                            "label": data[2].type,
-                            "url": data[2].self,
-                            "data": {
-                                "name": data[2].type
-                            }
-                        }
-                    },
-                    {
-                        "target": {
-                            "type": isNodeOrRel(data[1].self),
-                            "label": data[4][0],
-                            "url": data[1].self,
-                            "data": {
-                                "name": data[1].data.name
-                            }
-                        }
-                    }
-                ]);
-            });
+                    ]);
+                });
             return gt.toClientGraph({"triplets": serverNodes});
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
@@ -209,5 +210,9 @@ function chunk(array, n) {
     if (array.length === 0) return [];
     return [_.first(array, n)].concat(chunk(_.rest(array, n), n));
 }
+
+_.mixin({
+    chunk: chunk
+});
 
 module.exports = QueryService;
