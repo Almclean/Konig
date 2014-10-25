@@ -27,38 +27,43 @@ QueryService.prototype.getMetaData = function () {
 QueryService.prototype.getNodes = function (queryText) {
     return apiInstance.query(queryText)
         .then(function (results) {
+            var flatArray = _.flatten(results.data, true);
+            var arrays = chunk(flatArray, 5);
             var serverNodes = [];
-            if (results && results.data.length > 0) {
-                for (var i = 0; i < results.data.length; i++) {
-                    serverNodes.push([
-                        {"source": {
-                            "type": isNodeOrRel(results.data[i][0].self),
-                            "label": results.data[i][3][0],
-                            "url": results.data[i][0].self,
+            arrays.map( function(data){
+                serverNodes.push([
+                    {
+                        "source": {
+                            "type": isNodeOrRel(data[0].self),
+                            "label": data[3][0],
+                            "url": data[0].self,
                             "data": {
-                                "name": results.data[i][0].data.name
-                            }
-                        }},
-                        {"relationship": {
-                            "type": isNodeOrRel(results.data[i][2].self),
-                            "label": results.data[i][2].type,
-                            "url": results.data[i][2].self,
-                            "data": {
-                                "name": results.data[i][2].type
-                            }
-                        }},
-                        {"target": {
-                            "type": isNodeOrRel(results.data[i][1].self),
-                            "label": results.data[i][4][0],
-                            "url": results.data[i][1].self,
-                            "data": {
-                                "name": results.data[i][1].data.name
+                                "name": data[0].data.name
                             }
                         }
+                    },
+                    {
+                        "relationship": {
+                            "type": isNodeOrRel(data[2].self),
+                            "label": data[2].type,
+                            "url": data[2].self,
+                            "data": {
+                                "name": data[2].type
+                            }
                         }
-                    ]);
-                }
-            }
+                    },
+                    {
+                        "target": {
+                            "type": isNodeOrRel(data[1].self),
+                            "label": data[4][0],
+                            "url": data[1].self,
+                            "data": {
+                                "name": data[1].data.name
+                            }
+                        }
+                    }
+                ]);
+            });
             return gt.toClientGraph({"triplets": serverNodes});
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
@@ -71,7 +76,7 @@ QueryService.prototype.getNodes = function (queryText) {
 
 QueryService.prototype.getSavedQueries = function (limit) {
     var queryText = [
-            "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
+        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
     ].join('\n');
     return apiInstance.query(queryText)
         .then(function (results) {
@@ -93,7 +98,7 @@ QueryService.prototype.loadByTitle = function (title) {
         'WHERE q.title = {title}',
         'RETURN distinct(q) AS Query, COLLECT(t) AS Triplets'
     ].join('\n');
-    return apiInstance.query(queryText, {title:title})
+    return apiInstance.query(queryText, {title: title})
         .then(function (results) {
             return parseQuery(results);
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
@@ -110,7 +115,7 @@ QueryService.prototype.loadByTitle = function (title) {
 QueryService.prototype.loadByTitleFuzzy = function (title) {
     var queryText = [
         'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
-            'WHERE q.title =~ "(?i).*' + title + '.*"',
+        'WHERE q.title =~ "(?i).*' + title + '.*"',
         'RETURN q, t'
     ].join('\n');
     return apiInstance.query(queryText)
@@ -146,23 +151,24 @@ function isNodeOrRel(str) {
     return (re.test(str)) ? "node" : "relationship";
 }
 
-function parseQuery (results) {
+function parseQuery(results) {
     if (results.hasOwnProperty('data')) {
         var flatArray = _.flatten(results.data, true);
-        
+
         var query = flatArray[0];
         var tripletArray = [];
 
-        _.forEach(flatArray[1], function(triplet) {
+        _.forEach(flatArray[1], function (triplet) {
             tripletArray.push(triplet.data);
         });
 
-        return new Query({ url : query.self,
-                      title : query.data.title,
-                      version : query.data.version,
-                      queryText : query.data.queryText,
-                      triplets : tripletArray
-                    });
+        return new Query({
+            url: query.self,
+            title: query.data.title,
+            version: query.data.version,
+            queryText: query.data.queryText,
+            triplets: tripletArray
+        });
     }
 }
 
@@ -198,4 +204,10 @@ function createStatement(query) {
     }
     return persistString;
 }
+
+function chunk(array, n) {
+    if (array.length === 0) return [];
+    return [_.first(array, n)].concat(chunk(_.rest(array, n), n));
+}
+
 module.exports = QueryService;
