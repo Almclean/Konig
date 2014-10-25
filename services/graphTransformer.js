@@ -15,6 +15,7 @@ GraphTransformer.prototype.toClientGraph = function (data) {
         logger.error("toClientGraph: Triplets not defined");
         throw new GraphTransformerError("toClientGraph: Triplets not defined");
     }
+    // TODO refactor with lodash we can make this way cleaner
     var nodes = {};
     // Create node list, this should be a unique set
     for (var i = 0; i < data.triplets.length; i++) {

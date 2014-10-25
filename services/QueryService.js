@@ -27,45 +27,49 @@ QueryService.prototype.getMetaData = function () {
 QueryService.prototype.getNodes = function (queryText) {
     return apiInstance.query(queryText)
         .then(function (results) {
-            var serverNodes = [];
-            _.chain(results.data)
-                .flatten(true)
-                .chunk(5)
-                .map(function (data) {
-                    serverNodes.push([
-                        {
-                            "source": {
-                                "type": isNodeOrRel(data[0].self),
-                                "label": data[3][0],
-                                "url": data[0].self,
-                                "data": {
-                                    "name": data[0].data.name
+            if (results.hasOwnProperty('data')) {
+                var serverNodes = [];
+                _.chain(results.data)
+                    .flatten(true)
+                    .chunk(results.columns.length)
+                    .map(function (data) {
+                        serverNodes.push([
+                            {
+                                "source": {
+                                    "type": isNodeOrRel(data[0].self),
+                                    "label": data[3][0],
+                                    "url": data[0].self,
+                                    "data": {
+                                        "name": data[0].data.name
+                                    }
+                                }
+                            },
+                            {
+                                "relationship": {
+                                    "type": isNodeOrRel(data[2].self),
+                                    "label": data[2].type,
+                                    "url": data[2].self,
+                                    "data": {
+                                        "name": data[2].type
+                                    }
+                                }
+                            },
+                            {
+                                "target": {
+                                    "type": isNodeOrRel(data[1].self),
+                                    "label": data[4][0],
+                                    "url": data[1].self,
+                                    "data": {
+                                        "name": data[1].data.name
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "relationship": {
-                                "type": isNodeOrRel(data[2].self),
-                                "label": data[2].type,
-                                "url": data[2].self,
-                                "data": {
-                                    "name": data[2].type
-                                }
-                            }
-                        },
-                        {
-                            "target": {
-                                "type": isNodeOrRel(data[1].self),
-                                "label": data[4][0],
-                                "url": data[1].self,
-                                "data": {
-                                    "name": data[1].data.name
-                                }
-                            }
-                        }
-                    ]);
-                });
-            return gt.toClientGraph({"triplets": serverNodes});
+                        ]);
+                    });
+                return gt.toClientGraph({"triplets": serverNodes});
+            } else {
+                logger.warn(__filename + " getNodes: No data returned to parse")
+            }
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(__filename + " getNodes: Unable to parse body invalid json", e);
@@ -155,14 +159,11 @@ function isNodeOrRel(str) {
 function parseQuery(results) {
     if (results.hasOwnProperty('data')) {
         var flatArray = _.flatten(results.data, true);
-
         var query = flatArray[0];
         var tripletArray = [];
-
         _.forEach(flatArray[1], function (triplet) {
             tripletArray.push(triplet.data);
         });
-
         return new Query({
             url: query.self,
             title: query.data.title,
@@ -173,19 +174,24 @@ function parseQuery(results) {
     }
 }
 
-// TODO - Refactor this to be prettier like parseQuery
+// TODO - Can this just replace the parseQuery?
 function parseQueries(results) {
     var retArray = [];
-    if (results.data && results.data.length > 0) {
-        for (var i = 0; i < results.data.length; i++) {
-            var props = {};
-            props["url"] = results.data[i][0].self;
-            props ["title"] = results.data[i][0].data.title;
-            props ["version"] = results.data[i][0].data.version;
-            props ["queryText"] = results.data[i][0].data.queryText;
-            // TODO Test how multiple Triplets will return from DB
-            retArray.push(new Query(props));
-        }
+    if (results.hasOwnProperty('data')) {
+        _.chain(results.data)
+            .flatten(true)
+            .chunk(results.columns.length)
+            .map(function (data) {
+                retArray.push(new Query({
+                    url: data[0].self,
+                    title: data[0].data.title,
+                    version: data[0].data.version,
+                    queryText: data[0].data.queryText,
+                    triplets: data[1].data
+                }));
+            });
+    } else {
+        logger.warn(__filename + " parseQueries: No data returned to parse")
     }
     return retArray;
 }
