@@ -6,15 +6,15 @@
 
 var Api = require('./api');
 var apiInstance = new Api();
-var Query = require('../models/query');
-var QueryError = require('./error/queryError');
+var Query = require('../../models/Query');
+var QueryError = require('./../error/queryError');
 var GraphTransformer = require('../services/graphTransformer');
 var gt = new GraphTransformer();
 var logger = require('winston');
 var _ = require('lodash');
 
 //
-// This is the set of services that will query the data container and return values.
+// This is the set of server that will query the data container and return values.
 // All queries will hit the api layer and that will delegate to the appropriate db layer
 //
 function QueryService() {
@@ -25,6 +25,7 @@ QueryService.prototype.getMetaData = function () {
 };
 
 QueryService.prototype.getNodes = function (queryText) {
+    logger.info(methodEntry({'method': 'getNodes', 'query': JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
         .then(function (results) {
             if (results.hasOwnProperty('data')) {
@@ -36,7 +37,7 @@ QueryService.prototype.getNodes = function (queryText) {
                         serverNodes.push([
                             {
                                 "source": {
-                                    "type": isNodeOrRel(data[0].self),
+                                    "type": _.contains(data[0].self, "node") ? "node" : "relationship",
                                     "label": data[3][0],
                                     "url": data[0].self,
                                     "data": {
@@ -46,7 +47,7 @@ QueryService.prototype.getNodes = function (queryText) {
                             },
                             {
                                 "relationship": {
-                                    "type": isNodeOrRel(data[2].self),
+                                    "type": _.contains(data[2].self, "node") ? "node" : "relationship",
                                     "label": data[2].type,
                                     "url": data[2].self,
                                     "data": {
@@ -56,7 +57,7 @@ QueryService.prototype.getNodes = function (queryText) {
                             },
                             {
                                 "target": {
-                                    "type": isNodeOrRel(data[1].self),
+                                    "type": _.contains(data[1].self, "node") ? "node" : "relationship",
                                     "label": data[4][0],
                                     "url": data[1].self,
                                     "data": {
@@ -83,6 +84,7 @@ QueryService.prototype.getSavedQueries = function (limit) {
     var queryText = [
         "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
     ].join('\n');
+    logger.info(methodEntry({'method': 'getSavedQueries', 'query': JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
         .then(function (results) {
             return parseQueries(results);
@@ -95,14 +97,13 @@ QueryService.prototype.getSavedQueries = function (limit) {
         });
 };
 
-// @Param : Title of query
-// @Returns : array of matching queries complete with triplets
 QueryService.prototype.loadByTitle = function (title) {
     var queryText = [
         'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
         'WHERE q.title = {title}',
         'RETURN distinct(q) AS Query, COLLECT(t) AS Triplets'
     ].join('\n');
+    logger.info(methodEntry({'method': 'loadByTitle', 'query': JSON.stringify(queryText)}));
     return apiInstance.query(queryText, {title: title})
         .then(function (results) {
             return parseQuery(results);
@@ -115,14 +116,13 @@ QueryService.prototype.loadByTitle = function (title) {
         });
 };
 
-// @Param : Regular expression with partial query title
-// @Returns : array of matching queries complete with triplets
 QueryService.prototype.loadByTitleFuzzy = function (title) {
     var queryText = [
         'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
         'WHERE q.title =~ "(?i).*' + title + '.*"',
         'RETURN q, t'
     ].join('\n');
+    logger.info(methodEntry({'method': 'loadByTitleFuzzy', 'query': JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
         .then(function (results) {
             return parseQueries(results);
@@ -135,9 +135,9 @@ QueryService.prototype.loadByTitleFuzzy = function (title) {
         });
 };
 
-
-QueryService.prototype.saveQuery = function (query) {
-    return apiInstance.query(createStatement(query))
+QueryService.prototype.saveQuery = function (queryText) {
+    logger.info(methodEntry({'method': 'saveQuery', 'query': JSON.stringify(queryText)}));
+    return apiInstance.query(createStatement(queryText))
         .then(function (results) {
             logger.info(results);
             //FIXME We need proper error codes here
@@ -151,11 +151,11 @@ QueryService.prototype.saveQuery = function (query) {
         });
 };
 
-function isNodeOrRel(str) {
-    var re = /node/i;
-    return (re.test(str)) ? "node" : "relationship";
-}
+// ---------------------- ---------------------
 
+// Start of internal methods
+
+// Parses returned data from Neo4j into a Query model object
 function parseQuery(results) {
     if (results.hasOwnProperty('data')) {
         var flatArray = _.flatten(results.data, true);
@@ -175,6 +175,7 @@ function parseQuery(results) {
 }
 
 // TODO - Can this just replace the parseQuery?
+// Parses returned data from Neo4j into a collection of Query model object
 function parseQueries(results) {
     var retArray = [];
     if (results.hasOwnProperty('data')) {
@@ -196,6 +197,7 @@ function parseQueries(results) {
     return retArray;
 }
 
+// Creates an insert statement from the given query
 function createStatement(query) {
     var persistString = "CREATE (Q1:Query {title: \"" + query.title + "\", version: " + query.version + ", queryText: \"" + query.queryText + "\"})";
     // TODO Can we do this better???
@@ -212,13 +214,17 @@ function createStatement(query) {
     return persistString;
 }
 
+// Chunks an Array into a collection of Arrays of size n
 function chunk(array, n) {
     if (array.length === 0) return [];
     return [_.first(array, n)].concat(chunk(_.rest(array, n), n));
 }
 
-_.mixin({
-    chunk: chunk
-});
+var methodEntry = _.template(__filename + ' : <%= method %> : parameter(s) [[ <%= query %> ]]');
+
+_.mixin(
+    {
+        chunk: chunk
+    });
 
 module.exports = QueryService;

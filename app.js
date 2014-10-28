@@ -4,14 +4,14 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
-var logger = require('./services/util/logger');
+var logger = require('./server/util/logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var routes = require('./routes/index');
+var routes = require('./server/routes/index');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'jade');
 
 app.use(favicon(__dirname + '/public/icons/favicon.ico'));

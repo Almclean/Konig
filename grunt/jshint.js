@@ -7,5 +7,5 @@ module.exports = {
         debug: true,
         node: true
     },
-    target: ['./public/javascript/*.js', './routes/**/*.js', './services/**/*.js']
+    target: ['./public/javascript/*.js', './server/**/*.js']
 };

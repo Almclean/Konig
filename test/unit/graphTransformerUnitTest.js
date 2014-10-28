@@ -4,8 +4,8 @@
 /*jslint node: true */
 "use strict";
 
-var GraphTransformer = require('../../services/graphTransformer');
-var GraphTransformerError = require('../../services/error/graphTransformerError');
+var GraphTransformer = require('../../server/services/graphTransformer');
+var GraphTransformerError = require('../../server/error/graphTransformerError');
 
 describe('graphTransformer', function () {
     describe('#toClientGraph()', function () {

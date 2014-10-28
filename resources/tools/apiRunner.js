@@ -3,9 +3,9 @@
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
 var logger = require('winston');
-var qs = new (require('../services/QueryService'))();
+var qs = new (require('.././QueryService'))();
 var r = Promise.promisifyAll(require('request'));
-var api = new (require('../services/api'))();
+var api = new (require('.././api'))();
 var _ = require('lodash');
 
 function main() {
