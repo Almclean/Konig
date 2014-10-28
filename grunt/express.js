@@ -1,19 +1,19 @@
 /*jslint node: true */
 "use strict";
 
-var path = require('path');
+var path = require("path");
 
 module.exports = {
     options: {
         port: 3001,
-        hostname: 'localhost'
+        hostname: "localhost"
     },
     livereload: {
         options: {
-            server: path.resolve('./app'),
+            server: path.resolve("./app"),
             livereload: true,
             serverreload: true,
-            bases: [path.resolve('./public'), path.resolve('./server')]
+            bases: [path.resolve("./public"), path.resolve("./server")]
         }
     }
 };

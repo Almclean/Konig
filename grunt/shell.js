@@ -8,14 +8,14 @@ module.exports = {
             stdout: true
         },
         command: [
-            'echo Going to start Neo4J',
-            '<%= neo4j_start %>'
-        ].join('&&')
+            "echo Going to start Neo4J",
+            "<%= neo4j_start %>"
+        ].join("&&")
     },
     start_app: {
         command: [
-            'echo Starting app through node',
-            'node app'
-        ].join('&&')
+            "echo Starting app through node",
+            "node app"
+        ].join("&&")
     }
 };

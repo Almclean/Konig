@@ -1,4 +1,6 @@
 /*jslint node: true */
+/*jshint -W079 */
+
 "use strict";
 var Promise = require('bluebird');
 var r = Promise.promisifyAll(require('request'));
@@ -21,7 +23,7 @@ Api.prototype.getSimpleJSONResponse = function (uri) {
         if (response.statusCode === 200) {
             return JSON.parse(body);
         } else {
-            throw new ApiError(__filename + " getSimpleJSONResponse: Invalid status code returned [" + response.statusCode + "] for uri [" + uri + "]")
+            throw new ApiError(__filename + " getSimpleJSONResponse: Invalid status code returned [" + response.statusCode + "] for uri [" + uri + "]");
         }
     }).catch(SyntaxError, function (e) {
         logger.error(__filename + " getSimpleJSONResponse: Unable to parse body invalid json. \nError : " + e);

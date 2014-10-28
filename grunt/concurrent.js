@@ -2,7 +2,7 @@
 "use strict";
 
 module.exports = {
-    first: ['gitpull'],
-    second: ['npm-install'],
-    third: ['newer:uglify', 'mochaTest:test', 'jshint']
+    first: ["gitpull"],
+    second: ["npm-install"],
+    third: ["newer:uglify", "mochaTest:test", "jshint"]
 };

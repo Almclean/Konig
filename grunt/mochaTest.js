@@ -4,9 +4,9 @@
 module.exports = {
     test: {
         options: {
-            reporter: 'spec'
+            reporter: "spec"
         },
-        src: ['test/**/*.js']
+        src: ["test/**/*.js"]
     },
     options: {
         colors: true,

@@ -69,7 +69,7 @@ QueryService.prototype.getNodes = function (queryText) {
                     });
                 return gt.toClientGraph({"triplets": serverNodes});
             } else {
-                logger.warn(__filename + " getNodes: No data returned to parse")
+                logger.warn(__filename + " getNodes: No data returned to parse");
             }
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
@@ -192,7 +192,7 @@ function parseQueries(results) {
                 }));
             });
     } else {
-        logger.warn(__filename + " parseQueries: No data returned to parse")
+        logger.warn(__filename + " parseQueries: No data returned to parse");
     }
     return retArray;
 }

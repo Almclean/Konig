@@ -2,5 +2,5 @@
 "use strict";
 
 module.exports = {
-    install: ['npm-install']
+    install: ["npm-install"]
 };

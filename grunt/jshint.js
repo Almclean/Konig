@@ -3,9 +3,9 @@
 
 module.exports = {
     options: {
-        reporter: require('jshint-stylish'),
+        reporter: require("jshint-stylish"),
         debug: true,
         node: true
     },
-    target: ['./public/javascript/*.js', './server/**/*.js']
+    target: ["./public/javascript/*.js", "./server/**/*.js"]
 };
