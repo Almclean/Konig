@@ -2,8 +2,8 @@
  * Created by Ivan O'Mahony on 9/14/2014.
  */
 "use strict";
-var GraphTransformerError = require('./../error/graphTransformerError');
-var logger = require('winston');
+var GraphTransformerError = require("./../error/graphTransformerError");
+var logger = require("winston");
 
 // This represents the server side functions to transform the client side graph (d3 node / links) to the server side
 // model
@@ -11,7 +11,7 @@ function GraphTransformer() {
 }
 // Given a server graph transform it into a client side graph, see tests for sample data sets
 GraphTransformer.prototype.toClientGraph = function (data) {
-    if (typeof data === 'undefined' || data === "") {
+    if (typeof data === "undefined" || data === "") {
         logger.error("toClientGraph: Triplets not defined");
         throw new GraphTransformerError("toClientGraph: Triplets not defined");
     }
@@ -38,7 +38,7 @@ GraphTransformer.prototype.toClientGraph = function (data) {
 
 function indexOfNode(nodes, value) {
     for (var i = 0; i < nodes.length; i++) {
-        if (nodes[i].url == value) {
+        if (nodes[i].url === value) {
             return i;
         }
     }

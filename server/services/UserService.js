@@ -5,14 +5,14 @@
 /*jshint -W079 */
 
 "use strict";
-var Api = require('./api');
+var Api = require("./api");
 var apiInstance = new Api();
-var UserError = require('./../error/userError');
-var Promise = require('bluebird');
-var bcrypt = require('bcrypt');
+var UserError = require("./../error/userError");
+var Promise = require("bluebird");
+var bcrypt = require("bcrypt");
 Promise.promisifyAll(bcrypt);
-var _ = require('lodash');
-var logger = require('winston');
+var _ = require("lodash");
+var logger = require("winston");
 
 var UserService = function () {
     this.name = "UserService";
@@ -23,11 +23,11 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
     var queryText = [
         "MATCH (user:AdminUser { name: {userName} })",
         "RETURN user"
-    ].join('\n');
+    ].join("\n");
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             if (results && results.data) {
-                var storedHash = _.find(_.pluck(_.flatten(results.data), 'data'), 'password').password;
+                var storedHash = _.find(_.pluck(_.flatten(results.data), "data"), "password").password;
                 return bcrypt.compareAsync(inputPassword, storedHash);
             }
         })
@@ -53,7 +53,7 @@ UserService.prototype.groups = function (userName) {
     var queryText = [
         "MATCH (n {name : {userName} })-[IS_IN]-(g)",
         "RETURN g"
-    ].join('\n');
+    ].join("\n");
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             var retArray = [];
@@ -77,7 +77,7 @@ UserService.prototype.actions = function (userName) {
     var queryText = [
         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action) ",
         "RETURN g,action"
-    ].join('\n');
+    ].join("\n");
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             // TODO
@@ -96,7 +96,7 @@ UserService.prototype.resources = function (userName) {
     var queryText = [
         "MATCH (n {name : {userName} })-[IS_IN]-(g)-[HAS_ACTION]-(action:Action)-[ON]-(re:Resource) ",
         "RETURN DISTINCT n,action,re"
-    ].join('\n');
+    ].join("\n");
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             // TODO
