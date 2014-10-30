@@ -19,7 +19,7 @@ function main() {
         var whereClause = "";
 
         _.forEach(sampleTriplets, function (triplet) {
-            whereClause += "WHERE "
+            whereClause += "WHERE ";
             _.forEach(triplet, function (clauseObject, identifier) {
                 if (_.size(clauseObject) > 0) {
                     whereClause += identifier + '.';
