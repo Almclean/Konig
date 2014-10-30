@@ -3,24 +3,40 @@
 var Promise = require('bluebird');
 var bcrypt = require('bcrypt');
 var logger = require('winston');
-var qs = new (require('.././QueryService'))();
+var qs = new (require('../../server/services/QueryService'))();
 var r = Promise.promisifyAll(require('request'));
-var api = new (require('.././api'))();
+var api = new (require('../../server/services/Api'))();
 var _ = require('lodash');
 
 function main() {
   "use strict";
 
-    r.getAsync('http://localhost:3001/ext/query/list')
-    	.spread(function (response, results) {
-    		_.forEach(JSON.parse(results), function (result) {
-    			console.log('Looking for query title : ' + result.queryTitle);
-    			qs.loadByTitle(result.queryTitle)
-    				.then(function(query) {
-    					console.log(JSON.stringify(query, null, '\t'));
-    				});
-    		});
-    	});
+  qs.loadByTitle("Post refactor query")
+    .then(function (queryObject) {
+        var sampleTriplets = [{ from: {name: "MS"}, rel: {}, to: {name: "Scotland"}}];
+        var cypherQuery = queryObject.queryText;
+        var splitArr = cypherQuery.split("RETURN");
+        var whereClause = "";
+
+        _.forEach(sampleTriplets, function (triplet) {
+            whereClause += "WHERE "
+            _.forEach(triplet, function (clauseObject, identifier) {
+                if (_.size(clauseObject) > 0) {
+                    whereClause += identifier + '.';
+                    _.forEach(clauseObject, function (value, key) {
+                        whereClause += key + ' = ' + '\"' + value + '\" ';
+                    });
+                }
+            });
+        });
+        console.log('Where Clause = ' + whereClause);
+    });
+
+  // Send a post to the routing service
+  // Find the query
+  // bind the triplet information to the query ?
+  // Return using getNodes.
+
 }
 
 main();
