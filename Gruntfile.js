@@ -1,15 +1,15 @@
 /*jslint node: true */
 "use strict";
 
-var nodeOS = require('os');
+var nodeOS = require("os");
 
 // Basic Grunt wrapper. All commands must be in here
 module.exports = function (grunt) {
     // measures the time each task takes
-    require('time-grunt')(grunt);
+    require("time-grunt")(grunt);
 
     // load grunt config
-    require('load-grunt-config')(grunt, {
+    require("load-grunt-config")(grunt, {
         init: true, //auto grunt.initConfig
         data: { //data passed into config.  Can use with <%= operatingSys %>
             neo4j_start: ParseOSForNeo4j(grunt)

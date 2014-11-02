@@ -2,15 +2,15 @@
 /*jshint -W079 */
 
 "use strict";
-var Promise = require('bluebird');
-var r = Promise.promisifyAll(require('request'));
-var ApiError = require('./../error/apiError');
-var logger = require('winston');
+var Promise = require("bluebird");
+var r = Promise.promisifyAll(require("request"));
+var ApiError = require("./../error/apiError");
+var logger = require("winston");
 
 // Constructor
 // @param : The Neo service root.
 function Api() {
-    this.connectionString = 'http://162.243.169.45:7474/db/data/';
+    this.connectionString = "http://162.243.169.45:7474/db/data/";
 }
 
 Api.prototype.getSimpleJSONResponse = function (uri) {
@@ -41,18 +41,18 @@ Api.prototype.pingService = function () {
 
 Api.prototype.getNonAdminRelationships = function () {
     var queryText = [
-        'MATCH (n)-[r]-(m)',
-        'WHERE NOT has(r.admin)',
-        'RETURN distinct type(r) as r'
-    ].join('\n');
+        "MATCH (n)-[r]-(m)",
+        "WHERE NOT has(r.admin)",
+        "RETURN distinct type(r) as r"
+    ].join("\n");
     return this.query(queryText, {});
 };
 
 Api.prototype.getNonAdminLabels = function () {
     var queryText = [
-        'MATCH n WHERE NOT has(n.admin)',
-        'RETURN distinct labels(n) as l'
-    ].join('\n');
+        "MATCH n WHERE NOT has(n.admin)",
+        "RETURN distinct labels(n) as l"
+    ].join("\n");
 
     return this.query(queryText, {});
 };
@@ -64,7 +64,7 @@ Api.prototype.getMetaData = function () {
                 relationshipTypes = this.getNonAdminRelationships(),
                 indexes = "",
                 connectionString = this.connectionString;
-            if (result.hasOwnProperty('indexes')) {
+            if (result.hasOwnProperty("indexes")) {
                 indexes = this.getSimpleJSONResponse(result.indexes);
             }
             return Promise.props({
@@ -85,7 +85,7 @@ Api.prototype.getMetaData = function () {
 // Performs direct Cypher queries, bindings optional.
 Api.prototype.query = function (queryText, bindings) {
     return r.postAsync({
-        uri: this.connectionString + 'cypher',
+        uri: this.connectionString + "cypher",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json; charset=UTF-8",

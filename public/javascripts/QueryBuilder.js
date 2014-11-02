@@ -10,12 +10,12 @@ $(function () {
         receive: function (event, ui) {
             // so if > 1
             if ($(this).children().length > 1) {
-                $(ui.sender).sortable('cancel');
+                $(ui.sender).sortable("cancel");
             }
         }
     });
 
-    $.getJSON('/api/metaData', function (data) {
+    $.getJSON("/api/metaData", function (data) {
         var labels = data.labels,
             relationshipTypes = data.relationships;
         // Populate the nodeTypes
@@ -34,9 +34,9 @@ $(function () {
 
     });
 
-    $('#executeQuery').on('click', function (event) {
+    $("#executeQuery").on("click", function (event) {
         event.preventDefault();
-        $.post('/api/nodeQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List'), today()), function (data) {
+        $.post("/api/nodeQuery", createQuery($("#node1List"), $("#rel1List"), $("#node2List"), today()), function (data) {
             if (data && data.nodes.length) {
                 console.log(JSON.stringify(data));
                 console.log("Result");
@@ -58,22 +58,22 @@ $(function () {
 
                 drawGraph(color, force, svg, data);
             } else {
-                $('#graph').append('<p>No Results returned for that Query !</p>');
+                $("#graph").append("<p>No Results returned for that Query !</p>");
             }
 
         });
     });
 
-    $('#querySave').on('click', function (event) {
+    $("#querySave").on("click", function (event) {
         event.preventDefault();
-        $.post('/api/saveQuery', createQuery($('#node1List'), $('#rel1List'), $('#node2List'), $('#queryName')[0].value), function (data) {
+        $.post("/api/saveQuery", createQuery($("#node1List"), $("#rel1List"), $("#node2List"), $("#queryName")[0].value), function (data) {
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
                     console.log(JSON.stringify(data[i]));
                 }
             }
         });
-        $('#saveQueryModal').modal('hide');
+        $("#saveQueryModal").modal("hide");
     });
 
     // Start of functions
@@ -81,7 +81,7 @@ $(function () {
         var elem = ["<li class=\"list-group-item\" id=\"drag-list_" + value + "\">",
             value,
             "</li>"
-        ].join('');
+        ].join("");
 
         $(listId).append(elem).sortable({
             connectWith: ".entityConnect",
@@ -133,12 +133,12 @@ $(function () {
         var dd = now.getDate();
         var mm = now.getMonth() + 1; //January is 0!
         if (dd < 10) {
-            dd = '0' + dd
+            dd = "0" + dd
         }
         if (mm < 10) {
-            mm = '0' + mm
+            mm = "0" + mm
         }
-        return mm + '-' + dd + '-' + now.getFullYear() + '-' + now.getTime();
+        return mm + "-" + dd + "-" + now.getFullYear() + "-" + now.getTime();
     }
 
     var drawGraph = function (color, force, svg, graph) {
@@ -155,11 +155,11 @@ $(function () {
                 return Math.sqrt(d.value);
             });
 
-        var gnodes = svg.selectAll('g.gnode')
+        var gnodes = svg.selectAll("g.gnode")
             .data(graph.nodes)
             .enter()
-            .append('g')
-            .classed('gnode', true);
+            .append("g")
+            .classed("gnode", true);
 
         var node = gnodes.append("circle")
             .attr("class", "node")
@@ -189,7 +189,7 @@ $(function () {
                 });
 
             gnodes.attr("transform", function (d) {
-                return 'translate(' + [d.x, d.y] + ')';
+                return "translate(" + [d.x, d.y] + ")";
             });
         });
     };

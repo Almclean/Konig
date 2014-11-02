@@ -4,29 +4,29 @@
 /*jslint node: true */
 "use strict";
 
-var GraphTransformer = require('../../server/services/graphTransformer');
-var GraphTransformerError = require('../../server/error/graphTransformerError');
+var GraphTransformer = require("../../server/services/graphTransformer");
+var GraphTransformerError = require("../../server/error/graphTransformerError");
 
-describe('graphTransformer', function () {
-    describe('#toClientGraph()', function () {
-        it('should throw a GraphTransformerError if no data is passed', function () {
+describe("graphTransformer", function () {
+    describe("#toClientGraph()", function () {
+        it("should throw a GraphTransformerError if no data is passed", function () {
             var gt = new GraphTransformer();
             (function () {
                 gt.toClientGraph();
             }).should.throw(GraphTransformerError, {message: "toClientGraph: Triplets not defined"});
         });
-        it('should throw a GraphTransformerError if an empty string passed', function () {
+        it("should throw a GraphTransformerError if an empty string passed", function () {
             var gt = new GraphTransformer();
             (function () {
                 gt.toClientGraph("");
             }).should.throw(GraphTransformerError, {message: "toClientGraph: Triplets not defined"});
         });
-        it('should process a single valid data', function () {
+        it("should process a single valid data", function () {
             var gt = new GraphTransformer();
             var res = gt.toClientGraph(validData);
             res.should.eql(expected);
         });
-        it('should process multiple valid datasets', function () {
+        it("should process multiple valid datasets", function () {
             var gt = new GraphTransformer();
             var res = gt.toClientGraph(validDataSet);
             res.should.eql(expectedDataSet);

@@ -4,15 +4,15 @@
 /*jslint node: true */
 "use strict";
 
-var Api = require('./api');
+var Api = require("./api");
 var apiInstance = new Api();
-var Query = require('../../models/Query');
-var QueryError = require('./../error/queryError');
-var GraphTransformer = require('../services/graphTransformer');
+var Query = require("../../models/Query");
+var QueryError = require("./../error/queryError");
+var GraphTransformer = require("../services/graphTransformer");
 var gt = new GraphTransformer();
-var logger = require('winston');
-var util = require('util');
-var _ = require('lodash');
+var logger = require("winston");
+var util = require("util");
+var _ = require("lodash");
 
 //
 // This is the set of server that will query the data container and return values.
@@ -26,10 +26,10 @@ QueryService.prototype.getMetaData = function () {
 };
 
 QueryService.prototype.getNodes = function (queryText) {
-    logger.info(methodEntry({'method': 'getNodes', 'query': JSON.stringify(queryText)}));
+    logger.info(methodEntry({"method": "getNodes", "query": JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
         .then(function (results) {
-            if (results.hasOwnProperty('data')) {
+            if (results.hasOwnProperty("data")) {
                 var serverNodes = [];
                 _.chain(results.data)
                     .flatten(true)
@@ -85,8 +85,8 @@ QueryService.prototype.getNodes = function (queryText) {
 QueryService.prototype.getSavedQueries = function (limit) {
     var queryText = [
         "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
-    ].join('\n');
-    logger.info(methodEntry({'method': 'getSavedQueries', 'query': JSON.stringify(queryText)}));
+    ].join("\n");
+    logger.info(methodEntry({"method": "getSavedQueries", "query": JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
         .then(function (results) {
             return parseQueries(results);
@@ -101,11 +101,11 @@ QueryService.prototype.getSavedQueries = function (limit) {
 
 QueryService.prototype.loadByTitle = function (title) {
     var queryText = [
-        'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
-        'WHERE q.title = {title}',
-        'RETURN distinct(q) AS Query, COLLECT(t) AS Triplets'
-    ].join('\n');
-    logger.info(methodEntry({'method': 'loadByTitle', 'query': JSON.stringify(queryText)}));
+        "MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)",
+        "WHERE q.title = {title}",
+        "RETURN distinct(q) AS Query, COLLECT(t) AS Triplets"
+    ].join("\n");
+    logger.info(methodEntry({"method": "loadByTitle", "query": JSON.stringify(queryText)}));
     return apiInstance.query(queryText, {title: title})
         .then(function (results) {
             if (results) {
@@ -125,11 +125,11 @@ QueryService.prototype.loadByTitle = function (title) {
 
 QueryService.prototype.loadByTitleFuzzy = function (title) {
     var queryText = [
-        'MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)',
-        'WHERE q.title =~ "(?i).*' + title + '.*"',
-        'RETURN q, t'
-    ].join('\n');
-    logger.info(methodEntry({'method': 'loadByTitleFuzzy', 'query': JSON.stringify(queryText)}));
+        "MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)",
+        "WHERE q.title =~ '(?i).*" + title + ".*'",
+        "RETURN q, t"
+    ].join("\n");
+    logger.info(methodEntry({"method": "loadByTitleFuzzy", "query": JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
         .then(function (results) {
             return parseQueries(results);
@@ -143,7 +143,7 @@ QueryService.prototype.loadByTitleFuzzy = function (title) {
 };
 
 QueryService.prototype.saveQuery = function (queryText) {
-    logger.info(methodEntry({'method': 'saveQuery', 'query': JSON.stringify(queryText)}));
+    logger.info(methodEntry({"method": "saveQuery", "query": JSON.stringify(queryText)}));
     return apiInstance.query(createStatement(queryText))
         .then(function (results) {
             logger.info(results);
@@ -202,7 +202,7 @@ QueryService.prototype.executeBoundQuery = function (queryObject, tripletArray) 
 
 // Parses returned data from Neo4j into a Query model object
 function parseQuery(results) {
-    if (results.hasOwnProperty('data')) {
+    if (results.hasOwnProperty("data")) {
         var flatArray = _.flatten(results.data, true);
         var query = flatArray[0];
         var tripletArray = [];
@@ -223,7 +223,7 @@ function parseQuery(results) {
 // Parses returned data from Neo4j into a collection of Query model object
 function parseQueries(results) {
     var retArray = [];
-    if (results.hasOwnProperty('data')) {
+    if (results.hasOwnProperty("data")) {
         _.chain(results.data)
             .flatten(true)
             .chunk(results.columns.length)
@@ -265,7 +265,7 @@ function chunk(array, n) {
     return [_.first(array, n)].concat(chunk(_.rest(array, n), n));
 }
 
-var methodEntry = _.template(__filename + ' : <%= method %> : parameter(s) [[ <%= query %> ]]');
+var methodEntry = _.template(__filename + " : <%= method %> : parameter(s) [[ <%= query %> ]]");
 
 _.mixin(
     {

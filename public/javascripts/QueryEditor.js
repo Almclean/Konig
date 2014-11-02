@@ -7,7 +7,7 @@ $(function () {
     // TODO Should we try load all queries here. This affect search in that in the search box we could just load the
     // list for the already loaded queries. However will that end up being a lot of data in the client?
     var queries = {};
-    $.post('/api/savedQueries', {limit: 10}, function (data) {
+    $.post("/api/savedQueries", {limit: 10}, function (data) {
         if (data) {
             $.each(data, function (index, value) {
                 queries[value.url] = value;
@@ -15,7 +15,7 @@ $(function () {
         }
     });
 
-    $('#queries').on('click', function (event) {
+    $("#queries").on("click", function (event) {
         event.preventDefault();
         $("#recentQueries").empty();
         Object.keys(queries).forEach(function (key) {
@@ -25,13 +25,13 @@ $(function () {
 
     function createQueryListItem(title, id, listId) {
         var elem = ["<li id=\"" + id + "\" class=\"queryItem\"><h4><span class= \"label label-primary\">" + title + "</span></h4></li`>"
-        ].join('');
+        ].join("");
         $(listId).append(elem);
     }
 
-    $('#frmSearch').on('submit', function (event) {
+    $("#frmSearch").on("submit", function (event) {
         event.preventDefault();
-        $.post('/api/loadByTitleFuzzy', $('#frmSearch').serialize(), function (data) {
+        $.post("/api/loadByTitleFuzzy", $("#frmSearch").serialize(), function (data) {
             if (data) {
                 $("#searchResults").empty();
                 $.each(data, function (index, value) {
@@ -41,16 +41,16 @@ $(function () {
         });
     });
 
-    $("#recentQueries").on('click', "li.queryItem", function (event) {
+    $("#recentQueries").on("click", "li.queryItem", function (event) {
         event.preventDefault();
         var qry = queries[$(this)[0].id];
         $("#qTitle").text(qry.queryTitle);
         $("#qVersion").text(qry.queryVersion);
         $("#qText").text(qry.queryText);
-        $.post('/api/nodeQuery', {queryText: qry.queryText}, function (data) {
-            $('#graph').empty();
+        $.post("/api/nodeQuery", {queryText: qry.queryText}, function (data) {
+            $("#graph").empty();
             if (!data || data.nodes.length == 0) {
-                $('#graph').append('<p>No Results returned for that Query !</p>');
+                $("#graph").append("<p>No Results returned for that Query !</p>");
             } else {
                 var color = d3.scale.category20();
 
@@ -85,11 +85,11 @@ $(function () {
                 return Math.sqrt(d.value);
             });
 
-        var gnodes = svg.selectAll('g.gnode')
+        var gnodes = svg.selectAll("g.gnode")
             .data(graph.nodes)
             .enter()
-            .append('g')
-            .classed('gnode', true);
+            .append("g")
+            .classed("gnode", true);
 
         var node = gnodes.append("circle")
             .attr("class", "node")
@@ -119,7 +119,7 @@ $(function () {
                 });
 
             gnodes.attr("transform", function (d) {
-                return 'translate(' + [d.x, d.y] + ')';
+                return "translate(" + [d.x, d.y] + ")";
             });
         });
     }
