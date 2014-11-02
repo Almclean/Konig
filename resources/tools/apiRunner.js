@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 // Tool for running the api commands on the command line !
 var Promise = require('bluebird');
-var bcrypt = require('bcrypt');
-var logger = require('winston');
+var util = require('util');
 var qs = new (require('../../server/services/QueryService'))();
 var r = Promise.promisifyAll(require('request'));
 var api = new (require('../../server/services/Api'))();
@@ -10,26 +9,20 @@ var _ = require('lodash');
 
 function main() {
   "use strict";
-
-  qs.loadByTitle("Post refactor query")
-    .then(function (queryObject) {
-        var sampleTriplets = [{ from: {name: "MS"}, rel: {}, to: {name: "Scotland"}}];
-        var cypherQuery = queryObject.queryText;
-        var splitArr = cypherQuery.split("RETURN");
-        var whereClause = "";
-
-        _.forEach(sampleTriplets, function (triplet) {
-            whereClause += "WHERE "
-            _.forEach(triplet, function (clauseObject, identifier) {
-                if (_.size(clauseObject) > 0) {
-                    whereClause += identifier + '.';
-                    _.forEach(clauseObject, function (value, key) {
-                        whereClause += key + ' = ' + '\"' + value + '\" ';
-                    });
-                }
-            });
-        });
-        console.log('Where Clause = ' + whereClause);
+    console.log('About to submit query');
+    r.postAsync({
+        uri : "http://localhost:3001/ext/query?title=Post refactor query",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json; charset=UTF-8",
+            "X-Stream": true
+        },
+        json:
+            [{from : {name : "MS"},
+             to : {name : "Scotland"}}]
+        })
+        .spread(function(res, body, err) {
+        console.log(body);
     });
 
   // Send a post to the routing service

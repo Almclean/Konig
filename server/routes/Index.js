@@ -42,21 +42,37 @@ router.get('/queryEditor', function (req, res) {
 
 // Start of external query routes
 
-router.get('/ext/query/list', function (req, res, next) {
-    qs.getSavedQueries(200)
-        .then(function(result) {
-            var retval = [];
-            _.forEach(result, function(item) {
-                retval.push({'queryTitle' : item.queryTitle});
+router.route('/ext/query*')
+    .get(function (req, res, next) {
+        qs.getSavedQueries(200)
+            .then(function (result) {
+                var retval = [];
+                _.forEach(result, function (item) {
+                    retval.push({'queryTitle': item.queryTitle});
+                });
+                res.json(retval);
             });
-            res.json(retval);
-        });
-});
-
-router.post('/ext/query*', function (req, res, next) {
-    console.log(req);
-    res.send(req.path + '\n' + JSON.stringify(req.body) + '\n' + JSON.stringify(req.query));
-});
+    })
+    .post(function (req, res, next) {
+        logger.info('About to execute for ' + req.query.title);
+        console.log('Hiyas');
+        if (req.query.title && req.body) {
+            qs.loadByTitle(req.query.title)
+                .then(function (queryObject) {
+                    return [queryObject, req.body];
+                })
+                .spread(function (queryObject, bindings) {
+                    return qs.executeBoundQuery(queryObject, bindings);
+                })
+                .then(function (result) {
+                    logger.info(result);
+                    res.json(result);
+                })
+                .catch(function (e) {
+                    next(e);
+                });
+        }
+    });
 
 // ---------------------- ---------------------
 

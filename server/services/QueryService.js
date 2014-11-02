@@ -11,6 +11,7 @@ var QueryError = require('./../error/queryError');
 var GraphTransformer = require('../services/graphTransformer');
 var gt = new GraphTransformer();
 var logger = require('winston');
+var util = require('util');
 var _ = require('lodash');
 
 //
@@ -70,6 +71,7 @@ QueryService.prototype.getNodes = function (queryText) {
                 return gt.toClientGraph({"triplets": serverNodes});
             } else {
                 logger.warn(__filename + " getNodes: No data returned to parse");
+                throw new SyntaxError("Possible query error detected");
             }
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " getNodes: Unable to parse body invalid json. \nError : " + e);
@@ -106,7 +108,12 @@ QueryService.prototype.loadByTitle = function (title) {
     logger.info(methodEntry({'method': 'loadByTitle', 'query': JSON.stringify(queryText)}));
     return apiInstance.query(queryText, {title: title})
         .then(function (results) {
-            return parseQuery(results);
+            if (results) {
+                return parseQuery(results);
+            } else {
+                logger.error("Could not get query by title : " + title);
+                throw new SyntaxError("Cannot find query by title : " + title);
+            }
         }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
             logger.error(__filename + " loadByTitle: Unable to parse body invalid json. \nError : " + e);
             throw new QueryError(" loadByTitle: Unable to parse body invalid json", e);
@@ -149,6 +156,44 @@ QueryService.prototype.saveQuery = function (queryText) {
             logger.error(__filename + " saveQuery: unexpected error. \nError : ", e);
             throw new QueryError(__filename + " saveQuery: unexpected error. \nError : ", e);
         });
+};
+
+// @Param : QueryObject - A Query, e.g. returned from loadByTitle
+// @Param : tripletArray - array of triplets, e.g. [{from : {name = "blah"}, rel : {val = "OWNS"}, to : {name = "blah"}}, ...]
+// @Returns Promise : Subgraph of nodes from getNodes() using the generated cypher queryString
+QueryService.prototype.executeBoundQuery = function (queryObject, tripletArray) {
+
+    var cypherQuery = queryObject.queryText;
+    var splitArr = cypherQuery.split("RETURN");
+    var whereClause = "";
+    var termArray = [];
+
+    logger.info(tripletArray);
+
+    _.forEach(tripletArray, function (triplet) {
+        _.forEach(triplet, function (clauseObject, identifier) {
+            var retval = null;
+            if (_.size(clauseObject) > 0) {
+                _.forEach(clauseObject, function (val, key) {
+                    if (!_.isEmpty(val)) {
+                        retval = util.format("( %s.%s = \"%s\" )", identifier, key, val);
+                    }
+                });
+            }
+            if (retval) {
+                termArray.push(retval);
+            }
+        });
+    });
+
+    // Check that the termArray was acutually populated, null otherwise.
+    if (termArray.length > 0) {
+        whereClause += "WHERE " + termArray.join(' AND ');
+        var newCypher = splitArr.join(whereClause + " RETURN ");
+        return this.getNodes(newCypher);
+    } else {
+        return null;
+    }
 };
 
 // ---------------------- ---------------------
