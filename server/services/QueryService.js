@@ -198,6 +198,24 @@ QueryService.prototype.executeBoundQuery = function (queryObject, tripletArray) 
     }
 };
 
+// @Param : Query Test - The update statement created client side
+// @Returns Promise : Right now quiet simple json Persist success or an exception
+QueryService.prototype.updateQuery = function (queryText) {
+    logger.info(methodEntry({"method": "updateQuery", "query": JSON.stringify(queryText)}));
+    return apiInstance.query(queryText)
+        .then(function (results) {
+            logger.info(results);
+            //FIXME We need proper error codes here
+            return {"persist": "success"};
+        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
+            logger.error(__filename + " updateQuery: Unable to parse body invalid json. \nError : " + e);
+            throw new QueryError(" updateQuery: Unable to parse body invalid json", e);
+        }).error(function (e) {
+            logger.error(__filename + " updateQuery: unexpected error. \nError : ", e);
+            throw new QueryError(__filename + " updateQuery: unexpected error. \nError : ", e);
+        });
+};
+
 // ---------------------- ---------------------
 
 // Start of internal methods

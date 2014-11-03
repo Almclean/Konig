@@ -153,4 +153,15 @@ router.route("/api/saveQuery")
             });
     });
 
+router.route("/api/updateQuery")
+    .put(function (req, res, next) {
+        qs.updateQuery(req.body.update)
+            .then(function (result) {
+                res.json(result);
+            })
+            .catch(function (err) {
+                next(err);
+            });
+    });
+
 module.exports = router;

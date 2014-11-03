@@ -2,6 +2,7 @@
 // Event Handlers
 $(function () {
     "use strict";
+
     $("#signIn").on("submit", function (event) {
         event.preventDefault();
         $.post("/api/authenticate", $("#signIn").serialize(), function (data) {

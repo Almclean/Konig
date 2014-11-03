@@ -1,10 +1,11 @@
 /**
  * Created by almclean on 12/07/2014.
  */
-"use strict";
 /*jshint jquery: true */
 
 $(function () {
+    "use strict";
+
     // Make query sentence a drag target
     $(".entityConnect").sortable({
         receive: function (event, ui) {

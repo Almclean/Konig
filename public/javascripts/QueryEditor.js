@@ -3,8 +3,11 @@
  */
 
 $(function () {
+    "use strict";
 
-    // TODO Should we try load all queries here. This affect search in that in the search box we could just load the
+    // TODO Should we try load all queries here. This affect search in that in the search box we could ust load the
+    var selectedQuery = "";
+
     // list for the already loaded queries. However will that end up being a lot of data in the client?
     var queries = {};
     $.post("/api/savedQueries", {limit: 10}, function (data) {
@@ -43,39 +46,73 @@ $(function () {
 
     $("#recentQueries").on("click", "li.queryItem", function (event) {
         event.preventDefault();
-        var qry = queries[$(this)[0].id];
-        $("#qTitle").val(qry.queryTitle);
-        $("#qVersion").val(qry.queryVersion);
-        $("#qText").val(qry.queryText);
-        $("#qtSrc").val(qry.triplets[0].source);
-        $("#qtSrcFlt").val(qry.triplets[0].sourceConstraint);
-        $("#qtRel").val(qry.triplets[0].relationship);
-        $("#qtRelFlt").val(qry.triplets[0].relationshipConstraint);
-        $("#qtTrg").val(qry.triplets[0].target);
-        $("#qtTrgFlt").val(qry.triplets[0].targetConstraint);
-        $.post("/api/nodeQuery", {queryText: qry.queryText}, function (data) {
+        selectedQuery = queries[$(this)[0].id];
+        $("#qTitle").val(selectedQuery.queryTitle);
+        $("#qVersion").val(selectedQuery.queryVersion);
+        $("#qText").val(selectedQuery.queryText);
+        $("#qtSrc").val(selectedQuery.triplets[0].source);
+        $("#qtSrcFlt").val(selectedQuery.triplets[0].sourceConstraint);
+        $("#qtRel").val(selectedQuery.triplets[0].relationship);
+        $("#qtRelFlt").val(selectedQuery.triplets[0].relationshipConstraint);
+        $("#qtTrg").val(selectedQuery.triplets[0].target);
+        $("#qtTrgFlt").val(selectedQuery.triplets[0].targetConstraint);
+        updateGraph(selectedQuery.queryText);
+    });
+
+    $("#btnSave").on("click", function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/api/updateQuery',
+            type: 'PUT',
+            data: createUpdate(selectedQuery),
+            success: function (response) {
+                if (response) {
+                    console.log("YEAH");
+                    document.location.reload(true);
+                }
+            }
+        });
+    });
+
+    $("#btnExecute").on("click", function (event) {
+        event.preventDefault();
+        updateGraph($("#qText").val());
+    });
+
+    function createUpdate(queryToUpdate) {
+        var querySplit = queryToUpdate.url.split("/");
+        var nodeId = querySplit[querySplit.length - 1];
+        var queryText = [
+            "MATCH (n:Query)",
+            "WHERE ID(n)= " + nodeId,
+            "SET n.title = '" + $("#qTitle").val() + "',",
+            "n.queryText = '" + $("#qText").val() + "',",
+            "n.version = n.version + 1",
+            "RETURN n"
+        ].join("\n");
+        return {update: queryText};
+    }
+
+    function updateGraph(query) {
+        $.post("/api/nodeQuery", {queryText: query}, function (data) {
             $("#graph").empty();
             if (!data || data.nodes.length == 0) {
                 $("#graph").append("<p>No Results returned for that Query !</p>");
             } else {
                 var color = d3.scale.category20();
-
                 var graphWidth = $("#graph").width() - 15,
                     graphHeight = (graphWidth / 2) - 15;
-
                 var force = d3.layout.force()
                     .charge(-100)
                     .linkDistance(150)
                     .size([graphWidth, graphHeight]);
-
                 var svg = d3.select("#graph").append("svg")
                     .attr("width", graphWidth)
                     .attr("height", graphHeight);
-
                 drawGraph(color, force, svg, data);
             }
         });
-    });
+    }
 
     function drawGraph(color, force, svg, graph) {
         force
@@ -130,6 +167,7 @@ $(function () {
         });
     }
 
+    // TODO Create a better default graph
     function drawGraphDefaults() {
         var data = {
             "nodes": [
@@ -141,15 +179,12 @@ $(function () {
             ]
         };
         var color = d3.scale.category20();
-
         var graphWidth = $("#graph").width() - 5,
             graphHeight = (graphWidth / 2) - 5;
-
         var force = d3.layout.force()
             .charge(-100)
             .linkDistance(150)
             .size([graphWidth, graphHeight]);
-
         var svg = d3.select("#graph").append("svg")
             .attr("width", graphWidth)
             .attr("height", graphHeight);
