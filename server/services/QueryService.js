@@ -84,7 +84,9 @@ QueryService.prototype.getNodes = function (queryText) {
 
 QueryService.prototype.getSavedQueries = function (limit) {
     var queryText = [
-        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet) return q,t LIMIT " + limit
+        "MATCH (q:Query)-[COMPRISED_OF]->(t:Triplet)",
+        "RETURN q AS Query, COLLECT(t) AS Triplets",
+        " LIMIT " + limit
     ].join("\n");
     logger.info(methodEntry({"method": "getSavedQueries", "query": JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
@@ -109,7 +111,7 @@ QueryService.prototype.loadByTitle = function (title) {
     return apiInstance.query(queryText, {title: title})
         .then(function (results) {
             if (results) {
-                return parseQuery(results);
+                return parseQueries(results);
             } else {
                 logger.error("Could not get query by title : " + title);
                 throw new SyntaxError("Cannot find query by title : " + title);
@@ -127,7 +129,7 @@ QueryService.prototype.loadByTitleFuzzy = function (title) {
     var queryText = [
         "MATCH (q:Query)-[:COMPRISED_OF]->(t:Triplet)",
         "WHERE q.title =~ '(?i).*" + title + ".*'",
-        "RETURN q, t"
+        "RETURN distinct(q) AS Query, COLLECT(t) AS Triplets"
     ].join("\n");
     logger.info(methodEntry({"method": "loadByTitleFuzzy", "query": JSON.stringify(queryText)}));
     return apiInstance.query(queryText)
@@ -200,26 +202,6 @@ QueryService.prototype.executeBoundQuery = function (queryObject, tripletArray) 
 
 // Start of internal methods
 
-// Parses returned data from Neo4j into a Query model object
-function parseQuery(results) {
-    if (results.hasOwnProperty("data")) {
-        var flatArray = _.flatten(results.data, true);
-        var query = flatArray[0];
-        var tripletArray = [];
-        _.forEach(flatArray[1], function (triplet) {
-            tripletArray.push(triplet.data);
-        });
-        return new Query({
-            url: query.self,
-            title: query.data.title,
-            version: query.data.version,
-            queryText: query.data.queryText,
-            triplets: tripletArray
-        });
-    }
-}
-
-// TODO - Can this just replace the parseQuery?
 // Parses returned data from Neo4j into a collection of Query model object
 function parseQueries(results) {
     var retArray = [];
@@ -228,12 +210,16 @@ function parseQueries(results) {
             .flatten(true)
             .chunk(results.columns.length)
             .map(function (data) {
+                var tripletArray = [];
+                _.forEach(data[1], function (triplet) {
+                    tripletArray.push(triplet.data);
+                });
                 retArray.push(new Query({
                     url: data[0].self,
                     title: data[0].data.title,
                     version: data[0].data.version,
                     queryText: data[0].data.queryText,
-                    triplets: data[1].data
+                    triplets: tripletArray
                 }));
             });
     } else {

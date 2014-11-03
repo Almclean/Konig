@@ -44,9 +44,15 @@ $(function () {
     $("#recentQueries").on("click", "li.queryItem", function (event) {
         event.preventDefault();
         var qry = queries[$(this)[0].id];
-        $("#qTitle").text(qry.queryTitle);
-        $("#qVersion").text(qry.queryVersion);
-        $("#qText").text(qry.queryText);
+        $("#qTitle").val(qry.queryTitle);
+        $("#qVersion").val(qry.queryVersion);
+        $("#qText").val(qry.queryText);
+        $("#qtSrc").val(qry.triplets[0].source);
+        $("#qtSrcFlt").val(qry.triplets[0].sourceConstraint);
+        $("#qtRel").val(qry.triplets[0].relationship);
+        $("#qtRelFlt").val(qry.triplets[0].relationshipConstraint);
+        $("#qtTrg").val(qry.triplets[0].target);
+        $("#qtTrgFlt").val(qry.triplets[0].targetConstraint);
         $.post("/api/nodeQuery", {queryText: qry.queryText}, function (data) {
             $("#graph").empty();
             if (!data || data.nodes.length == 0) {
