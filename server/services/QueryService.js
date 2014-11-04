@@ -165,7 +165,10 @@ QueryService.prototype.saveQuery = function (queryText) {
 // @Returns Promise : Subgraph of nodes from getNodes() using the generated cypher queryString
 QueryService.prototype.executeBoundQuery = function (queryObject, tripletArray) {
 
-    var cypherQuery = queryObject.queryText;
+    var cypherQuery = _.chain(queryObject)
+        .pluck("queryText")
+        .first()
+        .value();
     var splitArr = cypherQuery.split("RETURN");
     var whereClause = "";
     var termArray = [];
@@ -188,7 +191,7 @@ QueryService.prototype.executeBoundQuery = function (queryObject, tripletArray) 
         });
     });
 
-    // Check that the termArray was acutually populated, null otherwise.
+    // Check that the termArray was actually populated, null otherwise.
     if (termArray.length > 0) {
         whereClause += "WHERE " + termArray.join(' AND ');
         var newCypher = splitArr.join(whereClause + " RETURN ");
