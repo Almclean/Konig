@@ -22,7 +22,6 @@ describe("User Service Integration Tests", function () {
             request(app)
                 .post("/api/authenticate")
                 .send({usernameInput: "Al", passwordInput: "blah"})
-                .expect(200)
                 .end(function (err, res) {
                     res.body.authenticated.should.equal(true);
                     res.body.user.should.equal("Al");

@@ -3,39 +3,80 @@
 
 var express = require("express");
 var router = express.Router();
-var p = require("bluebird");
 var logger = require("winston");
 var UserService = require("../services/userService");
 var QueryService = require("../services/queryService");
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var _ = require("lodash");
 var qs = new QueryService();
 var us = new UserService();
+
+// Passport Setup
+passport.use(new LocalStrategy(function(username, password, done) {
+    console.log("In passport handler.");
+    return us.getByUserName(username)
+        .then(function(userObj) {
+            if (userObj) {
+                return userObj;
+            } else {
+                logger.error("Invalid username : " + username);
+                return done(null, false, {message: "Invalid UserName."});
+            }
+        })
+        .then(function(userObj) {
+            logger.info("Authenticating user : " + userObj.username);
+            return us.authenticate(userObj.username, userObj.password);
+        })
+        .then(function(result) {
+            if (result && result.authenticated) {
+                logger.info("Successfully authenticated User: " + result.user);
+                return done(null, result);
+            } else {
+                logger.error("Invalid password");
+                return done(null, false, {message: "Incorrect Password."});
+            }
+        });
+}));
 
 // ---------------------- ---------------------
 
 // Routes for pages
 
-router.get("/", function (req, res) {
-    res.render("index", { title: "Konig"});
+router.get("/login", function(req, res) {   
+    res.render("index", {title: "Konig - login"});
 });
 
-router.get("/admin", function (req, res) {
-    res.render("admin", {title: "Konig - Admin"});
+router.post("/login", passport.authenticate('local', {successRedirect: "/home",
+                                                      failureRedirect: "/login"}
+));
+
+router.get("/", passport.authenticate('local', {failureRedirect: "/login"}),
+    function (req, res) {
+        res.render("index", { title: "Konig"});
+});
+
+router.get("/admin", passport.authenticate('local', {failureRedirect: "/login"}),
+    function (req, res) {
+        res.render("admin", {title: "Konig - Admin"});
 });
 
 /* GET home page. */
-router.get("/home", function (req, res) {
-    res.render("home", { title: "Konig - Home" });
+router.get("/home", passport.authenticate('local', {failureRedirect: "/login"}),
+    function (req, res) {
+        res.render("home", { title: "Konig - Home" });
 });
 
 // Get the QueryBuilder page
-router.get("/queryBuilder", function (req, res) {
-    res.render("queryBuilder", { title: "Konig - Query Builder"});
+router.get("/queryBuilder", passport.authenticate('local', {failureRedirect: "/login"}),
+    function (req, res) {
+        res.render("queryBuilder", { title: "Konig - Query Builder"});
 });
 
 // Get the QueryEditor page
-router.get("/queryEditor", function (req, res) {
-    res.render("queryEditor", { title: "Konig - Query Editor"});
+router.get("/queryEditor", passport.authenticate('local', {failureRedirect: "/login"}),
+    function (req, res) {
+        res.render("queryEditor", { title: "Konig - Query Editor"});
 });
 
 // ---------------------- ---------------------
@@ -73,20 +114,6 @@ router.route("/ext/query*")
     });
 
 // ---------------------- ---------------------
-
-// Start of API calls
-router.route("/api/authenticate")
-    .post(function (req, res, next) {
-        us.authenticate(req.body.usernameInput, req.body.passwordInput)
-            .then(function (result) {
-                logger.info("Successfully authenticated User: " + result.user);
-                res.json(result);
-            })
-            .catch(function (e) {
-                var result = {"authenticated": false, "reason": "Invalid User Name/Password"};
-                res.json(result);
-            });
-    });
 
 router.route("/api/loadByTitle")
     .post(function (req, res, next) {

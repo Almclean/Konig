@@ -7,6 +7,7 @@
 "use strict";
 var Api = require("./api");
 var apiInstance = new Api();
+var User = require('../../models/User');
 var UserError = require("./../error/userError");
 var Promise = require("bluebird");
 var bcrypt = require("bcrypt");
@@ -20,31 +21,45 @@ var UserService = function () {
 
 // Go and check if this user password matches the database
 UserService.prototype.authenticate = function (userName, inputPassword) {
+    return this.getByUserName(userName)
+        .then(function (user) {
+            if (user) {
+                return [bcrypt.compareAsync(inputPassword, user.password), user];
+            } else {
+                return false;
+            }
+        })
+        .spread(function (result, user) {
+            var retval = {};
+            if (result) {
+                retval = {"user": user, "authenticated": true};
+            } else {
+                retval = {"user": user, "authenticated": false, "reason": "Invalid User Name/Password"};
+            }
+            return retval;
+        })
+        .catch(function(e) {
+            throw e;
+        });
+};
+
+// @Param userName : Name of a User to find
+// @Returns Promise : User Object populated with the userName and password hash.
+UserService.prototype.getByUserName = function (userName) {
     var queryText = [
         "MATCH (user:AdminUser { name: {userName} })",
         "RETURN user"
     ].join("\n");
+
     return apiInstance.query(queryText, {userName: userName})
         .then(function (results) {
             if (results && results.data) {
                 var storedHash = _.find(_.pluck(_.flatten(results.data), "data"), "password").password;
-                return bcrypt.compareAsync(inputPassword, storedHash);
-            }
-        })
-        .then(function (result) {
-            var retval = {};
-            if (result) {
-                retval = {"user": userName, "authenticated": true};
+                var u = new User(userName, storedHash);
+                return u;
             } else {
-                retval = {"user": userName, "authenticated": false, "reason": "Invalid User Name/Password"};
+                return false;
             }
-            return retval;
-        }).catch(SyntaxError, function (e) { // TODO What would be the error here to catch
-            logger.error(__filename + " authenticate: Unable to authenticate user. \nError : " + e);
-            throw new UserError(__filename + " authenticate: Unable to authenticate user.", e);
-        }).error(function (e) {
-            logger.error(__filename + " authenticate: Unable to authenticate user. \nError : ", e);
-            throw new UserError(__filename + " authenticate: Unable to authenticate user.", e);
         });
 };
 
