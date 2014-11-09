@@ -5,8 +5,6 @@ $(function () {
 
     $("#signIn").on("submit", function (event) {
         event.preventDefault();
-        $.post("/login", $("#signIn").serialize(), function(data) {
-            console.log(data);
-        });
+        $.post("/login", $("#signIn").serialize());
     });
 });

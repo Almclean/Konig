@@ -6,7 +6,6 @@ var session = require("express-session");
 var path = require("path");
 var favicon = require("static-favicon");
 var logger = require("./server/util/logger");
-var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var passport = require("passport");
 var routes = require("./server/routes/index");
@@ -19,12 +18,14 @@ app.set("view engine", "jade");
 app.use(favicon(__dirname + "/public/icons/favicon.ico"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(require("morgan")("combined", { "stream": logger.stream }));
-app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(session({ secret: 'IMABIGSECRET' }));
+app.use(session({ secret: "IMABIGSECRET",
+                  resave : true,
+                  saveUninitialized : true}
+));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/", routes);

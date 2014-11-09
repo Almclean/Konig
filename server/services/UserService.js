@@ -24,7 +24,7 @@ UserService.prototype.authenticate = function (userName, inputPassword) {
     return this.getByUserName(userName)
         .then(function (user) {
             if (user) {
-                return [bcrypt.compareAsync(inputPassword, user.password), user];
+                return Promise.join(bcrypt.compareAsync(inputPassword, user.password), user);
             } else {
                 return false;
             }

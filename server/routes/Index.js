@@ -6,15 +6,14 @@ var router = express.Router();
 var logger = require("winston");
 var UserService = require("../services/userService");
 var QueryService = require("../services/queryService");
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var passport = require("passport");
+var LocalStrategy = require("passport-local").Strategy;
 var _ = require("lodash");
 var qs = new QueryService();
 var us = new UserService();
 
 // Passport Setup
-passport.use(new LocalStrategy(function(username, password, done) {
-    console.log("In passport handler.");
+passport.use(new LocalStrategy({passReqToCallback: true}, function(req, username, password, done) {
     return us.getByUserName(username)
         .then(function(userObj) {
             if (userObj) {
@@ -25,12 +24,12 @@ passport.use(new LocalStrategy(function(username, password, done) {
             }
         })
         .then(function(userObj) {
-            logger.info("Authenticating user : " + userObj.username);
-            return us.authenticate(userObj.username, userObj.password);
+            logger.info("Authenticating user : " + userObj.userName);
+            return us.authenticate(userObj.userName, password);
         })
         .then(function(result) {
             if (result && result.authenticated) {
-                logger.info("Successfully authenticated User: " + result.user);
+                logger.info("Successfully authenticated User: " + result.user.userName);
                 return done(null, result);
             } else {
                 logger.error("Invalid password");
@@ -38,6 +37,19 @@ passport.use(new LocalStrategy(function(username, password, done) {
             }
         });
 }));
+
+passport.serializeUser(function(authResult, done) {
+    console.log("Serializing user " + authResult.user.userName);
+    done(null, authResult.user);
+});
+
+passport.deserializeUser(function(user, done) {
+    console.log("Getting user :" + user.userName);
+    us.getByUserName(user.userName)
+        .then(function(user) {
+            done(null, user);
+        });
+});
 
 // ---------------------- ---------------------
 
@@ -47,34 +59,35 @@ router.get("/login", function(req, res) {
     res.render("index", {title: "Konig - login"});
 });
 
-router.post("/login", passport.authenticate('local', {successRedirect: "/home",
-                                                      failureRedirect: "/login"}
-));
+router.post("/login", passport.authenticate('local', {failureRedirect: "/login"}),
+    function(req, res) {
+        res.redirect("/home");
+    });
 
-router.get("/", passport.authenticate('local', {failureRedirect: "/login"}),
+router.get("/", ensureAuthenticated,
     function (req, res) {
-        res.render("index", { title: "Konig"});
+        res.redirect("/home");
 });
 
-router.get("/admin", passport.authenticate('local', {failureRedirect: "/login"}),
+router.get("/admin", ensureAuthenticated,
     function (req, res) {
         res.render("admin", {title: "Konig - Admin"});
 });
 
 /* GET home page. */
-router.get("/home", passport.authenticate('local', {failureRedirect: "/login"}),
+router.get("/home", ensureAuthenticated,
     function (req, res) {
         res.render("home", { title: "Konig - Home" });
 });
 
 // Get the QueryBuilder page
-router.get("/queryBuilder", passport.authenticate('local', {failureRedirect: "/login"}),
+router.get("/queryBuilder", ensureAuthenticated,
     function (req, res) {
         res.render("queryBuilder", { title: "Konig - Query Builder"});
 });
 
 // Get the QueryEditor page
-router.get("/queryEditor", passport.authenticate('local', {failureRedirect: "/login"}),
+router.get("/queryEditor", ensureAuthenticated,
     function (req, res) {
         res.render("queryEditor", { title: "Konig - Query Editor"});
 });
@@ -190,5 +203,14 @@ router.route("/api/updateQuery")
                 next(err);
             });
     });
+
+function ensureAuthenticated(req,res,next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        console.log("Not logged in, redirecting !");
+        res.redirect('/login');
+    }
+}
 
 module.exports = router;
