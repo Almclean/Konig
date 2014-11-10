@@ -1,6 +1,5 @@
 extends layout
 block content
-    script(src='/javascripts/Main.js')
     div(class="container-fluid")
         div(class="row")
             br
@@ -13,7 +12,7 @@ block content
                     div(class="panel-heading")
                         h3(id="lblInfo" class="panel-title" ) Please sign in
                         div(class="panel-body")
-                            form(id="signIn" accept-charset="UTF-8" role="form")
+                            form(id="signIn" action="/login" method="post" accept-charset="UTF-8" role="form")
                                 fieldset
                                     div(class="form-group")
                                         input(class="form-control" placeholder="User Name" name="username" type="text")

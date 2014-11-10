@@ -3,6 +3,7 @@
 
 var express = require("express");
 var router = express.Router();
+var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var logger = require("winston");
 var UserService = require("../services/userService");
 var QueryService = require("../services/queryService");
@@ -59,35 +60,32 @@ router.get("/login", function(req, res) {
     res.render("index", {title: "Konig - login"});
 });
 
-router.post("/login", passport.authenticate('local', {failureRedirect: "/login"}),
-    function(req, res) {
-        res.redirect("/home");
-    });
+router.post("/login", passport.authenticate('local', {failureRedirect: "/login", successRedirect: "/home"}));
 
-router.get("/", ensureAuthenticated,
+router.get("/", ensureLoggedIn("/login"),
     function (req, res) {
         res.redirect("/home");
 });
 
-router.get("/admin", ensureAuthenticated,
+router.get("/admin", ensureLoggedIn("/login"),
     function (req, res) {
         res.render("admin", {title: "Konig - Admin"});
 });
 
 /* GET home page. */
-router.get("/home", ensureAuthenticated,
+router.get("/home", ensureLoggedIn("/login"),
     function (req, res) {
         res.render("home", { title: "Konig - Home" });
 });
 
 // Get the QueryBuilder page
-router.get("/queryBuilder", ensureAuthenticated,
+router.get("/queryBuilder", ensureLoggedIn("/login"),
     function (req, res) {
         res.render("queryBuilder", { title: "Konig - Query Builder"});
 });
 
 // Get the QueryEditor page
-router.get("/queryEditor", ensureAuthenticated,
+router.get("/queryEditor", ensureLoggedIn("/login"),
     function (req, res) {
         res.render("queryEditor", { title: "Konig - Query Editor"});
 });
@@ -203,14 +201,5 @@ router.route("/api/updateQuery")
                 next(err);
             });
     });
-
-function ensureAuthenticated(req,res,next) {
-    if (req.isAuthenticated()) {
-        return next();
-    } else {
-        console.log("Not logged in, redirecting !");
-        res.redirect('/login');
-    }
-}
 
 module.exports = router;
