@@ -18,3 +18,17 @@ An example would be:
 ```
 python GenerateData.py -n 120 -f "C:/development/SourceControl/Konig/resources/sampleData/initData.json"
 ```
+
+bcryptUtil.js
+-------------
+A simple script to create a hashed value of the string based on a salt of 10
+
+This takes one parameter:
+   *  hash=Password
+
+Where *Password* is the string you want to hash
+
+To run this ensure you have run npm install on the project then run
+```
+node .\bcryptUtil.js hash=Password
+```
