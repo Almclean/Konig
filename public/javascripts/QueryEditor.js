@@ -61,15 +61,10 @@ $(function () {
 
     $("#btnSave").on("click", function (event) {
         event.preventDefault();
-        $.ajax({
-            url: '/api/updateQuery',
-            type: 'PUT',
-            data: createUpdate(selectedQuery),
-            success: function (response) {
-                if (response) {
-                    console.log("YEAH");
-                    document.location.reload(true);
-                }
+        $.put("/api/updateQuery", createUpdate(selectedQuery), function (response) {
+            if (response) {
+                console.log("YEAH");
+                document.location.reload(true);
             }
         });
     });
@@ -96,7 +91,7 @@ $(function () {
     function updateGraph(query) {
         $.post("/api/nodeQuery", {queryText: query}, function (data) {
             $("#graph").empty();
-            if (!data || data.nodes.length == 0) {
+            if (!data || data.nodes.length === 0) {
                 $("#graph").append("<p>No Results returned for that Query !</p>");
             } else {
                 var color = d3.scale.category20();
@@ -192,4 +187,28 @@ $(function () {
     }
 
     drawGraphDefaults();
+
+    /* Extend jQuery with functions for PUT and DELETE requests. */
+    function extendAjaxRequest(url, data, callback, type, method) {
+        if (jQuery.isFunction(data)) {
+            callback = data;
+            data = {};
+        }
+        return jQuery.ajax({
+            type: method,
+            url: url,
+            data: data,
+            success: callback,
+            dataType: type
+        });
+    }
+
+    jQuery.extend({
+        put: function(url, data, callback, type) {
+            return extendAjaxRequest(url, data, callback, type, 'PUT');
+        },
+        delete: function(url, data, callback, type) {
+            return extendAjaxRequest(url, data, callback, type, 'DELETE');
+        }
+    });
 });
