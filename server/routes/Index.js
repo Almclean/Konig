@@ -40,12 +40,10 @@ passport.use(new LocalStrategy({passReqToCallback: true}, function(req, username
 }));
 
 passport.serializeUser(function(authResult, done) {
-    console.log("Serializing user " + authResult.user.userName);
     done(null, authResult.user);
 });
 
 passport.deserializeUser(function(user, done) {
-    console.log("Getting user :" + user.userName);
     us.getByUserName(user.userName)
         .then(function(user) {
             done(null, user);
