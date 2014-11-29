@@ -56,6 +56,11 @@ passport.deserializeUser(function(user, done) {
 
 // Routes for pages
 
+router.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+
 router.get("/login", function(req, res) {   
     res.render("index", {title: "Konig - login"});
 });
