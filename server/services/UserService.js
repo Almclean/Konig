@@ -5,10 +5,10 @@
 /*jshint -W079 */
 
 "use strict";
-var Api = require("./api");
+var Api = require("./Api");
 var apiInstance = new Api();
 var User = require('../../models/User');
-var UserError = require("./../error/userError");
+var UserError = require("./../error/UserError");
 var Promise = require("bluebird");
 var bcrypt = require("bcrypt");
 Promise.promisifyAll(bcrypt);

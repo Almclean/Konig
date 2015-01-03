@@ -2,7 +2,7 @@
  * Created by Ivan O'Mahony on 9/14/2014.
  */
 "use strict";
-var GraphTransformerError = require("./../error/graphTransformerError");
+var GraphTransformerError = require("./../error/GraphTransformerError");
 var logger = require("winston");
 
 // This represents the server side functions to transform the client side graph (d3 node / links) to the server side

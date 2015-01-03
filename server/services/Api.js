@@ -4,7 +4,7 @@
 "use strict";
 var Promise = require("bluebird");
 var r = Promise.promisifyAll(require("request"));
-var ApiError = require("./../error/apiError");
+var ApiError = require("./../error/ApiError");
 var logger = require("winston");
 
 // Constructor

@@ -5,10 +5,10 @@ var express = require("express");
 var session = require("express-session");
 var path = require("path");
 var favicon = require("static-favicon");
-var logger = require("./server/util/logger");
+var logger = require("./server/util/Logger");
 var bodyParser = require("body-parser");
 var passport = require("passport");
-var routes = require("./server/routes/index");
+var routes = require("./server/routes/Index");
 var app = express();
 
 // view engine setup

@@ -4,11 +4,11 @@
 /*jslint node: true */
 "use strict";
 
-var Api = require("./api");
+var Api = require("./Api");
 var apiInstance = new Api();
 var Query = require("../../models/Query");
-var QueryError = require("./../error/queryError");
-var GraphTransformer = require("../services/graphTransformer");
+var QueryError = require("./../error/QueryError");
+var GraphTransformer = require("../services/GraphTransformer");
 var gt = new GraphTransformer();
 var logger = require("winston");
 var util = require("util");
