@@ -68,10 +68,10 @@ describe("Query Service Integration Tests", function () {
                 .expect(200)
                 .end(function (err, res) {
                     _.contains(res.body.labels.columns, "l").should.equal(true);
-                    _.contains(_.flatten(res.body.labels.data),"Rating").should.equal(true);
-                    _.contains(_.flatten(res.body.labels.data),"Location").should.equal(true);
-                    _.contains(_.flatten(res.body.labels.data),"Account").should.equal(true);
-                    _.contains(_.flatten(res.body.labels.data),"Party").should.equal(true);
+                    _.contains(_.flattenDeep(res.body.labels.data),"Rating").should.equal(true);
+                    _.contains(_.flattenDeep(res.body.labels.data),"Location").should.equal(true);
+                    _.contains(_.flattenDeep(res.body.labels.data),"Account").should.equal(true);
+                    _.contains(_.flattenDeep(res.body.labels.data),"Party").should.equal(true);
                     done();
                 });
         });
