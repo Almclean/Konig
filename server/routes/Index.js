@@ -205,4 +205,21 @@ router.route("/api/updateQuery")
             });
     });
 
+// Start of 3rd Party API Calls
+router.route("/entity")
+    .post(function (req, res, next) {
+        res.render("Not Yet Implemented");
+    })
+    .put(function (req, res, next) {
+        res.render("Not Yet Implemented");
+    });
+
+router.route("/relationship")
+    .post(function (req, res, next) {
+        res.render("Not Yet Implemented");
+    })
+    .put(function (req, res, next) {
+        res.render("Not Yet Implemented");
+    });
+
 module.exports = router;
