@@ -19,3 +19,5 @@ NodeService.prototype.updateNode = function () {
     return null;
 };
 
+module.exports = NodeService;
+
