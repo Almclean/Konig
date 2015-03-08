@@ -17,13 +17,13 @@ function NodeService() { }
 NodeService.prototype.createNode = function (label, data) {
     var queryText = [
         util.format("CREATE (n:%s {data})", label),
-        "RETURN n"
+        "RETURN id(n)"
     ].join("\n");
 
     return apiInstance.query(queryText, {data: data})
         .then(function (results) {
             if (results && results.data) {
-                return _.first(_.flatten(results.data)).metadata;
+                return _.first(_.flatten(results.data));
             } else if (results.exception) {
                 throw results.exception;
             }

@@ -12,7 +12,7 @@ function main() {
 
     var queryText = [
         util.format("CREATE (n:%s {data})", label),
-        "RETURN n"
+        "RETURN id(n)"
     ].join("\n");
 
     console.time("queryTime");
@@ -20,7 +20,7 @@ function main() {
         .then(function (results) {
             console.log("Got something back.");
             if (results && results.data) {
-                console.log(_.first(_.flatten(results.data)).metadata);
+                console.log(_.first(_.flatten(results.data)));
                 console.timeEnd("queryTime");
             } else if (results.exception) {
                 console.error(results.message);
