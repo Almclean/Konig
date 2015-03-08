@@ -30,16 +30,26 @@ NodeService.prototype.createNode = function (label, data) {
         });
 };
 
-NodeService.prototype.updateNode = function (nodeid, data) {
 
+// @Param nodeid : Neo4J specifier for the node id
+// @Param data : JSON data to update node with.  Please note, this is a non-destructive update and other properties
+//               are not changed.
+NodeService.prototype.updateNode = function (nodeid, data) {
     var queryText = [
-        "",
-        ""
+        "START n=node({nodeid})",
+        "SET n += {data}",
+        "RETURN n"
     ].join("\n");
 
-    return apiInstance.query(queryText)
-
-    return null;
+    return apiInstance.query(queryText, {nodeid: nodeid, data: data})
+        .then(function (results) {
+            if (results && results.data) {
+                return _.first(_.flatten(results.data));
+            } else if (results.exception) {
+                console.error(results.message);
+                throw results.exception;
+            }
+        });
 };
 
 module.exports = NodeService;

@@ -7,16 +7,18 @@ var _ = require('lodash');
 function main() {
     "use strict";
     console.log('About to submit query');
-    var label = "TEST";
-    var data = {name: "Al", text: "This is some random text"};
+
+    var nodeid = 983;
+    var data = {name: "Another Name", some: "thingelse"};
 
     var queryText = [
-        util.format("CREATE (n:%s {data})", label),
-        "RETURN id(n)"
+        "START n=node({nodeid})",
+        "SET n += {data}",
+        "RETURN n"
     ].join("\n");
 
     console.time("queryTime");
-    api.query(queryText, {data: data})
+    api.query(queryText, {nodeid: nodeid, data: data})
         .then(function (results) {
             console.log("Got something back.");
             if (results && results.data) {
