@@ -2,16 +2,19 @@
 "use strict";
 
 var express = require("express");
+var URL = require('url');
 var router = express.Router();
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var logger = require("winston");
 var UserService = require("../services/UserService");
 var QueryService = require("../services/QueryService");
+var NodeService = require("../services/NodeService");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var _ = require("lodash");
 var qs = new QueryService();
 var us = new UserService();
+var ns = new NodeService();
 
 // Passport Setup
 passport.use(new LocalStrategy({passReqToCallback: true}, function(req, username, password, done) {
@@ -206,15 +209,21 @@ router.route("/api/updateQuery")
     });
 
 // Start of 3rd Party API Calls
-router.route("/entity")
+router.route("/entity*")
     .post(function (req, res, next) {
-        res.render("Not Yet Implemented");
+        var data = JSON.parse(req.body.data);
+        var entity = URL.parse(req.url);
+
+        ns.createNode(label, data)
+            .then(function (result) {
+                res.json(result);
+            });
     })
     .put(function (req, res, next) {
         res.render("Not Yet Implemented");
     });
 
-router.route("/relationship")
+router.route("/relationship*")
     .post(function (req, res, next) {
         res.render("Not Yet Implemented");
     })
