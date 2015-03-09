@@ -1,8 +1,8 @@
 /*jslint node: true */
 "use strict";
 
+var url = require("url");
 var express = require("express");
-var URL = require('url');
 var router = express.Router();
 var ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 var logger = require("winston");
@@ -212,7 +212,13 @@ router.route("/api/updateQuery")
 router.route("/entity*")
     .post(function (req, res, next) {
         var data = JSON.parse(req.body.data);
-        var entity = URL.parse(req.url);
+        var entityUrlArr = req.url.split("/");
+
+        if ( entityUrlArr.length < 3 ) {
+            res.status(400).send("Malfomed request, please see api documentation.");
+        }
+
+        var label = entityUrlArr[2];
 
         ns.createNode(label, data)
             .then(function (result) {
