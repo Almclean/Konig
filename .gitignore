@@ -1,11 +1,15 @@
-node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
 secrets.key
 .idea
-Konig.iml
+.iml
 bin/data_load.cql
 bin/GenerateData.py
 .DS_Store
 25brym4g.bb5.txt
-C
 coverage/
 logs/

@@ -53,4 +53,3 @@ NodeService.prototype.updateNode = function (nodeid, data) {
 };
 
 module.exports = NodeService;
-
