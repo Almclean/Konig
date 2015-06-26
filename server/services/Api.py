@@ -8,12 +8,15 @@ import json
 class Api(object):
     """ Controls low level access to the Rest end point on Neo"""
 
-    def __init__(self, connection_url=os.environ['DB_REST_ENDPOINT']):
+    def __init__(self, connection_url=None):
         """
         :param connection_url: Connection url of DB Rest endpoint
         :return: new Api object
         """
-        self.connection_url = connection_url
+        if connection_url is None:
+            self.connection_url = os.environ['DB_REST_ENDPOINT']
+        else:
+            self.connection_url = connection_url
 
     def __send_cypher__(self, cypher):
         """
@@ -41,7 +44,7 @@ class Api(object):
         else:
             resp.raise_for_status()
 
-    def __is_sequence__(self, thing):
+    def __is_sequence__(self, arg):
         return (not hasattr(arg, "strip") and
                 hasattr(arg, "__getitem__") or
                 hasattr(arg, "__iter__"))
