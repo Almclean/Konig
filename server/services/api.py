@@ -4,8 +4,10 @@ import os
 import requests as r
 import json
 
+
 class Api(object):
     """ Controls low level access to the Rest end point on Neo"""
+
     def __init__(self, connection_url=os.environ['DB_REST_ENDPOINT']):
         """
         :param connection_url: Connection url of DB Rest endpoint
@@ -20,8 +22,8 @@ class Api(object):
             (http://docs.python-requests.org/en/latest/user/quickstart/#errors-and-exceptions)
         """
         headers = {"Content-Type": "application/json",
-            "Accept": "application/json; charset=UTF-8"
-            }
+                   "Accept": "application/json; charset=UTF-8"
+                   }
 
         data = {"statements": []}
 
@@ -41,6 +43,5 @@ class Api(object):
 
     def __is_sequence__(self, thing):
         return (not hasattr(arg, "strip") and
-            hasattr(arg, "__getitem__") or
-            hasattr(arg, "__iter__"))
-
+                hasattr(arg, "__getitem__") or
+                hasattr(arg, "__iter__"))

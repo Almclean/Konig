@@ -1,17 +1,17 @@
 __author__ = "Alistair Mclean"
 
-__doc__ = """Simple domain class tests"""
-
-
 from models import Action, Group, Query, Resource, User
+
 
 def testActionObj():
     a = Action("myNewAction")
     assert a.name == "myNewAction"
 
+
 def testGroupObj():
     g = Group("myNewGroup")
     assert g.name == "myNewGroup"
+
 
 def testQueryObj():
     props = {
@@ -28,10 +28,12 @@ def testQueryObj():
     assert q.url == 'http://blah.com'
     assert q.triplets == {'triplet1': 'somevalue', 'triplet2': 'another value'}
 
+
 def testUser():
     u = User('Alistaim', 'apassword')
     assert u.user_name == 'Alistaim'
     assert u.password == 'apassword'
+
 
 def testResource():
     p = {
