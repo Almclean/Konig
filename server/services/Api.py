@@ -21,7 +21,7 @@ class Api(object):
     def __send_cypher__(self, cypher):
         """
         :param cypher: Single string or list of cypher commands to send to Neo
-        :return: data from server otherwise throw
+        :return: JSON data from server otherwise throw
             (http://docs.python-requests.org/en/latest/user/quickstart/#errors-and-exceptions)
         """
         headers = {"Content-Type": "application/json",

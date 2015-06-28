@@ -8,6 +8,7 @@ import httpretty
 
 @httpretty.activate
 def test_api_response():
+    """Tests that __send_cypher__ renders back JSON objects correctly."""
     a = Api(connection_url="http://auld.nonsense.com")
     test_json_object = '{"title": "Test Resp"}'
 
