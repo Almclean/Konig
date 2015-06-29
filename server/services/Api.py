@@ -18,7 +18,27 @@ class Api(object):
         else:
             self.connection_url = connection_url
 
-    def __send_cypher__(self, cypher):
+    def get_non_admin_labels(self):
+        """Gets labels from the db for non-admin nodes"""
+        cypher = "\n".join(
+            ['MATCH (n)-[r]-(m)', 'WHERE NOT has(r.admin)', 'RETURN distinct type(r) as r']
+        )
+        return self.query(cypher)
+
+    def get_non_admin_relationships(self):
+        cypher = "\n".join([
+            'MATCH (n)-[r]-(m)',
+            'WHERE NOT has(r.admin)',
+            'RETURN distinct type(r) as r'
+        ])
+        return self.query(cypher)
+
+    def get_meta_data(self):
+        """Returns a json object consisting of the non-admin labels and relationships in the db"""
+        ret_val = {'labels': self.get_non_admin_labels(), 'relationships': self.get_non_admin_relationships()}
+        return json.dump(ret_val)
+
+    def query(self, cypher, bindings=None):
         """
         :param cypher: Single string or list of cypher commands to send to Neo
         :return: JSON data from server otherwise throw
@@ -31,7 +51,7 @@ class Api(object):
         data = {"statements": []}
 
         # Work out if this is a list of cypher strings or not.
-        if self.__is_sequence__(cypher):
+        if self.__is_sequence__(cypher, bindings=None):
             for query_string in cypher:
                 data["statements"].append(
                     {"statement": query_string})

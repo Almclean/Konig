@@ -8,7 +8,7 @@ import httpretty
 
 @httpretty.activate
 def test_api_response():
-    """Tests that __send_cypher__ renders back JSON objects correctly."""
+    """Tests that query renders back JSON objects correctly."""
     a = Api(connection_url="http://auld.nonsense.com")
     test_json_object = '{"title": "Test Resp"}'
 
@@ -17,5 +17,5 @@ def test_api_response():
                            content_type="application/json",
                            status=200)
 
-    resp = a.__send_cypher__("Some auld bollocks")
+    resp = a.query("Some auld bollocks")
     expect(resp).to.equal(json.loads(test_json_object))
