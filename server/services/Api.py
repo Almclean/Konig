@@ -20,9 +20,11 @@ class Api(object):
 
     def get_non_admin_labels(self):
         """Gets labels from the db for non-admin nodes"""
-        cypher = "\n".join(
-            ['MATCH (n)-[r]-(m)', 'WHERE NOT has(r.admin)', 'RETURN distinct type(r) as r']
-        )
+        cypher = "\n".join([
+            'MATCH (n)-[r]-(m)',
+            'WHERE NOT has(r.admin)',
+            'RETURN distinct type(r) as r'
+        ])
         return self.query(cypher)
 
     def get_non_admin_relationships(self):
