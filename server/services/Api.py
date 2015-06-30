@@ -38,7 +38,7 @@ class Api(object):
         ret_val = {'labels': self.get_non_admin_labels(), 'relationships': self.get_non_admin_relationships()}
         return json.dump(ret_val)
 
-    def query(self, cypher, bindings=None):
+    def query(self, cypher, parameters=None):
         """
         :param cypher: Single string or list of cypher commands to send to Neo
         :return: JSON data from server otherwise throw
@@ -51,12 +51,12 @@ class Api(object):
         data = {"statements": []}
 
         # Work out if this is a list of cypher strings or not.
-        if self.__is_sequence__(cypher, bindings=None):
+        if self.__is_sequence__(cypher):
             for query_string in cypher:
                 data["statements"].append(
                     {"statement": query_string})
         else:
-            data["statements"] = {"statement": cypher}
+            data["statements"] = {"statement": cypher, "parameters": parameters}
 
         resp = r.post(self.connection_url, headers=headers, data=json.dumps(data))
         if resp.status_code is 200:
