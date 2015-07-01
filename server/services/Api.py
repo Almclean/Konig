@@ -1,9 +1,12 @@
 __author__ = 'almclean'
 
 import os
-import requests as r
 import json
+import logging
 
+import requests as r
+
+log = logging.getLogger(__name__)
 
 class Api(object):
     """ Controls low level access to the Rest end point on Neo"""
@@ -58,15 +61,14 @@ class Api(object):
                 data["statements"].append(
                     {"statement": query_string})
         else:
-            data["statements"] = {"statement": cypher, "parameters": parameters}
+            data["statements"] = [{"statement": cypher, "parameters": parameters}]
 
         resp = r.post(self.connection_url, headers=headers, data=json.dumps(data))
+        log.debug(resp.text)
         if resp.status_code is 200:
             return resp.json()
         else:
             resp.raise_for_status()
 
     def __is_sequence__(self, arg):
-        return (not hasattr(arg, "strip") and
-                hasattr(arg, "__getitem__") or
-                hasattr(arg, "__iter__"))
+        return not isinstance(arg, str)
