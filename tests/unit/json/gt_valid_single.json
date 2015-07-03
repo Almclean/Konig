@@ -1,0 +1,36 @@
+{
+  "triplets": [
+    [
+      {
+        "source": {
+          "type": "node",
+          "label": "Party",
+          "url": "http://162.243.169.45:7474/db/data/node/282",
+          "data": {
+            "name": "MS"
+          }
+        }
+      },
+      {
+        "relationship": {
+          "type": "relationship",
+          "label": "LOCATED_IN",
+          "url": "http://162.243.169.45:7474/db/data/relationship/160",
+          "data": {
+            "name": "LOCATED_IN"
+          }
+        }
+      },
+      {
+        "target": {
+          "type": "node",
+          "label": "Location",
+          "url": "http://162.243.169.45:7474/db/data/node/158",
+          "data": {
+            "name": "Scotland"
+          }
+        }
+      }
+    ]
+  ]
+}

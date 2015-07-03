@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "name": "MS",
+      "group": "Party",
+      "url": "http://162.243.169.45:7474/db/data/node/282"
+    },
+    {
+      "name": "Scotland",
+      "group": "Location",
+      "url": "http://162.243.169.45:7474/db/data/node/158"
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 1,
+      "value": 1,
+      "url": "http://162.243.169.45:7474/db/data/relationship/160"
+    }
+  ]
+}
