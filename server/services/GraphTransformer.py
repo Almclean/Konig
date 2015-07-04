@@ -2,7 +2,6 @@ __author__ = 'Ivan'
 
 import logging
 from server.error import GraphTransformerException
-import json
 from pydash.objects import deep_get
 
 log = logging.getLogger(__name__)

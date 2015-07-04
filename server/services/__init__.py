@@ -6,3 +6,4 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 from .Api import Api
 from .Userservice import Userservice
+from .GraphTransformer import GraphTransformer

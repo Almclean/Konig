@@ -1,6 +1,6 @@
 __author__ = 'Ivan'
 
-from server.services.GraphTransformer import GraphTransformer
+from server.services import GraphTransformer
 from server.error import GraphTransformerException
 from nose.tools import raises
 from sure import expect
