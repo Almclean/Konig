@@ -1,10 +1,11 @@
 __author__ = 'Ivan'
 
+from nose.tools import raises
 from server.services import GraphTransformer
 from server.error import GraphTransformerException
-from nose.tools import raises
 from sure import expect
 import json
+import pydash
 import os
 
 
@@ -21,15 +22,14 @@ def test_single_triplet():
         data = json.load(data_file)
         actual = GraphTransformer.to_client_graph(data)
         # Test links
-        expect(actual['links'].__len__()).to.equal(1)
-        expect(actual['links'][0]['url']).to.equal('http://162.243.169.45:7474/db/data/relationship/160')
+        links = pydash.pluck(actual['links'], 'url')
+        expect(links.__len__()).to.equal(1)
+        expect(links).to.equal(['http://162.243.169.45:7474/db/data/relationship/160'])
         # Test nodes
-        expect(actual['nodes'].__len__()).to.equal(2)
-        actual_node_url = []
-        for node in actual['nodes']:
-            actual_node_url.append(node['url'])
-        expect(actual_node_url.__contains__('http://162.243.169.45:7474/db/data/node/282')).to.equal(True)
-        expect(actual_node_url.__contains__('http://162.243.169.45:7474/db/data/node/158')).to.equal(True)
+        nodes = pydash.pluck(actual['nodes'], 'url')
+        expect(nodes.__len__()).to.equal(2)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/282')).to.equal(True)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/158')).to.equal(True)
 
 
 def test_multiple_triplet():
@@ -38,12 +38,21 @@ def test_multiple_triplet():
     with open(os.path.join(dir, 'json' + os.sep + 'gt_valid_multiple.json')) as data_file:
         data = json.load(data_file)
         actual = GraphTransformer.to_client_graph(data)
-        expect(actual['links'].__len__()).to.equal(3)
-        expect(actual['nodes'].__len__()).to.equal(5)
-        # TODO Do we really need to validate content here?
-        with open(os.path.join(dir, 'json' + os.sep + 'gt_valid_multiple_trans.json')) as data_file:
-            expected = json.load(data_file)
-            expect(actual).to.equal(expected)
+        # Test links
+        links = pydash.pluck(actual['links'], 'url')
+        expect(links.__len__()).to.equal(3)
+        expect(links.__contains__('http://162.243.169.45:7474/db/data/relationship/160')).to.equal(True)
+        expect(links.__contains__('http://162.243.169.45:7474/db/data/relationship/161')).to.equal(True)
+        expect(links.__contains__('http://162.243.169.45:7474/db/data/relationship/164')).to.equal(True)
+        # Test nodes
+        nodes = pydash.pluck(actual['nodes'], 'url')
+        expect(nodes.__len__()).to.equal(5)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/284')).to.equal(True)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/283')).to.equal(True)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/282')).to.equal(True)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/159')).to.equal(True)
+        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/158')).to.equal(True)
+
 
 def test_index_of_node():
     """Tests that the GraphTransformer can parse a single triplet """
