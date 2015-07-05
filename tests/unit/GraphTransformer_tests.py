@@ -20,9 +20,17 @@ def test_single_triplet():
     with open(os.path.join(dir, 'json' + os.sep + 'gt_valid_single.json')) as data_file:
         data = json.load(data_file)
         actual = GraphTransformer.to_client_graph(data)
-        with open(os.path.join(dir, 'json' + os.sep + 'gt_valid_single_trans.json')) as data_file:
-            expected = json.load(data_file)
-            expect(actual).to.equal(expected)
+        # Test links
+        expect(actual['links'].__len__()).to.equal(1)
+        expect(actual['links'][0]['url']).to.equal('http://162.243.169.45:7474/db/data/relationship/160')
+        # Test nodes
+        expect(actual['nodes'].__len__()).to.equal(2)
+        actual_node_url = []
+        for node in actual['nodes']:
+            actual_node_url.append(node['url'])
+        expect(actual_node_url.__contains__('http://162.243.169.45:7474/db/data/node/282')).to.equal(True)
+        expect(actual_node_url.__contains__('http://162.243.169.45:7474/db/data/node/158')).to.equal(True)
+
 
 def test_multiple_triplet():
     """Tests that the GraphTransformer can parse a single triplet """
