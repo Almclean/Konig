@@ -1,8 +1,10 @@
 __author__ = 'Ivan'
 
 import logging
-from server.error import GraphTransformerException
+
 from pydash.objects import deep_get
+
+from server.error import GraphTransformerException
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +23,7 @@ class GraphTransformer(object):
         if not data:
             log.error("No data to transform")
             raise GraphTransformerException("No data to transform")
+        log.debug("About to parse " + str(data))
         nodes = {}
         triplets = deep_get(data, 'triplets')
         for trip in triplets:
@@ -38,7 +41,9 @@ class GraphTransformer(object):
                           "value": 1,
                           "url": deep_get(trip, '1.relationship.url')})
 
-        return {"nodes": uniq_nodes, "links": links}
+        res = {"nodes": uniq_nodes, "links": links}
+        log.debug("Returning " + str(res))
+        return res
 
     @staticmethod
     def index_of_node(nodes, url):

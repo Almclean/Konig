@@ -1,12 +1,14 @@
 __author__ = 'Ivan'
 
+import json
+import os
+
 from nose.tools import raises
+from sure import expect
+import pydash
+
 from server.services import GraphTransformer
 from server.error import GraphTransformerException
-from sure import expect
-import json
-import pydash
-import os
 
 
 @raises(GraphTransformerException)
@@ -23,13 +25,13 @@ def test_single_triplet():
         actual = GraphTransformer.to_client_graph(data)
         # Test links
         links = pydash.pluck(actual['links'], 'url')
-        expect(links.__len__()).to.equal(1)
+        expect(len(links)).to.equal(1)
         expect(links).to.equal(['http://162.243.169.45:7474/db/data/relationship/160'])
         # Test nodes
         nodes = pydash.pluck(actual['nodes'], 'url')
-        expect(nodes.__len__()).to.equal(2)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/282')).to.equal(True)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/158')).to.equal(True)
+        expect(len(nodes)).to.equal(2)
+        expect('http://162.243.169.45:7474/db/data/node/282' in nodes).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/node/158' in nodes).to.equal(True)
 
 
 def test_multiple_triplet():
@@ -40,18 +42,18 @@ def test_multiple_triplet():
         actual = GraphTransformer.to_client_graph(data)
         # Test links
         links = pydash.pluck(actual['links'], 'url')
-        expect(links.__len__()).to.equal(3)
-        expect(links.__contains__('http://162.243.169.45:7474/db/data/relationship/160')).to.equal(True)
-        expect(links.__contains__('http://162.243.169.45:7474/db/data/relationship/161')).to.equal(True)
-        expect(links.__contains__('http://162.243.169.45:7474/db/data/relationship/164')).to.equal(True)
+        expect(len(links)).to.equal(3)
+        expect('http://162.243.169.45:7474/db/data/relationship/160' in links).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/relationship/161' in links).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/relationship/164' in links).to.equal(True)
         # Test nodes
         nodes = pydash.pluck(actual['nodes'], 'url')
-        expect(nodes.__len__()).to.equal(5)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/284')).to.equal(True)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/283')).to.equal(True)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/282')).to.equal(True)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/159')).to.equal(True)
-        expect(nodes.__contains__('http://162.243.169.45:7474/db/data/node/158')).to.equal(True)
+        expect(len(nodes)).to.equal(5)
+        expect('http://162.243.169.45:7474/db/data/node/284' in nodes).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/node/283' in nodes).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/node/282' in nodes).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/node/159' in nodes).to.equal(True)
+        expect('http://162.243.169.45:7474/db/data/node/158' in nodes).to.equal(True)
 
 
 def test_index_of_node():
