@@ -14,8 +14,15 @@ app = Flask(__name__)
 app.register_blueprint(Router)
 
 # Get Config
-config = ZKConfig('alistaim')
-log.info(config.get_rest_endpoint())
+try:
+    config = ZKConfig('alistaim')
+    log.info(config.get_rest_endpoint())
+except IOError:
+    log.error("Cannot connect to ZooKeeper ensemble, defaulting to system props")
+
+
+
+
 
 if __name__ == '__main__':
     app.run()
